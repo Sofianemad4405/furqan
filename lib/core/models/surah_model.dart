@@ -1,34 +1,39 @@
 import 'package:furqan/core/models/audio_model.dart';
+import 'package:furqan/core/models/surah_base.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'surah_model.g.dart';
 
 @JsonSerializable()
-class SurahModel {
-  final String surahName;
-  final String surahNameArabic;
-  final String surahNameArabicLong;
-  final String surahNameTranslation;
-  final String revelationPlace;
-  final int totalAyah;
+class SurahModel extends SurahBase {
   final int surahNo;
   final Map<String, AudioModel> surahAudio;
-  final Map<String, AudioModel> verseAudio;
-  final List<String> translation;
+  final List<String> english;
+  final List<String> arabic1;
+  final List<String> arabic2;
+  final List<String> bengali;
+  final List<String> urdu;
+  final List<String> turkish;
+  final List<String> uzbek;
 
   SurahModel({
-    required this.surahName,
-    required this.surahNameArabic,
-    required this.surahNameArabicLong,
-    required this.surahNameTranslation,
-    required this.revelationPlace,
-    required this.totalAyah,
+    required super.surahName,
+    required super.surahNameArabic,
+    required super.surahNameArabicLong,
+    required super.surahNameTranslation,
+    required super.revelationPlace,
+    required super.totalAyah,
     required this.surahNo,
     required this.surahAudio,
-    required this.verseAudio,
-    required this.translation,
+    required this.english,
+    required this.arabic1,
+    required this.arabic2,
+    required this.bengali,
+    required this.urdu,
+    required this.turkish,
+    required this.uzbek,
   });
-
   factory SurahModel.fromJson(Map<String, dynamic> json) =>
       _$SurahModelFromJson(json);
+  @override
   Map<String, dynamic> toJson() => _$SurahModelToJson(this);
 }

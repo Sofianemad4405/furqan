@@ -24,6 +24,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: const Center(child: Text('Hello Worldsssss')));
+    return Scaffold(
+      body: Center(
+        child: ElevatedButton(onPressed: () {}, child: Text('Get Surahs')),
+      ),
+    );
   }
 }
