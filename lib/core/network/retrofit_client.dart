@@ -24,7 +24,6 @@ abstract class ApiService {
   @GET("/{surahNo}.json")
   Future<SurahModel> getSurahWithAudioAndTranslation(
     @Path("surahNo") int surahNo,
-    @Path("language") String language,
   );
 
   //https://quranapi.pages.dev/api/tafsir/19_56.json

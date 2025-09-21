@@ -31,7 +31,7 @@ class _ApiService implements ApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/${Endpoints.allSurahs}',
+            '/surah.json',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -51,10 +51,7 @@ class _ApiService implements ApiService {
   }
 
   @override
-  Future<SurahModel> getSurahWithAudioAndTranslation(
-    int surahNo,
-    String language,
-  ) async {
+  Future<SurahModel> getSurahWithAudioAndTranslation(int surahNo) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
