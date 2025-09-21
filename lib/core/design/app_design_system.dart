@@ -201,7 +201,7 @@ class _BottomNavigationStyles {
   _BottomNavigationStyles();
 
   final background = Colors.white70;
-  final activeColor = Color(0xFF059669);
+  final activeColor = Color(0xFF10b981);
   final inactiveColor = Color(0xFF6b7280);
 }
 
