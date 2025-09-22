@@ -9,9 +9,8 @@ class Furqan extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: QuranTheme.light,
-      darkTheme: QuranTheme.dark,
-      themeMode: ThemeMode.system,
+      theme: AppTheme.darkTheme,
+      darkTheme: AppTheme.lightTheme,
       home: const RootPage(),
     );
   }

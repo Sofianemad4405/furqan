@@ -1,0 +1,86 @@
+import 'package:flutter/material.dart';
+import 'package:furqan/core/themes/theme_modes.dart';
+import 'package:furqan/core/themes/theme_provider.dart';
+
+PreferredSizeWidget buildAppBar(ThemeProvider themeProvider) {
+  return AppBar(
+    title: Row(
+      children: [
+        // Arabic Logo
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [AppTheme.emerald500, AppTheme.teal500],
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Center(
+            child: Text(
+              'ق',
+              style: TextStyle(
+                fontFamily: 'Amiri',
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        const Text('Al-Quran Kareem'),
+      ],
+    ),
+    actions: [
+      // Theme Toggle
+      IconButton(
+        onPressed: () => themeProvider.toggleTheme(),
+        icon: Icon(themeProvider.getThemeIcon()),
+        tooltip: themeProvider.getThemeName(),
+      ),
+
+      // Language Toggle
+      PopupMenuButton<String>(
+        onSelected: (String languageCode) {
+          themeProvider.setLanguage(languageCode);
+        },
+        itemBuilder: (BuildContext context) => [
+          const PopupMenuItem(
+            value: 'en',
+            child: Row(
+              children: [Text('🇺🇸'), SizedBox(width: 8), Text('English')],
+            ),
+          ),
+          const PopupMenuItem(
+            value: 'ar',
+            child: Row(
+              children: [Text('🇸🇦'), SizedBox(width: 8), Text('العربية')],
+            ),
+          ),
+          const PopupMenuItem(
+            value: 'ur',
+            child: Row(
+              children: [Text('🇵🇰'), SizedBox(width: 8), Text('اردو')],
+            ),
+          ),
+          const PopupMenuItem(
+            value: 'bn',
+            child: Row(
+              children: [Text('🇧🇩'), SizedBox(width: 8), Text('বাংলা')],
+            ),
+          ),
+          const PopupMenuItem(
+            value: 'uz',
+            child: Row(
+              children: [Text('🇺🇿'), SizedBox(width: 8), Text('O\'zbek')],
+            ),
+          ),
+        ],
+        child: const Icon(Icons.language),
+      ),
+    ],
+    backgroundColor: Colors.transparent,
+    elevation: 0,
+  );
+}

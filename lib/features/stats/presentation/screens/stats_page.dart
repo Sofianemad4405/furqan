@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class StatsPage extends StatefulWidget {
-  const StatsPage({super.key});
+class StatsScreen extends StatefulWidget {
+  const StatsScreen({super.key});
 
   @override
-  State<StatsPage> createState() => _StatsPageState();
+  State<StatsScreen> createState() => _StatsScreenState();
 }
 
-class _StatsPageState extends State<StatsPage> {
+class _StatsScreenState extends State<StatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [Text("Stats")]);
