@@ -359,7 +359,7 @@ class GlassEffects {
         BoxShadow(
           color: LightColors.glassCardShadow,
           blurRadius: 20,
-          offset: const Offset(0, 8),
+          offset: Offset(0, 8),
         ),
       ],
     );

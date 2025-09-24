@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furqan/app/root_page.dart';
-import 'package:furqan/core/themes/theme_modes.dart';
+import 'package:furqan/core/themes/theme_system.dart';
 
 class Furqan extends StatelessWidget {
   const Furqan({super.key});
@@ -9,8 +9,8 @@ class Furqan extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      darkTheme: AppTheme.lightTheme,
+      theme: QuranAppTheme.lightTheme,
+      darkTheme: QuranAppTheme.darkTheme,
       home: const RootPage(),
     );
   }

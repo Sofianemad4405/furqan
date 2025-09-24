@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/core/themes/theme_modes.dart';
 import 'package:furqan/core/themes/theme_provider.dart';
+import 'package:furqan/core/themes/theme_system.dart';
 
 PreferredSizeWidget buildAppBar(ThemeProvider themeProvider) {
   return AppBar(
@@ -12,7 +12,7 @@ PreferredSizeWidget buildAppBar(ThemeProvider themeProvider) {
           height: 40,
           decoration: BoxDecoration(
             gradient: const LinearGradient(
-              colors: [AppTheme.emerald500, AppTheme.teal500],
+              colors: [QuranAppTheme.emerald500, QuranAppTheme.teal500],
             ),
             borderRadius: BorderRadius.circular(12),
           ),

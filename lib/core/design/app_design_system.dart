@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 /// Root Design System
 class QuranDesignSystem {
   static final colors = _AppColors();
-  static final typography = _AppTypography();
-  static final spacing = _AppSpacing();
-  static final radius = _AppRadius();
-  static final shadows = _AppShadows();
+  static const typography = _AppTypography();
+  static const spacing = _AppSpacing();
+  static const radius = _AppRadius();
+  static const shadows = _AppShadows();
   static final components = _AppComponents();
   static const animations = _AppAnimations();
   static const gradients = _AppGradients();
@@ -19,7 +19,7 @@ class QuranDesignSystem {
 class _AppColors {
   _AppColors();
 
-  final primary = _PrimaryColors();
+  final primary = const _PrimaryColors();
   final neutral = _NeutralColors();
   final semantic = _SemanticColors();
 }
@@ -47,23 +47,23 @@ class _PrimaryColors {
 class _NeutralColors {
   _NeutralColors();
 
-  final c50 = Color(0xFFf9fafb);
-  final c100 = Color(0xFFf3f4f6);
-  final c200 = Color(0xFFe5e7eb);
-  final c400 = Color(0xFF9ca3af);
-  final c500 = Color(0xFF6b7280);
-  final c700 = Color(0xFF374151);
-  final c800 = Color(0xFF1f2937);
-  final c900 = Color(0xFF111827);
+  final c50 = const Color(0xFFf9fafb);
+  final c100 = const Color(0xFFf3f4f6);
+  final c200 = const Color(0xFFe5e7eb);
+  final c400 = const Color(0xFF9ca3af);
+  final c500 = const Color(0xFF6b7280);
+  final c700 = const Color(0xFF374151);
+  final c800 = const Color(0xFF1f2937);
+  final c900 = const Color(0xFF111827);
 }
 
 class _SemanticColors {
   _SemanticColors();
 
-  final success = Color(0xFF10b981);
-  final warning = Color(0xFFf59e0b);
-  final error = Color(0xFFef4444);
-  final info = Color(0xFF3b82f6);
+  final success = const Color(0xFF10b981);
+  final warning = const Color(0xFFf59e0b);
+  final error = const Color(0xFFef4444);
+  final info = const Color(0xFF3b82f6);
 }
 
 /// ---------------- Typography ----------------
@@ -201,8 +201,8 @@ class _BottomNavigationStyles {
   _BottomNavigationStyles();
 
   final background = Colors.white70;
-  final activeColor = Color(0xFF10b981);
-  final inactiveColor = Color(0xFF6b7280);
+  final activeColor = const Color(0xFF10b981);
+  final inactiveColor = const Color(0xFF6b7280);
 }
 
 class _AyahCardStyles {
@@ -271,7 +271,7 @@ class _AppIcons {
 class _IslamicTheme {
   _IslamicTheme();
 
-  final green = Color(0xFF10b981);
-  final gold = Color(0xFFf59e0b);
-  final cream = Color(0xFFfef7ed);
+  final green = const Color(0xFF10b981);
+  final gold = const Color(0xFFf59e0b);
+  final cream = const Color(0xFFfef7ed);
 }
