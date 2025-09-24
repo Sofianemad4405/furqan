@@ -113,34 +113,44 @@ class _HomeScreenState extends State<HomeScreen>
                                     color:
                                         context.read<ThemeProvider>().isDarkMode
                                         ? QuranAppTheme
-                                              .darkStatCardColors['hasanat']!['background']!
+                                              .homeIconsContainersColorsDark[index]
                                         : QuranAppTheme
-                                              .lightStatCardColors['hasanat']!['background']!,
+                                              .homeIconsContainersColorsLight[index],
                                   ),
-                                  child: const Center(child: Text("📖")),
+                                  child: Center(
+                                    child: Text(
+                                      todayChallenges[index].challengeIcon,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.headlineMedium,
+                                    ),
+                                  ),
                                 ),
                                 const Gap(10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Complete a Sursah",
+                                      todayChallenges[index].challengeName,
                                       style: Theme.of(
                                         context,
-                                      ).textTheme.labelLarge,
+                                      ).textTheme.headlineMedium,
                                     ),
                                     Text(
-                                      "Read any complete Surah today",
+                                      todayChallenges[index].challengeDesc ??
+                                          "",
                                       style: Theme.of(
                                         context,
-                                      ).textTheme.labelSmall,
+                                      ).textTheme.bodyMedium,
                                     ),
                                   ],
                                 ),
                                 const Spacer(),
                                 Text(
-                                  "0/1",
-                                  style: Theme.of(context).textTheme.labelSmall,
+                                  "0/${todayChallenges[index].challengeCompletion}",
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.headlineMedium,
                                 ),
                               ],
                             ),
@@ -177,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Current Streak",
+                            "Current Stssssssssssreak",
                             style: Theme.of(context).textTheme.headlineMedium
                                 ?.copyWith(color: Colors.white),
                           ),
@@ -235,15 +245,15 @@ class _HomeScreenState extends State<HomeScreen>
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            challenges[index].challengeIcon,
+                            mainChallenges[index].challengeIcon,
                             style: const TextStyle(fontSize: 24),
                           ),
                           Text(
-                            challenges[index].challengeName,
+                            mainChallenges[index].challengeName,
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           Text(
-                            challenges[index].challengeDesc ??
+                            mainChallenges[index].challengeDesc ??
                                 "Start your journey",
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
@@ -292,3 +302,18 @@ class _HomeScreenState extends State<HomeScreen>
 // Complete 100 Tasbih
 
 // 0/100
+
+// Today's Challenges
+// 📖
+// Complete a Surah
+// Read any complete Surah today
+
+// 0/1
+// ❤️
+// Act of Kindness
+// Perform one act of charity or kindness
+
+// 0/1
+// 📖
+// Read 5 Ayahs
+// Read at least 5 Ayahs with reflection

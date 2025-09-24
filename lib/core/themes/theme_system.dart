@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,6 +27,21 @@ class QuranAppTheme {
   static const Color emerald900 = Color(0xFF064E3B);
   static const Color emerald950 = Color(0xFF022C22);
   static const Color green = Color(0xff00B578);
+
+  ///home icons containers colors (light Theme)
+
+  static const List<Color> homeIconsContainersColorsLight = [
+    Color(0xffC8F0DC),
+    Color(0xffD2E1F4),
+    Color(0xffF9E7F9),
+  ];
+
+  ///home icons containers colors (dark Theme)
+  static const List<Color> homeIconsContainersColorsDark = [
+    Color(0xff133236),
+    Color(0xff1B2B4E),
+    Color(0xff143236),
+  ];
 
   // Teal Colors (Secondary Islamic Green)
   static const Color teal50 = Color(0xFFF0FDFA);
