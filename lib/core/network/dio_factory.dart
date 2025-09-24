@@ -5,7 +5,7 @@ class DioFactory {
   Dio getDio() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: Constants.baseUrl,
+        baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 20),
         receiveTimeout: const Duration(seconds: 20),
         // headers: {"Content-Type": "application/json"},

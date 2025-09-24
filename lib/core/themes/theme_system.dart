@@ -24,6 +24,7 @@ class QuranAppTheme {
   static const Color emerald800 = Color(0xFF065F46);
   static const Color emerald900 = Color(0xFF064E3B);
   static const Color emerald950 = Color(0xFF022C22);
+  static const Color green = Color(0xff00B578);
 
   // Teal Colors (Secondary Islamic Green)
   static const Color teal50 = Color(0xFFF0FDFA);
@@ -57,6 +58,7 @@ class QuranAppTheme {
   static const Color gray200 = Color(0xFFE5E7EB);
   static const Color gray300 = Color(0xFFD1D5DB);
   static const Color gray400 = Color(0xFF9CA3AF);
+  static const Color gray450 = Color(0xFFC2C4C7);
   static const Color gray500 = Color(0xFF6B7280);
   static const Color gray600 = Color(0xFF4B5563);
   static const Color gray700 = Color(0xFF374151);
@@ -730,50 +732,50 @@ class QuranAppTheme {
   /// Light mode stat card colors
   static const Map<String, Map<String, Color>> lightStatCardColors = {
     'hasanat': {
-      'background': Color(0xFFF0FDF4), // green-50
-      'border': Color(0xFFBBF7D0), // green-200
-      'icon': Color(0xFF16A34A), // green-600
-      'text': Color(0xFF15803D), // green-700
-      'number': Color(0xFF166534), // green-800
+      'background': Color(0xFFF5F0E3), // green-50
+      'border': Color(0xFFF5E780), // green-200
+      'icon': Color(0xFFC88200), // green-600
+      'text': Color(0xFFC88200), // green-700
+      'number': Color(0xFF9F5B00), // green-800
     },
     'surahs': {
-      'background': emerald50,
-      'border': emerald200,
-      'icon': emerald600,
-      'text': emerald700,
-      'number': emerald900,
+      'background': Color(0xFFEAFAF3),
+      'border': Color(0xFFA2F1CD),
+      'icon': Color(0xFFC88200),
+      'text': Color(0xFF007552),
+      'number': Color(0xFF007552),
     },
     'minutes': {
-      'background': teal50,
-      'border': teal200,
-      'icon': teal600,
-      'text': teal700,
-      'number': teal900,
+      'background': Color(0xFFF2E9F1),
+      'border': Color(0xFFE2CDF7),
+      'icon': Color(0xFF7D00D2),
+      'text': Color(0xFF7D00D2),
+      'number': Color(0xFF7D00D2),
     },
   };
 
   /// Dark mode stat card colors
   static const Map<String, Map<String, Color>> darkStatCardColors = {
     'hasanat': {
-      'background': Color(0xFF14532D), // green-900
-      'border': Color(0xFF166534), // green-800
+      'background': Color(0xFF282226), // green-900
+      'border': Color(0xFF844800), // green-800
       'icon': Color(0xFF22C55E), // green-500
-      'text': Color(0xFF4ADE80), // green-400
-      'number': Color(0xFF86EFAC), // green-300
+      'text': Color(0xFFF5D61F), // green-400
+      'number': Color(0xFFF5D61F), // green-300
     },
     'surahs': {
-      'background': emerald950,
-      'border': emerald900,
-      'icon': emerald500,
-      'text': emerald400,
-      'number': emerald300,
+      'background': Color(0xFF122731),
+      'border': Color(0xFF005C42),
+      'icon': Color(0xFF00CC8C),
+      'text': Color(0xFF00CC8C),
+      'number': Color(0xFF00CC8C),
     },
     'minutes': {
-      'background': teal950,
-      'border': teal900,
-      'icon': teal500,
-      'text': teal400,
-      'number': teal300,
+      'background': Color(0xFF2D2239),
+      'border': Color(0xFF6A10A9),
+      'icon': Color(0xFF6A10A9),
+      'text': Color(0xFF2D233B),
+      'number': Color(0xFFD1ABF5),
     },
   };
 
@@ -815,15 +817,15 @@ class QuranAppTheme {
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ?? Colors.white.withOpacity(0.1),
-        width: 1,
+        width: 2,
       ),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.3),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-      ],
+      // boxShadow: [
+      //   BoxShadow(
+      //     color: Colors.black.withOpacity(0.3),
+      //     blurRadius: 20,
+      //     offset: const Offset(0, 8),
+      //   ),
+      // ],
     );
   }
 

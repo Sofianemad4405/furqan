@@ -6,7 +6,7 @@ import 'package:furqan/core/themes/theme_provider.dart';
 Future<void> main() async {
   runApp(
     BlocProvider(
-      create: (context) => ThemeProvider(ThemeMode.light),
+      create: (context) => ThemeProvider(ThemeMode.dark),
       child: const Furqan(),
     ),
   );

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:furqan/core/themes/theme_provider.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/core/widgets/custom_nav_bar.dart';
 import 'package:furqan/features/chat/presentation/screens/chat_screen.dart';
@@ -24,10 +26,15 @@ class _RootPageState extends State<RootPage> {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: QuranAppTheme.darkScaffoldGradient.colors,
+          colors: context.watch<ThemeProvider>().isDarkMode
+              ? QuranAppTheme.darkScaffoldGradient.colors
+              : QuranAppTheme.lightScaffoldGradient.colors,
+          begin: AlignmentGeometry.topLeft,
+          end: AlignmentGeometry.bottomRight,
         ),
       ),
       child: Scaffold(
+        extendBody: true,
         body: _currentIndex == 0
             ? const HomeScreen()
             : _currentIndex == 1
@@ -39,9 +46,9 @@ class _RootPageState extends State<RootPage> {
             : _currentIndex == 4
             ? const ChatScreen()
             : const SettingsScreen(),
-        bottomNavigationBar: BottomAppBar(
-          color: Colors.transparent,
-          height: 100,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: GlassBottomNavigation(
             activeTab: TabType.values[_currentIndex],
             onTabChange: (TabType tab) {

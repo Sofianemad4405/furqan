@@ -10,7 +10,7 @@ import 'package:furqan/core/utils/parse_error_logger.dart';
 
 part 'retrofit_client.g.dart';
 
-@RestApi(baseUrl: Constants.baseUrl)
+@RestApi(baseUrl: baseUrl)
 abstract class ApiService {
   factory ApiService(
     Dio dio, {

@@ -11,6 +11,7 @@ class Furqan extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: QuranAppTheme.lightTheme,
       darkTheme: QuranAppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       home: const RootPage(),
     );
   }

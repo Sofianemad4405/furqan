@@ -11,9 +11,7 @@ PreferredSizeWidget buildAppBar(ThemeProvider themeProvider) {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [QuranAppTheme.emerald500, QuranAppTheme.teal500],
-            ),
+            gradient: const LinearGradient(colors: []),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Center(

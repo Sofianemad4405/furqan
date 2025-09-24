@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furqan/core/design/app_design_system.dart';
+import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/core/utils/constants_imgs.dart';
 
 enum TabType { home, reading, search, stats, chat, settings }
@@ -46,16 +47,7 @@ class GlassBottomNavigation extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
+      decoration: QuranAppTheme.darkGlassDecoration(),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
         child: Container(
@@ -103,8 +95,12 @@ class GlassBottomNavigation extends StatelessWidget {
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                   colors: [
-                                    const Color(0xFF10B981).withOpacity(0.07),
-                                    const Color(0xFF14B8A6).withOpacity(0.07),
+                                    const Color(
+                                      0xFF10B981,
+                                    ).withValues(alpha: 0.07),
+                                    const Color(
+                                      0xFF14B8A6,
+                                    ).withValues(alpha: 0.07),
                                   ],
                                 )
                               : null,
