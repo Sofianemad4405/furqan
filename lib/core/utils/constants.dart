@@ -1,3 +1,4 @@
+import 'package:furqan/features/home/presentation/models/challenge_model.dart';
 import 'package:furqan/features/home/presentation/models/stat_model.dart';
 import 'package:furqan/features/home/presentation/screens/home_screen.dart';
 
@@ -12,9 +13,13 @@ const String uzbek = "uzbek";
 ///days chars
 const List<String> days = ["SU", "M", "T", "W", "TH", "F", "SA"];
 
-///Home Stats
-final Map<String, String> homeStats = {
-  "Hasanat": "🌙",
-  "Surahs": "🌙",
-  "Minutes": "🌙",
-};
+List<ChallengeModel> challenges = [
+  ChallengeModel(
+    challengeIcon: "📚",
+    challengeName: "Continue Reading",
+    challengeDesc: "Start your journey",
+  ),
+  ChallengeModel(challengeIcon: "🤲", challengeName: "Duas"),
+  ChallengeModel(challengeIcon: "✨", challengeName: "Dhikr Counter"),
+  ChallengeModel(challengeIcon: "🕌", challengeName: "Prayer Times"),
+];
