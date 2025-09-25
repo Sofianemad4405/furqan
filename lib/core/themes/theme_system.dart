@@ -811,7 +811,7 @@ class QuranAppTheme {
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ?? Colors.white.withOpacity(0.2),
-        width: 1,
+        width: 0.5,
       ),
       boxShadow: [
         BoxShadow(
@@ -834,7 +834,7 @@ class QuranAppTheme {
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ?? Colors.white.withOpacity(0.1),
-        width: 2,
+        width: 0.9,
       ),
       // boxShadow: [
       //   BoxShadow(
