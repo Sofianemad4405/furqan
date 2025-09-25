@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:furqan/core/themes/theme_provider.dart';
+import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
@@ -19,7 +19,7 @@ class TodayChallengesListView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: CustomContainer(
-            isDarkMood: context.read<ThemeProvider>().isDarkMode,
+            isDarkMood: context.read<ThemeCubit>().isDarkMood(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
               child: Column(
@@ -31,7 +31,7 @@ class TodayChallengesListView extends StatelessWidget {
                         width: 40,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: context.read<ThemeProvider>().isDarkMode
+                          color: context.read<ThemeCubit>().isDarkMood()
                               ? QuranAppTheme
                                     .homeIconsContainersColorsDark[index]
                               : QuranAppTheme

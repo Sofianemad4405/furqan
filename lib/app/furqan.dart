@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/app/root_page.dart';
+import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 
 class Furqan extends StatelessWidget {
@@ -7,12 +9,16 @@ class Furqan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: QuranAppTheme.lightTheme,
-      darkTheme: QuranAppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      home: const RootPage(),
+    return BlocBuilder<ThemeCubit, ThemeMode>(
+      builder: (context, state) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: QuranAppTheme.darkTheme,
+          darkTheme: QuranAppTheme.darkTheme,
+          themeMode: state,
+          home: const RootPage(),
+        );
+      },
     );
   }
 }

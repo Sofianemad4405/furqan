@@ -1,7 +1,4 @@
-import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/models/challenge_model.dart';
-import 'package:furqan/features/home/presentation/models/stat_model.dart';
-import 'package:furqan/features/home/presentation/screens/home_screen.dart';
 
 const String baseUrl = "https://quranapi.pages.dev/api";
 const String arabic1 = "arabic1";
