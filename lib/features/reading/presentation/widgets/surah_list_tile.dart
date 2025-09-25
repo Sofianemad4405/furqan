@@ -16,10 +16,7 @@ class SurahListTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: QuranAppTheme.containerBorderLight,
-            width: 1.2,
-          ),
+          border: Border.all(color: QuranAppTheme.gray600, width: 0.3),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
@@ -35,8 +32,8 @@ class SurahListTile extends StatelessWidget {
                         width: 25,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: QuranAppTheme.containerBorderLight,
-                            width: 1.2,
+                            color: QuranAppTheme.gray600,
+                            width: .5,
                           ),
                           borderRadius: BorderRadius.circular(6),
                         ),
@@ -66,7 +63,7 @@ class SurahListTile extends StatelessWidget {
                 surah.surahNameArabic,
                 style: const TextStyle(
                   fontFamily: 'Amiri',
-                  color: Colors.green,
+                  color: QuranAppTheme.green,
                 ),
               ),
             ],

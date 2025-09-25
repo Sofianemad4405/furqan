@@ -27,6 +27,10 @@ class ReadingCubit extends Cubit<ReadingState> {
     emit(ChoosingMode(surahNo: surahNo, surahName: surahName));
   }
 
+  void toggleToSurahSelectionMode() {
+    emit(ReadingInitial());
+  }
+
   Future<SurahEntity> getSurah(int surahNo) async {
     final surah = await _readingRepo.getSurahWithAudioAndTranslation(surahNo);
     return surah;

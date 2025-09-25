@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
-import 'package:furqan/features/reading/presentation/widgets/choosing_mode_view.dart';
+import 'package:furqan/features/reading/presentation/screens/choosing_mode_page.dart';
 import 'package:furqan/features/reading/presentation/widgets/surah_list_tile.dart';
 import 'package:gap/gap.dart';
 
@@ -178,7 +178,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
               ],
             );
           } else if (state is ChoosingMode) {
-            return ChoosingModeView(
+            return ChoosingModePage(
               surahNo: state.surahNo,
               surahName: state.surahName,
             );
