@@ -27,6 +27,8 @@ class QuranAppTheme {
   static const Color emerald900 = Color(0xFF064E3B);
   static const Color emerald950 = Color(0xFF022C22);
   static const Color green = Color(0xff00B578);
+  static const Color containerBorderDark = Color(0xff0A0A0A);
+  static const Color containerBorderLight = Color(0xffDCDCDC);
 
   ///home icons containers colors (light Theme)
 
