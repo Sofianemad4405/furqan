@@ -16,9 +16,11 @@ class CustomContainer extends StatelessWidget {
       decoration: QuranAppTheme.adaptiveGlassDecoration(
         context,
         backgroundColor: isDarkMood
-            ? QuranAppTheme.gray900
+            ? QuranAppTheme.gray800
             : QuranAppTheme.gray50,
-        borderColor: QuranAppTheme.gray400,
+        borderColor: isDarkMood
+            ? const Color(0xff21252A)
+            : QuranAppTheme.gray400,
         borderRadius: 16,
       ),
       child: child,

@@ -39,7 +39,7 @@ class _RootPageState extends State<RootPage> {
           title: const Text("Furqan"),
           actions: [
             IconButton(
-              icon: const Icon(Icons.notifications),
+              icon: const Icon(Icons.notifications, color: Colors.red),
               onPressed: () {
                 log("toggling");
                 context.read<ThemeCubit>().toggleTheme();

@@ -13,7 +13,7 @@ class Furqan extends StatelessWidget {
       builder: (context, state) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: QuranAppTheme.darkTheme,
+          theme: QuranAppTheme.lightTheme,
           darkTheme: QuranAppTheme.darkTheme,
           themeMode: state,
           home: const RootPage(),
