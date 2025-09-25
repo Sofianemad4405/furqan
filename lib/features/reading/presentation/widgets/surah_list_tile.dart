@@ -1,48 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:gap/gap.dart';
 
 class SurahListTile extends StatelessWidget {
-  const SurahListTile({super.key});
+  const SurahListTile({super.key, required this.surah});
+  final SurahBaseEntity surah;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 30,
-      decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: Border.all(color: Theme.of(context).cardColor),
-      ),
-      child: Row(
-        children: [
-          Column(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Container(
+        height: 70,
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: QuranAppTheme.containerBorderLight,
+            width: 1.2,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+          child: Row(
             children: [
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    height: 20,
-                    width: 20,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Theme.of(context).cardColor.withOpacity(0.5),
+                  Row(
+                    children: [
+                      Container(
+                        height: 25,
+                        width: 25,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: QuranAppTheme.containerBorderLight,
+                            width: 1.2,
+                          ),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Center(
+                          child: Text(
+                            surah.surahNumber.toString(),
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                        ),
                       ),
-                    ),
-                    child: Center(child: Text("1")),
+                      const Gap(5),
+                      Text(
+                        surah.surahName,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ],
                   ),
-                  Gap(20),
+                  const Spacer(),
                   Text(
-                    "Al-Fatiha",
-                    style: Theme.of(context).textTheme.displaySmall,
+                    "${surah.surahNameTranslation} . ${surah.totalAyah} Ayahs",
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
+              const Spacer(),
+              Text(
+                surah.surahNameArabic,
+                style: const TextStyle(
+                  fontFamily: 'Amiri',
+                  color: Colors.green,
+                ),
+              ),
             ],
           ),
-          Spacer(),
-          Text("الفاتحة"),
-        ],
+        ),
       ),
     );
   }

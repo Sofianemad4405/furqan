@@ -1,3 +1,4 @@
+import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/models/audio_model.dart';
 import 'package:furqan/core/models/surah_base.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -36,4 +37,25 @@ class SurahModel extends SurahBase {
       _$SurahModelFromJson(json);
   @override
   Map<String, dynamic> toJson() => _$SurahModelToJson(this);
+  SurahEntity modelToEntity() {
+    return SurahEntity(
+      surahNo: surahNo,
+      surahName: surahName,
+      surahNameArabic: surahNameArabic,
+      surahNameArabicLong: surahNameArabicLong,
+      surahNameTranslation: surahNameTranslation,
+      revelationPlace: revelationPlace,
+      totalAyah: totalAyah,
+      surahAudio: surahAudio.map(
+        (key, value) => MapEntry(key, value.toEntity()),
+      ),
+      english: english,
+      arabic1: arabic1,
+      arabic2: arabic2,
+      bengali: bengali,
+      urdu: urdu,
+      turkish: turkish,
+      uzbek: uzbek,
+    );
+  }
 }

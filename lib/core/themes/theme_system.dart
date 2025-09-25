@@ -29,6 +29,8 @@ class QuranAppTheme {
   static const Color green = Color(0xff00B578);
   static const Color containerBorderDark = Color(0xff0A0A0A);
   static const Color containerBorderLight = Color(0xffDCDCDC);
+  static const Color readingModeContainerLight = Color(0xff009362);
+  static const Color listeningModeContainerLight = Color(0xffA133F1);
 
   ///home icons containers colors (light Theme)
 
@@ -130,6 +132,7 @@ class QuranAppTheme {
     );
 
     return ThemeData(
+      fontFamilyFallback: const ['Ubuntu', 'IBM Plex Sans Arabic', 'Amiri'],
       useMaterial3: true,
       colorScheme: lightColorScheme,
       fontFamily: 'System',
@@ -439,6 +442,7 @@ class QuranAppTheme {
     );
 
     return ThemeData(
+      fontFamilyFallback: const ['Ubuntu', 'IBM Plex Sans Arabic'],
       useMaterial3: true,
       colorScheme: darkColorScheme,
       fontFamily: 'System',
@@ -578,6 +582,7 @@ class QuranAppTheme {
       // ========================================
       textTheme: const TextTheme(
         displayLarge: TextStyle(
+          fontFamily: 'IBM Plex Sans Arabic',
           fontSize: 32,
           fontWeight: FontWeight.w700,
           color: gray50,

@@ -1,3 +1,4 @@
+import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'surah_base.g.dart';
 
@@ -21,4 +22,12 @@ class SurahBase {
   factory SurahBase.fromJson(Map<String, dynamic> json) =>
       _$SurahBaseFromJson(json);
   Map<String, dynamic> toJson() => _$SurahBaseToJson(this);
+  SurahBaseEntity baseToEntity() => SurahBaseEntity(
+    surahName: surahName,
+    surahNameArabic: surahNameArabic,
+    surahNameArabicLong: surahNameArabicLong,
+    surahNameTranslation: surahNameTranslation,
+    revelationPlace: revelationPlace,
+    totalAyah: totalAyah,
+  );
 }
