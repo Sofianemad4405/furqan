@@ -11,16 +11,14 @@ extension SurahMapper on SurahModel {
       surahNameTranslation: surahNameTranslation,
       revelationPlace: revelationPlace,
       totalAyah: totalAyah,
-      surahAudio: surahAudio.map((k, v) => MapEntry(k, v.url)),
-      translations: {
-        "english": english,
-        "arabic1": arabic1,
-        "arabic2": arabic2,
-        "bengali": bengali,
-        "urdu": urdu,
-        "turkish": turkish,
-        "uzbek": uzbek,
-      },
+      surahAudio: surahAudio.map((k, v) => MapEntry(k, v.toEntity())),
+      english: english,
+      arabic1: arabic1,
+      arabic2: arabic2,
+      bengali: bengali,
+      urdu: urdu,
+      turkish: turkish,
+      uzbek: uzbek,
     );
   }
 }
