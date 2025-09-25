@@ -14,7 +14,7 @@ class MainChallengesGridView extends StatelessWidget {
         mainAxisSpacing: 20,
         childAspectRatio: 1.5,
       ),
-      physics: const NeverScrollableScrollPhysics(), // يمنع سكول داخلي
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: 4,
       shrinkWrap: true,
       itemBuilder: (context, index) {

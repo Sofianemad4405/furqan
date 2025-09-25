@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/core/themes/theme_provider.dart';
-import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/features/home/presentation/widgets/current_streak.dart';
+import 'package:furqan/features/home/presentation/widgets/home_header.dart';
 import 'package:furqan/features/home/presentation/widgets/home_stats.dart';
 import 'package:furqan/features/home/presentation/widgets/main_challenges_grid_view.dart';
 import 'package:furqan/features/home/presentation/widgets/today.dart';
@@ -42,37 +42,7 @@ class _HomeScreenState extends State<HomeScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ///Header
-              Row(
-                children: [
-                  ///Welcome
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Welcome Back",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      ),
-                      const Gap(10),
-                      Text(
-                        "Continue your spiritual journey today",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: QuranAppTheme.gray400,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-
-                  ///Avatar Image
-                  const CircleAvatar(
-                    backgroundColor: QuranAppTheme.cyan300,
-                    child: Icon(
-                      Icons.notifications,
-                      color: QuranAppTheme.gray400,
-                    ),
-                  ),
-                ],
-              ),
+              const HomeHeader(),
               const Gap(10),
 
               ///Today View
@@ -80,16 +50,15 @@ class _HomeScreenState extends State<HomeScreen>
               const Gap(40),
 
               //// Home Stats
-              HomeStats(isDarkMode: context.read<ThemeProvider>().isDarkMode),
+              HomeStats(isDarkMode: context.read<ThemeCubit>().isDarkMood()),
               const Gap(30),
 
+              ///Today Challenges List View
               Text(
                 "Today's Challenges",
                 style: Theme.of(context).textTheme.displaySmall,
               ),
               const Gap(10),
-
-              ///Today Challenges List View
               const TodayChallengesListView(),
               const Gap(20),
 

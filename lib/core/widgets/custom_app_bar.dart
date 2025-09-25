@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/core/themes/theme_provider.dart';
-import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 
-PreferredSizeWidget buildAppBar(ThemeProvider themeProvider) {
+PreferredSizeWidget buildAppBar(ThemeCubit themeProvider) {
   return AppBar(
     title: Row(
       children: [
@@ -34,15 +33,17 @@ PreferredSizeWidget buildAppBar(ThemeProvider themeProvider) {
       // Theme Toggle
       IconButton(
         onPressed: () => themeProvider.toggleTheme(),
-        icon: Icon(themeProvider.getThemeIcon()),
-        tooltip: themeProvider.getThemeName(),
+        icon: Icon(
+          themeProvider.isDarkMood() ? Icons.dark_mode : Icons.light_mode,
+        ),
+        tooltip: themeProvider.isDarkMood() ? 'Dark Mode' : 'Light Mode',
       ),
 
       // Language Toggle
       PopupMenuButton<String>(
-        onSelected: (String languageCode) {
-          themeProvider.setLanguage(languageCode);
-        },
+        // onSelected: (String languageCode) {
+        //   themeProvider.setLanguage(languageCode);
+        // },
         itemBuilder: (BuildContext context) => [
           const PopupMenuItem(
             value: 'en',
