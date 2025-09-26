@@ -6,8 +6,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
+import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
+import 'package:furqan/features/reading/presentation/widgets/verse_card.dart';
 import 'package:gap/gap.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -22,7 +24,6 @@ class ReadingSurah extends StatefulWidget {
 
 class _ReadingSurahState extends State<ReadingSurah> {
   int ayahNumber = 1;
-  bool isPlaying = false;
   final player = AudioPlayer();
 
   List<AudioEntity> surahVerses = [];
@@ -105,105 +106,90 @@ class _ReadingSurahState extends State<ReadingSurah> {
               ),
             ),
             const Gap(50),
-            BlocBuilder<ThemeCubit, ThemeMode>(
-              builder: (context, state) {
-                return CustomContainer(
-                  isDarkMood: state == ThemeMode.dark,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(
-                              Icons.save_outlined,
-                              color: state == ThemeMode.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                            ),
-                            Icon(
-                              Icons.favorite_border,
-                              color: state == ThemeMode.dark
-                                  ? Colors.white
-                                  : Colors.black,
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  widget.surah.surahName,
-                                  style: Theme.of(context).textTheme.titleSmall
-                                      ?.copyWith(
-                                        color: const Color(0xff1D6E58),
-                                      ),
+            VerseCard(
+              surah: widget.surah,
+              ayahNumber: ayahNumber,
+              player: player,
+              surahVerses: surahVerses,
+            ),
+            const Gap(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ///Previous Ayah
+                GestureDetector(
+                  onTap: () {
+                    if (ayahNumber > 1) {
+                      setState(() {
+                        ayahNumber--;
+                      });
+                    }
+                  },
+                  child: CustomContainer(
+                    isDarkMood: state == ThemeMode.dark,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.arrow_back_ios, size: 12),
+                          const Gap(10),
+                          Text(
+                            "Previous",
+                            style: Theme.of(context).textTheme.labelLarge
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                 ),
-                                Text(
-                                  "Ayah $ayahNumber",
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                if (isPlaying) {
-                                  await player.pause();
-                                } else {
-                                  try {
-                                    await player.setUrl(
-                                      surahVerses[ayahNumber - 1].url,
-                                    );
-                                    await player.play();
-                                  } catch (e) {
-                                    log("${e.toString()} ${e.runtimeType}");
-                                  }
-                                }
-                                setState(() {
-                                  isPlaying = !isPlaying;
-                                });
-                              },
-                              child: SvgPicture.asset(
-                                "assets/svgs/volume2-icon.svg",
-                                colorFilter: ColorFilter.mode(
-                                  Theme.of(context).colorScheme.onSurface,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
-                            ),
-                            SvgPicture.asset(
-                              "assets/svgs/bookopen-icon.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.onSurface,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Gap(50),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              widget.surah.arabic1[ayahNumber - 1],
-                              style: Theme.of(context).textTheme.bodyLarge
-                                  ?.copyWith(fontFamily: "Amiri", fontSize: 24),
-                              maxLines: 90,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                        const Gap(50),
-                        const Divider(thickness: 1),
-                        const Gap(20),
-                        Text(
-                          widget.surah.english[ayahNumber - 1],
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                );
-              },
+                ),
+                Text("$ayahNumber of ${widget.surah.totalAyah}"),
+
+                ///Next Ayah
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (ayahNumber < widget.surah.totalAyah) {
+                        ayahNumber++;
+                      }
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: QuranAppTheme.green,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          Text(
+                            "Next",
+                            style: Theme.of(context).textTheme.labelLarge
+                                ?.copyWith(color: Colors.white),
+                          ),
+                          const Gap(10),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 12,
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         );
