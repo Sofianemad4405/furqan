@@ -24,6 +24,8 @@ final class ErrorChoosingSurah extends ReadingState {
   const ErrorChoosingSurah({required this.message});
 }
 
+////choosing mode
+
 final class ChoosingMode extends ReadingState {
   final int surahNo;
   final String surahName;
@@ -31,16 +33,32 @@ final class ChoosingMode extends ReadingState {
   const ChoosingMode({required this.surahNo, required this.surahName});
 }
 
-final class SurahLoading extends ReadingState {}
+////listening mode
+final class SurahLoadingInListeningMode extends ReadingState {}
 
-final class SurahLoaded extends ReadingState {
+final class SurahLoadedInListeningMode extends ReadingState {
   final SurahEntity surah;
 
-  const SurahLoaded({required this.surah});
+  const SurahLoadedInListeningMode({required this.surah});
 }
 
-final class ErrorSurah extends ReadingState {
+final class ErrorSurahInListeningMode extends ReadingState {
   final String message;
 
-  const ErrorSurah({required this.message});
+  const ErrorSurahInListeningMode({required this.message});
+}
+
+////reading mode
+final class SurahLoadingInReadingMode extends ReadingState {}
+
+final class SurahLoadedInReadingMode extends ReadingState {
+  final SurahEntity surah;
+
+  const SurahLoadedInReadingMode({required this.surah});
+}
+
+final class ErrorSurahInReadingMode extends ReadingState {
+  final String message;
+
+  const ErrorSurahInReadingMode({required this.message});
 }

@@ -18,9 +18,11 @@ VerseModel _$VerseModelFromJson(Map<String, dynamic> json) => VerseModel(
   totalAyah: (json['totalAyah'] as num).toInt(),
   ayahNo: (json['ayahNo'] as num).toInt(),
   surahNo: (json['surahNo'] as num).toInt(),
-  verseAudio: (json['verseAudio'] as Map<String, dynamic>).map(
-    (k, e) => MapEntry(k, AudioModel.fromJson(e as Map<String, dynamic>)),
-  ),
+  verseAudio: (json['verseAudio'] != null)
+      ? (json['verseAudio'] as Map<String, dynamic>).map(
+          (k, e) => MapEntry(k, AudioModel.fromJson(e as Map<String, dynamic>)),
+        )
+      : {},
 );
 
 Map<String, dynamic> _$VerseModelToJson(VerseModel instance) =>

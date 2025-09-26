@@ -725,7 +725,7 @@ class QuranAppTheme {
   static const LinearGradient darkScaffoldGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [emerald950, teal950, cyan950],
+    colors: [teal800, teal900, teal950],
   );
 
   /// Primary emerald gradient for buttons and accents

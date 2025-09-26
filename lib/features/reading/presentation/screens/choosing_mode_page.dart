@@ -41,55 +41,62 @@ class _ChoosingModePageState extends State<ChoosingModePage> {
         const Gap(20),
         BlocBuilder<ThemeCubit, ThemeMode>(
           builder: (context, state) {
-            return CustomContainer(
-              isDarkMood: state == ThemeMode.dark,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 24,
-                ),
-                child: Row(
-                  children: [
-                    Center(
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          color: state == ThemeMode.dark
-                              ? QuranAppTheme.readingModeContainerLight
-                                    .withValues(alpha: 0.2)
-                              : QuranAppTheme.readingModeContainerLight
-                                    .withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Center(
-                          child: SvgPicture.asset(
-                            "assets/svgs/bookopen-icon.svg",
-                            colorFilter: ColorFilter.mode(
-                              state == ThemeMode.dark
-                                  ? QuranAppTheme.readingModeContainerLight
-                                  : QuranAppTheme.readingModeContainerLight,
-                              BlendMode.srcIn,
+            return GestureDetector(
+              onTap: () {
+                context.read<ReadingCubit>().getSurahWithAudioAndTranslation(
+                  widget.surahNo,
+                );
+              },
+              child: CustomContainer(
+                isDarkMood: state == ThemeMode.dark,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
+                  child: Row(
+                    children: [
+                      Center(
+                        child: Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                            color: state == ThemeMode.dark
+                                ? QuranAppTheme.readingModeContainerLight
+                                      .withValues(alpha: 0.2)
+                                : QuranAppTheme.readingModeContainerLight
+                                      .withValues(alpha: 0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: SvgPicture.asset(
+                              "assets/svgs/bookopen-icon.svg",
+                              colorFilter: ColorFilter.mode(
+                                state == ThemeMode.dark
+                                    ? QuranAppTheme.readingModeContainerLight
+                                    : QuranAppTheme.readingModeContainerLight,
+                                BlendMode.srcIn,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    const Gap(20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Reading Mode",
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        Text(
-                          "Read at your own pace with\ntranslations",
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ],
+                      const Gap(20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Reading Mode",
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          Text(
+                            "Read at your own pace with\ntranslations",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

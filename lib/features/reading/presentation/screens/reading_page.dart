@@ -4,6 +4,8 @@ import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:furqan/features/reading/presentation/screens/choosing_mode_page.dart';
+import 'package:furqan/features/reading/presentation/screens/listening_to_surah.dart';
+import 'package:furqan/features/reading/presentation/screens/reading_surah.dart';
 import 'package:furqan/features/reading/presentation/widgets/surah_list_tile.dart';
 import 'package:gap/gap.dart';
 
@@ -182,6 +184,14 @@ class _ReadingScreenState extends State<ReadingScreen> {
               surahNo: state.surahNo,
               surahName: state.surahName,
             );
+          } else if (state is SurahLoadingInReadingMode) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is SurahLoadedInReadingMode) {
+            return ReadingSurah(surah: state.surah);
+          } else if (state is ErrorSurahInReadingMode) {
+            return Text(state.message);
+          } else if (state is SurahLoadedInListeningMode) {
+            return ListeningToSurah(surah: state.surah);
           } else {
             return Text("data");
           }

@@ -14,15 +14,29 @@ SurahModel _$SurahModelFromJson(Map<String, dynamic> json) => SurahModel(
   revelationPlace: json['revelationPlace'] as String,
   totalAyah: (json['totalAyah'] as num).toInt(),
   surahNo: (json['surahNo'] as num).toInt(),
-  surahAudio: (json['surahAudio'] as Map<String, dynamic>).map(
-    (k, e) => MapEntry(k, AudioModel.fromJson(e as Map<String, dynamic>)),
-  ),
-  english: (json['english'] as List<dynamic>).map((e) => e as String).toList(),
-  arabic1: (json['arabic1'] as List<dynamic>).map((e) => e as String).toList(),
-  arabic2: (json['arabic2'] as List<dynamic>).map((e) => e as String).toList(),
-  bengali: (json['bengali'] as List<dynamic>).map((e) => e as String).toList(),
-  urdu: (json['urdu'] as List<dynamic>).map((e) => e as String).toList(),
-  turkish: (json['turkish'] as List<dynamic>).map((e) => e as String).toList(),
+  surahAudio: (json['surahAudio'] != null)
+      ? (json['surahAudio'] as Map<String, dynamic>).map(
+          (k, e) => MapEntry(k, AudioModel.fromJson(e as Map<String, dynamic>)),
+        )
+      : {},
+  english: (json['english'] != null)
+      ? (json['english'] as List<dynamic>).map((e) => e as String).toList()
+      : [],
+  arabic1: (json['arabic1'] != null)
+      ? (json['arabic1'] as List<dynamic>).map((e) => e as String).toList()
+      : [],
+  arabic2: (json['arabic2'] != null)
+      ? (json['arabic2'] as List<dynamic>).map((e) => e as String).toList()
+      : [],
+  bengali: (json['bengali'] != null)
+      ? (json['bengali'] as List<dynamic>).map((e) => e as String).toList()
+      : [],
+  urdu: (json['urdu'] != null)
+      ? (json['urdu'] as List<dynamic>).map((e) => e as String).toList()
+      : [],
+  turkish: (json['turkish'] != null)
+      ? (json['turkish'] as List<dynamic>).map((e) => e as String).toList()
+      : [],
   uzbek: (json['uzbek'] as List<dynamic>).map((e) => e as String).toList(),
 );
 
