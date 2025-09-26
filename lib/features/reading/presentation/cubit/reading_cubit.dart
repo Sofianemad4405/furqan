@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:furqan/features/reading/domain/reading_repo.dart';
@@ -27,18 +28,29 @@ class ReadingCubit extends Cubit<ReadingState> {
     emit(ChoosingMode(surahNo: surahNo, surahName: surahName));
   }
 
+  void toggleToSurahSelectionMode() {
+    emit(ReadingInitial());
+  }
+
   Future<SurahEntity> getSurah(int surahNo) async {
     final surah = await _readingRepo.getSurahWithAudioAndTranslation(surahNo);
     return surah;
   }
 
   Future<void> getSurahWithAudioAndTranslation(int surahNo) async {
-    emit(SurahLoading());
+    emit(SurahLoadingInReadingMode());
     try {
+      log("Sofian");
       final surah = await _readingRepo.getSurahWithAudioAndTranslation(surahNo);
-      emit(SurahLoaded(surah: surah));
+      emit(SurahLoadedInReadingMode(surah: surah));
     } catch (e) {
-      emit(ErrorSurah(message: e.toString()));
+      log(e.toString());
+      emit(ErrorSurahInReadingMode(message: e.toString()));
     }
+  }
+
+  Future<List<AudioEntity>> getVerseAudios(int surahNo, int ayahNo) async {
+    final audio = await _readingRepo.getVerseAudio(surahNo, ayahNo);
+    return audio.values.toList();
   }
 }

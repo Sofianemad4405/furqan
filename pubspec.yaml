@@ -33,6 +33,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^1.1.0
+  iconsax: ^0.0.8
   intl: ^0.18.1
   json_annotation: ^4.9.0
   just_audio: ^0.9.36
@@ -92,6 +93,3 @@ flutter:
           weight: 500
         - asset: assets/fonts/Ubuntu-Light.ttf
           weight: 300
-
-        
-  #

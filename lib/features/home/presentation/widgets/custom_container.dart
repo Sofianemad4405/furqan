@@ -21,7 +21,7 @@ class CustomContainer extends StatelessWidget {
         borderColor: isDarkMood
             ? const Color(0xff21252A)
             : QuranAppTheme.gray400,
-        borderRadius: 16,
+        borderRadius: 12,
       ),
       child: child,
     );
