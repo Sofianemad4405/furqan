@@ -98,6 +98,10 @@ class _VerseCardState extends State<VerseCard> {
                                 : "assets/svgs/volume2-icon.svg",
                             height: 24,
                             width: 24,
+                            colorFilter: ColorFilter.mode(
+                              Theme.of(context).colorScheme.onSurface,
+                              BlendMode.srcIn,
+                            ),
                           );
                         },
                       ),

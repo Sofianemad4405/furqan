@@ -1,8 +1,6 @@
-import 'dart:developer';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
@@ -25,13 +23,30 @@ class ReadingSurah extends StatefulWidget {
 class _ReadingSurahState extends State<ReadingSurah> {
   int ayahNumber = 1;
   final player = AudioPlayer();
+  int ayahsRead = 0;
 
   List<AudioEntity> surahVerses = [];
+  late Timer _timer;
+  int _seconds = 0;
 
   @override
   void initState() {
     getVersesAudios();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _seconds++;
+      });
+    });
     super.initState();
+  }
+
+  String formatTime(int totalSeconds) {
+    final hours = totalSeconds ~/ 3600;
+    final minutes = (totalSeconds % 3600) ~/ 60;
+    final seconds = totalSeconds % 60;
+    return "${hours.toString().padLeft(2, '0')}:"
+        "${minutes.toString().padLeft(2, '0')}:"
+        "${seconds.toString().padLeft(2, '0')}";
   }
 
   Future<void> getVersesAudios() async {
@@ -40,6 +55,13 @@ class _ReadingSurahState extends State<ReadingSurah> {
       ayahNumber,
     );
     surahVerses = audios;
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    player.dispose();
+    super.dispose();
   }
 
   @override
@@ -63,7 +85,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                       title: 'Reading\nTime',
                       iconColor: const Color(0xff598BF3),
                       topColumn: Text(
-                        '1:08',
+                        formatTime(_seconds),
                         style: Theme.of(context).textTheme.labelMedium,
                         textAlign: TextAlign.center,
                       ),
@@ -80,7 +102,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                       title: 'Ayahs\nRead',
                       iconColor: const Color(0xff27A57A),
                       topColumn: Text(
-                        '1:08',
+                        ayahsRead.toString(),
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
@@ -97,7 +119,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                       title: 'Hasanat',
                       iconColor: const Color(0xffDDB557),
                       topColumn: Text(
-                        '1:08',
+                        "${ayahsRead * 10}",
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ),
@@ -158,6 +180,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                     setState(() {
                       if (ayahNumber < widget.surah.totalAyah) {
                         ayahNumber++;
+                        ayahsRead++;
                       }
                     });
                   },
