@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
+import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax/iconsax.dart';
@@ -17,6 +18,7 @@ class ReadingSurah extends StatefulWidget {
 }
 
 class _ReadingSurahState extends State<ReadingSurah> {
+  int ayahNumber = 1;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeMode>(
@@ -80,15 +82,85 @@ class _ReadingSurahState extends State<ReadingSurah> {
                 ],
               ),
             ),
-            const Gap(10),
+            const Gap(50),
             BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (context, state) {
                 return CustomContainer(
                   isDarkMood: state == ThemeMode.dark,
-                  child: Column(children: [Row(children: [
-                        
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Icon(
+                              Icons.save_outlined,
+                              color: state == ThemeMode.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                            Icon(
+                              Icons.favorite_border,
+                              color: state == ThemeMode.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  widget.surah.surahName,
+                                  style: Theme.of(context).textTheme.titleSmall
+                                      ?.copyWith(
+                                        color: const Color(0xff1D6E58),
+                                      ),
+                                ),
+                                Text(
+                                  "Ayah $ayahNumber",
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                            SvgPicture.asset(
+                              "assets/svgs/volume2-icon.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.onSurface,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                            SvgPicture.asset(
+                              "assets/svgs/bookopen-icon.svg",
+                              colorFilter: ColorFilter.mode(
+                                Theme.of(context).colorScheme.onSurface,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Gap(50),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              widget.surah.arabic1[ayahNumber - 1],
+                              style: Theme.of(context).textTheme.bodyLarge
+                                  ?.copyWith(fontFamily: "Amiri", fontSize: 24),
+                              maxLines: 90,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                        const Gap(50),
+                        const Divider(thickness: 1),
+                        const Gap(20),
+                        Text(
+                          widget.surah.english[ayahNumber - 1],
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.center,
+                        ),
                       ],
-                    )]),
+                    ),
+                  ),
                 );
               },
             ),
