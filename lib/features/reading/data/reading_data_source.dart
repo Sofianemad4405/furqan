@@ -1,17 +1,25 @@
 import 'package:furqan/core/models/audio_model.dart';
 import 'package:furqan/core/models/surah_base.dart';
 import 'package:furqan/core/models/surah_model.dart';
+import 'package:furqan/core/models/verse_tafsir.dart';
 import 'package:furqan/core/network/retrofit_client.dart';
+import 'package:furqan/core/network/tafsir_client.dart';
 
 abstract class ReadingDataSource {
   Future<List<SurahBase>> getSurahs();
   Future<SurahModel> getSurahWithAudioAndTranslation(int surahNo);
   Future<Map<String, AudioModel>> getVerseAudio(int surahNo, int ayahNo);
+  Future<VerseTafsir> getVerseTafsir(
+    int tafseerId,
+    int surahNo,
+    int ayahNumber,
+  );
 }
 
 class ReadingDataSourceImpl implements ReadingDataSource {
   final ApiService _api;
-  ReadingDataSourceImpl(this._api);
+  final TafsirClient _tafsirClient;
+  ReadingDataSourceImpl(this._api, this._tafsirClient);
   @override
   Future<List<SurahBase>> getSurahs() async {
     try {
@@ -36,6 +44,24 @@ class ReadingDataSourceImpl implements ReadingDataSource {
   Future<Map<String, AudioModel>> getVerseAudio(int surahNo, int ayahNo) async {
     try {
       final response = await _api.getVerseAudio(surahNo, ayahNo);
+      return response;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<VerseTafsir> getVerseTafsir(
+    int tafseerId,
+    int surahNo,
+    int ayahNumber,
+  ) async {
+    try {
+      final response = await _tafsirClient.getVerseTafsir(
+        tafseerId,
+        surahNo,
+        ayahNumber,
+      );
       return response;
     } catch (e) {
       throw Exception(e.toString());

@@ -7,10 +7,10 @@ part of 'audio_model.dart';
 // **************************************************************************
 
 AudioModel _$AudioModelFromJson(Map<String, dynamic> json) => AudioModel(
-  reciter: json['reciter']?.toString() ?? '',
-  url: json['url']?.toString() ?? '',
-  originalUrl: json['originalUrl']?.toString() ?? '',
-);
+      reciter: json['reciter'] as String,
+      url: json['url'] as String,
+      originalUrl: json['originalUrl'] as String,
+    );
 
 Map<String, dynamic> _$AudioModelToJson(AudioModel instance) =>
     <String, dynamic>{

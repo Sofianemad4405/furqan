@@ -7,10 +7,10 @@ part of 'explain_model.dart';
 // **************************************************************************
 
 ExplainModel _$ExplainModelFromJson(Map<String, dynamic> json) => ExplainModel(
-  author: json['author'] as String,
-  groupVerse: json['groupVerse'] as String?,
-  content: json['content'] as String,
-);
+      author: json['author'] as String,
+      groupVerse: json['groupVerse'] as String?,
+      content: json['content'] as String,
+    );
 
 Map<String, dynamic> _$ExplainModelToJson(ExplainModel instance) =>
     <String, dynamic>{

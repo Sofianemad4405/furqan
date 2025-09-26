@@ -1,5 +1,6 @@
 import 'package:furqan/core/network/dio_factory.dart';
 import 'package:furqan/core/network/retrofit_client.dart';
+import 'package:furqan/core/network/tafsir_client.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/features/reading/data/reading_data_source.dart';
 import 'package:furqan/features/reading/domain/reading_repo.dart';
@@ -14,10 +15,15 @@ Future<void> init() async {
   sl.registerLazySingleton<ApiService>(
     () => ApiService(sl<DioFactory>().getDio()),
   );
+
+  sl.registerLazySingleton<TafsirClient>(
+    () => TafsirClient(sl<DioFactory>().getDio()),
+  );
+
   sl.registerLazySingleton<DioFactory>(() => DioFactory());
 
   sl.registerLazySingleton<ReadingDataSource>(
-    () => ReadingDataSourceImpl(sl<ApiService>()),
+    () => ReadingDataSourceImpl(sl<ApiService>(), sl<TafsirClient>()),
   );
 
   sl.registerLazySingleton<ReadingRepo>(
