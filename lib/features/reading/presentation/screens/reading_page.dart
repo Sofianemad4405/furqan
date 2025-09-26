@@ -193,7 +193,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
           } else if (state is SurahLoadedInListeningMode) {
             return ListeningToSurah(surah: state.surah);
           } else {
-            return Text("data");
+            return const Text("data");
           }
         },
       ),

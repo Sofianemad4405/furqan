@@ -5,12 +5,12 @@ part 'audio_model.g.dart';
 
 @JsonSerializable()
 class AudioModel {
-  final String recieter;
+  final String reciter;
   final String url;
   final String originalUrl;
 
   AudioModel({
-    required this.recieter,
+    required this.reciter,
     required this.url,
     required this.originalUrl,
   });
@@ -20,6 +20,6 @@ class AudioModel {
   Map<String, dynamic> toJson() => _$AudioModelToJson(this);
 
   AudioEntity toEntity() {
-    return AudioEntity(recieter: recieter, url: url, originalUrl: originalUrl);
+    return AudioEntity(recieter: reciter, url: url, originalUrl: originalUrl);
   }
 }

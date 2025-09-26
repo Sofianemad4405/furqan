@@ -1,12 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
-import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
+import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:gap/gap.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:just_audio/just_audio.dart';
 
 class ReadingSurah extends StatefulWidget {
   const ReadingSurah({super.key, required this.surah});
@@ -19,6 +22,25 @@ class ReadingSurah extends StatefulWidget {
 
 class _ReadingSurahState extends State<ReadingSurah> {
   int ayahNumber = 1;
+  bool isPlaying = false;
+  final player = AudioPlayer();
+
+  List<AudioEntity> surahVerses = [];
+
+  @override
+  void initState() {
+    getVersesAudios();
+    super.initState();
+  }
+
+  Future<void> getVersesAudios() async {
+    final audios = await context.read<ReadingCubit>().getVerseAudios(
+      widget.surah.surahNo,
+      ayahNumber,
+    );
+    surahVerses = audios;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeMode>(
@@ -121,11 +143,30 @@ class _ReadingSurahState extends State<ReadingSurah> {
                                 ),
                               ],
                             ),
-                            SvgPicture.asset(
-                              "assets/svgs/volume2-icon.svg",
-                              colorFilter: ColorFilter.mode(
-                                Theme.of(context).colorScheme.onSurface,
-                                BlendMode.srcIn,
+                            GestureDetector(
+                              onTap: () async {
+                                if (isPlaying) {
+                                  await player.pause();
+                                } else {
+                                  try {
+                                    await player.setUrl(
+                                      surahVerses[ayahNumber - 1].url,
+                                    );
+                                    await player.play();
+                                  } catch (e) {
+                                    log("${e.toString()} ${e.runtimeType}");
+                                  }
+                                }
+                                setState(() {
+                                  isPlaying = !isPlaying;
+                                });
+                              },
+                              child: SvgPicture.asset(
+                                "assets/svgs/volume2-icon.svg",
+                                colorFilter: ColorFilter.mode(
+                                  Theme.of(context).colorScheme.onSurface,
+                                  BlendMode.srcIn,
+                                ),
                               ),
                             ),
                             SvgPicture.asset(

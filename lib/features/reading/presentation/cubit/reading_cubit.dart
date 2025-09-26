@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:furqan/features/reading/domain/reading_repo.dart';
@@ -46,5 +47,10 @@ class ReadingCubit extends Cubit<ReadingState> {
       log(e.toString());
       emit(ErrorSurahInReadingMode(message: e.toString()));
     }
+  }
+
+  Future<List<AudioEntity>> getVerseAudios(int surahNo, int ayahNo) async {
+    final audio = await _readingRepo.getVerseAudio(surahNo, ayahNo);
+    return audio.values.toList();
   }
 }
