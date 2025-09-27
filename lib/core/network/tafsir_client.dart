@@ -15,9 +15,9 @@ abstract class TafsirClient {
     ParseErrorLogger? errorLogger,
   }) = _TafsirClient;
 
-  ///http://api.quran-tafseer.com/tafseer/1/1/1
   ///api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number}
-  @GET("/{tafseerId}/{surahNo}/{ayahNumber}")
+  ///http://api.quran-tafseer.com/tafseer/1/1/1
+  @GET("/tafseer/{tafseerId}/{surahNo}/{ayahNumber}")
   Future<VerseTafsir> getVerseTafsir(
     @Path("tafseerId") int tafseerId,
     @Path("surahNo") int surahNo,
@@ -25,6 +25,6 @@ abstract class TafsirClient {
   );
 
   ///http://api.quran-tafseer.com/tafseer/
-  @GET("/")
+  @GET("/tafseer/")
   Future<List<TafsirProvider>> getTafsirList();
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/reading/domain/entities/tafsir_provider_entity.dart';
 import 'package:gap/gap.dart';
 
@@ -7,9 +8,11 @@ class TafsirProviderTile extends StatefulWidget {
     super.key,
     required this.tafsirProvider,
     required this.children,
+    required this.isDark,
   });
   final TafsirProviderEntity tafsirProvider;
   final List<Widget> children;
+  final bool isDark;
 
   @override
   State<TafsirProviderTile> createState() => _TafsirProviderTileState();
@@ -31,10 +34,19 @@ class _TafsirProviderTileState extends State<TafsirProviderTile> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: _isExpanded
-                  ? const Color(0xff9EEAC7).withValues(alpha: 0.4)
-                  : const Color(0xff9EEAC7).withValues(alpha: 0.3),
-              border: Border.all(color: const Color(0xff9EEAC7), width: 0.8),
+              color: widget.isDark
+                  ? QuranAppTheme.tafsirContainerBorderDark.withValues(
+                      alpha: 0.4,
+                    )
+                  : QuranAppTheme.tafsirContainerBorderLight.withValues(
+                      alpha: 0.3,
+                    ),
+              border: Border.all(
+                color: widget.isDark
+                    ? QuranAppTheme.tafsirContainerBorderDark
+                    : QuranAppTheme.tafsirContainerBorderLight,
+                width: 0.8,
+              ),
               borderRadius: const BorderRadius.all(Radius.circular(8)),
             ),
             child: Row(

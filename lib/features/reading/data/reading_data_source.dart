@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:furqan/core/models/audio_model.dart';
 import 'package:furqan/core/models/surah_base.dart';
 import 'package:furqan/core/models/surah_model.dart';
@@ -58,14 +60,19 @@ class ReadingDataSourceImpl implements ReadingDataSource {
     int surahNo,
     int ayahNumber,
   ) async {
+    log(
+      "URL => http://api.quran-tafseer.com/tafseer/$tafseerId/$surahNo/$ayahNumber",
+    );
     try {
       final response = await _tafsirClient.getVerseTafsir(
         tafseerId,
         surahNo,
         ayahNumber,
       );
+      log("koko ${response.toString()}");
       return response;
     } catch (e) {
+      log("kokii ${e.toString()}");
       throw Exception(e.toString());
     }
   }

@@ -1,7 +1,7 @@
 import 'package:furqan/features/home/presentation/models/challenge_model.dart';
 
 const String baseUrl = "https://quranapi.pages.dev/api";
-const String tafsirBaseUrl = "http://api.quran-tafseer.com/tafseer";
+const String tafsirBaseUrl = "http://api.quran-tafseer.com";
 const String arabic1 = "arabic1";
 const String arabic2 = "arabic2";
 const String bengali = "bengali";

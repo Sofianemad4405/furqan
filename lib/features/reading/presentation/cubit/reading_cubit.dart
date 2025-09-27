@@ -59,12 +59,17 @@ class ReadingCubit extends Cubit<ReadingState> {
     int surahNo,
     int ayahNo,
   ) async {
-    final verseTafsir = await _readingRepo.getVerseTafsir(
-      tafseerId,
-      surahNo,
-      ayahNo,
-    );
-    return verseTafsir;
+    try {
+      final verseTafsir = await _readingRepo.getVerseTafsir(
+        tafseerId,
+        surahNo,
+        ayahNo,
+      );
+      return verseTafsir;
+    } catch (e) {
+      log(e.toString());
+      throw Exception(e.toString());
+    }
   }
 
   Future<List<TafsirProviderEntity>> getTafsirProviders() async {

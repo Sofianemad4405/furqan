@@ -31,6 +31,9 @@ class QuranAppTheme {
   static const Color containerBorderLight = Color(0xffDCDCDC);
   static const Color readingModeContainerLight = Color(0xff009362);
   static const Color listeningModeContainerLight = Color(0xffA133F1);
+  static const Color tafsirContainerBorderLight = Color(0xff9EEAC7);
+  static const Color tafsirContainerBorderDark = Color(0xff005C42);
+  static const Color tafsirSecondContainerBorderDark = Color(0xff0F1726);
 
   ///home icons containers colors (light Theme)
 
@@ -425,7 +428,7 @@ class QuranAppTheme {
       errorContainer: Color(0xFF7F1D1D),
       onErrorContainer: Color(0xFFFEE2E2),
       // Surface
-      surface: gray900,
+      surface: Colors.black,
       onSurface: gray50,
       surfaceContainerHighest: gray800,
       onSurfaceVariant: gray400,

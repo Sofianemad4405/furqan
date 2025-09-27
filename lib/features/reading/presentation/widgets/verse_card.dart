@@ -34,33 +34,31 @@ class VerseCard extends StatefulWidget {
 }
 
 class _VerseCardState extends State<VerseCard> {
-  List<TafsirProviderEntity>? tafsirProviders;
+  List<TafsirProviderEntity> tafsirProviders = [];
   VerseTafsirEntity? verseTafsir;
   @override
   void initState() {
     getTafsirProviders();
-    getVerseTafsir();
     super.initState();
   }
 
   Future<void> getTafsirProviders() async {
-    final tafsirProviders = await context
-        .read<ReadingCubit>()
-        .getTafsirProviders();
+    final providers = await context.read<ReadingCubit>().getTafsirProviders();
     setState(() {
-      this.tafsirProviders = tafsirProviders;
+      tafsirProviders = providers;
     });
+    if (providers.isNotEmpty) {
+      getVerseTafsir(providers[0].id);
+    }
   }
 
-  Future<void> getVerseTafsir() async {
+  Future<VerseTafsirEntity> getVerseTafsir(int tafseerId) async {
     final verseTafsir = await context.read<ReadingCubit>().getVerseTafsir(
-      tafsirProviders?.first.id ?? 0,
+      tafseerId,
       widget.surah.surahNo,
       widget.ayahNumber,
     );
-    setState(() {
-      this.verseTafsir = verseTafsir;
-    });
+    return verseTafsir;
   }
 
   @override
@@ -145,6 +143,9 @@ class _VerseCardState extends State<VerseCard> {
                           context: context,
                           builder: (context) {
                             return Dialog(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.surface,
                               shape: const RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(8),
@@ -157,12 +158,6 @@ class _VerseCardState extends State<VerseCard> {
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).colorScheme.surface,
                                   borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurface,
-                                    width: 0.5,
-                                  ),
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
@@ -200,16 +195,18 @@ class _VerseCardState extends State<VerseCard> {
                                       ),
                                       const Gap(5),
                                       Container(
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xffE3E5E9),
-                                          borderRadius: BorderRadius.all(
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.surfaceContainerHighest,
+                                          borderRadius: const BorderRadius.all(
                                             Radius.circular(8),
                                           ),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            "${tafsirProviders?.length} Tafsirs Available",
+                                            "${tafsirProviders.length} Tafsirs Available",
                                             style: Theme.of(
                                               context,
                                             ).textTheme.titleSmall,
@@ -220,120 +217,161 @@ class _VerseCardState extends State<VerseCard> {
                                       Expanded(
                                         child: ListView.builder(
                                           shrinkWrap: true,
-                                          itemCount:
-                                              tafsirProviders?.length ?? 0,
+                                          itemCount: tafsirProviders.length,
                                           itemBuilder: (context, index) {
                                             final tafsirProvider =
-                                                tafsirProviders![index];
+                                                tafsirProviders[index];
                                             return Padding(
                                               padding: const EdgeInsets.all(
                                                 4.0,
                                               ),
-                                              child: TafsirProviderTile(
-                                                tafsirProvider: tafsirProvider,
-                                                children: [
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        width: 0.8,
-                                                        color: const Color(
-                                                          0xff9EEAC7,
+                                              child: BlocBuilder<ThemeCubit, ThemeMode>(
+                                                builder: (context, state) {
+                                                  return TafsirProviderTile(
+                                                    tafsirProvider:
+                                                        tafsirProvider,
+                                                    isDark:
+                                                        state == ThemeMode.dark,
+                                                    children: [
+                                                      FutureBuilder(
+                                                        future: getVerseTafsir(
+                                                          tafsirProvider.id,
                                                         ),
-                                                      ),
-                                                      borderRadius:
-                                                          const BorderRadius.all(
-                                                            Radius.circular(8),
-                                                          ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                            8.0,
-                                                          ),
-                                                      child: Column(
-                                                        children: [
-                                                          Row(
-                                                            children: [
-                                                              Container(
-                                                                decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      const BorderRadius.all(
-                                                                        Radius.circular(
-                                                                          8,
-                                                                        ),
-                                                                      ),
-                                                                  color:
-                                                                      const Color(
-                                                                        0xff00B578,
-                                                                      ).withValues(
-                                                                        alpha:
-                                                                            0.05,
-                                                                      ),
-                                                                  border: Border.all(
-                                                                    width: 0.8,
-                                                                    color: const Color(
+                                                        builder: (context, snapshot) {
+                                                          if (snapshot
+                                                                  .connectionState ==
+                                                              ConnectionState
+                                                                  .waiting) {
+                                                            return const Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            );
+                                                          } else if (snapshot
+                                                              .hasError) {
+                                                            return Text(
+                                                              "Error: ${snapshot.error}",
+                                                            );
+                                                          } else if (!snapshot
+                                                              .hasData) {
+                                                            return const Text(
+                                                              "No Tafsir",
+                                                            );
+                                                          }
+
+                                                          final verseTafsir =
+                                                              snapshot.data!;
+                                                          return Container(
+                                                            decoration: BoxDecoration(
+                                                              color:
+                                                                  state ==
+                                                                      ThemeMode
+                                                                          .dark
+                                                                  ? QuranAppTheme
+                                                                        .tafsirSecondContainerBorderDark
+                                                                  : Colors
+                                                                        .transparent,
+                                                              border: Border.all(
+                                                                width: 0.2,
+                                                                color:
+                                                                    const Color(
                                                                       0xff9EEAC7,
                                                                     ),
+                                                              ),
+                                                              borderRadius:
+                                                                  const BorderRadius.all(
+                                                                    Radius.circular(
+                                                                      8,
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets.symmetric(
-                                                                        horizontal:
-                                                                            12,
-                                                                        vertical:
-                                                                            4,
-                                                                      ),
-                                                                  child: Text(
-                                                                    "Ayah ${widget.ayahNumber}",
-                                                                    style: Theme.of(context)
-                                                                        .textTheme
-                                                                        .titleSmall
-                                                                        ?.copyWith(
-                                                                          color: const Color(
-                                                                            0xff00B578,
+                                                            ),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets.all(
+                                                                    16,
+                                                                  ),
+                                                              child: Column(
+                                                                children: [
+                                                                  Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration: BoxDecoration(
+                                                                          borderRadius: const BorderRadius.all(
+                                                                            Radius.circular(
+                                                                              8,
+                                                                            ),
+                                                                          ),
+                                                                          color:
+                                                                              const Color(
+                                                                                0xff00B578,
+                                                                              ).withValues(
+                                                                                alpha: 0.05,
+                                                                              ),
+                                                                          border: Border.all(
+                                                                            width:
+                                                                                0.2,
+                                                                            color: const Color(
+                                                                              0xff9EEAC7,
+                                                                            ),
                                                                           ),
                                                                         ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              const Spacer(),
-                                                              Text(
-                                                                "Tafseer ID: ${tafsirProvider.id}",
-                                                                style: Theme.of(context)
-                                                                    .textTheme
-                                                                    .bodySmall
-                                                                    ?.copyWith(
-                                                                      color: const Color(
-                                                                        0xff00B578,
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                12,
+                                                                            vertical:
+                                                                                4,
+                                                                          ),
+                                                                          child: Text(
+                                                                            "Ayah ${widget.ayahNumber}",
+                                                                            style:
+                                                                                Theme.of(
+                                                                                  context,
+                                                                                ).textTheme.bodySmall?.copyWith(
+                                                                                  color: const Color(
+                                                                                    0xff00B578,
+                                                                                  ),
+                                                                                ),
+                                                                          ),
+                                                                        ),
                                                                       ),
-                                                                    ),
+                                                                      const Spacer(),
+                                                                      Text(
+                                                                        "Tafseer ID: ${tafsirProvider.id}",
+                                                                        style:
+                                                                            Theme.of(
+                                                                              context,
+                                                                            ).textTheme.bodySmall?.copyWith(
+                                                                              color: const Color(
+                                                                                0xff00B578,
+                                                                              ),
+                                                                            ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const Gap(10),
+                                                                  Text(
+                                                                    verseTafsir
+                                                                        .text,
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .bodyLarge
+                                                                        ?.copyWith(
+                                                                          fontFamily:
+                                                                              "Amiri",
+                                                                        ),
+                                                                    textDirection:
+                                                                        TextDirection
+                                                                            .rtl,
+                                                                  ),
+                                                                ],
                                                               ),
-                                                            ],
-                                                          ),
-                                                          const Gap(10),
-                                                          Text(
-                                                            verseTafsir?.text ??
-                                                                "",
-                                                            style:
-                                                                Theme.of(
-                                                                      context,
-                                                                    )
-                                                                    .textTheme
-                                                                    .bodyLarge
-                                                                    ?.copyWith(
-                                                                      fontFamily:
-                                                                          "Amiri",
-                                                                    ),
-                                                            textDirection:
-                                                                TextDirection
-                                                                    .rtl,
-                                                          ),
-                                                        ],
+                                                            ),
+                                                          );
+                                                        },
                                                       ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                    ],
+                                                  );
+                                                },
                                               ),
                                             );
                                           },
