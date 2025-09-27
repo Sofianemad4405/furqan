@@ -133,7 +133,8 @@ class _VerseCardState extends State<VerseCard> {
                             : Colors.transparent,
                       ),
                       child: Text(
-                        widget.surah.arabic1[widget.ayahNumber - 1],
+                        widget.surah.arabic1?[widget.ayahNumber - 1] ??
+                            "Ayah Not found",
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontFamily: "Amiri",
                           fontSize: 24,
@@ -149,7 +150,8 @@ class _VerseCardState extends State<VerseCard> {
                 const Divider(thickness: 1),
                 const Gap(20),
                 Text(
-                  widget.surah.english[widget.ayahNumber - 1],
+                  widget.surah.english?[widget.ayahNumber - 1] ??
+                      "Translate Not found",
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),

@@ -7,21 +7,24 @@ part of 'verse_model.dart';
 // **************************************************************************
 
 VerseModel _$VerseModelFromJson(Map<String, dynamic> json) => VerseModel(
-      surahName: json['surahName'] as String,
-      surahNameArabic: json['surahNameArabic'] as String,
-      surahNameArabicLong: json['surahNameArabicLong'] as String,
-      surahNameTranslation: json['surahNameTranslation'] as String,
-      revelationPlace: json['revelationPlace'] as String,
-      verseEnglish: json['verseEnglish'] as String,
-      verseArabic1: json['verseArabic1'] as String,
-      verseArabic2: json['verseArabic2'] as String,
-      totalAyah: (json['totalAyah'] as num).toInt(),
-      ayahNo: (json['ayahNo'] as num).toInt(),
-      surahNo: (json['surahNo'] as num).toInt(),
-      verseAudio: (json['verseAudio'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(k, AudioModel.fromJson(e as Map<String, dynamic>)),
-      ),
-    );
+  surahName: json['surahName'] as String,
+  surahNameArabic: json['surahNameArabic'] as String,
+  surahNameArabicLong: json['surahNameArabicLong'] as String,
+  surahNameTranslation: json['surahNameTranslation'] as String,
+  revelationPlace: json['revelationPlace'] as String,
+  verseEnglish: json['verseEnglish'] as String,
+  verseArabic1: json['verseArabic1'] as String,
+  verseArabic2: json['verseArabic2'] as String,
+  totalAyah: (json['totalAyah'] as num).toInt(),
+  ayahNo: (json['ayahNo'] as num).toInt(),
+  surahNo: (json['surahNo'] as num).toInt(),
+  verseAudio: (json['verseAudio'] as Map<String, dynamic>).map(
+    (k, e) => MapEntry(
+      k,
+      AudioModel.fromJson(e != null ? e as Map<String, dynamic> : {}),
+    ),
+  ),
+);
 
 Map<String, dynamic> _$VerseModelToJson(VerseModel instance) =>
     <String, dynamic>{

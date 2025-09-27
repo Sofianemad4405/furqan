@@ -41,11 +41,9 @@ class ReadingCubit extends Cubit<ReadingState> {
   Future<void> getSurahWithAudioAndTranslation(int surahNo) async {
     emit(SurahLoadingInReadingMode());
     try {
-      log("Sofian");
       final surah = await _readingRepo.getSurahWithAudioAndTranslation(surahNo);
       emit(SurahLoadedInReadingMode(surah: surah));
     } catch (e) {
-      log(e.toString());
       emit(ErrorSurahInReadingMode(message: e.toString()));
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/theme_system.dart';
@@ -189,6 +191,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
           } else if (state is SurahLoadedInReadingMode) {
             return ReadingSurah(surah: state.surah);
           } else if (state is ErrorSurahInReadingMode) {
+            log(state.message);
             return Text(state.message);
           } else if (state is SurahLoadedInListeningMode) {
             return ListeningToSurah(surah: state.surah);

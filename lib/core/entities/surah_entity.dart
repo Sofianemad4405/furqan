@@ -9,13 +9,13 @@ class SurahEntity {
   final String revelationPlace;
   final int totalAyah;
   final Map<String, AudioEntity> surahAudio;
-  final List<String> english;
-  final List<String> arabic1;
-  final List<String> arabic2;
-  final List<String> bengali;
-  final List<String> urdu;
-  final List<String> turkish;
-  final List<String> uzbek;
+  final List<String>? english;
+  final List<String>? arabic1;
+  final List<String>? arabic2;
+  final List<String>? bengali;
+  final List<String>? urdu;
+  final List<String>? turkish;
+  final List<String>? uzbek;
 
   SurahEntity({
     required this.surahNo,

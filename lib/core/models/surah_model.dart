@@ -7,14 +7,14 @@ part 'surah_model.g.dart';
 @JsonSerializable()
 class SurahModel extends SurahBase {
   final int surahNo;
-  final Map<String, AudioModel> surahAudio;
-  final List<String> english;
-  final List<String> arabic1;
-  final List<String> arabic2;
-  final List<String> bengali;
-  final List<String> urdu;
-  final List<String> turkish;
-  final List<String> uzbek;
+  final Map<String, AudioModel> audio;
+  final List<String>? english;
+  final List<String>? arabic1;
+  final List<String>? arabic2;
+  final List<String>? bengali;
+  final List<String>? urdu;
+  final List<String>? turkish;
+  final List<String>? uzbek;
 
   SurahModel({
     required super.surahName,
@@ -24,7 +24,7 @@ class SurahModel extends SurahBase {
     required super.revelationPlace,
     required super.totalAyah,
     required this.surahNo,
-    required this.surahAudio,
+    required this.audio,
     required this.english,
     required this.arabic1,
     required this.arabic2,
@@ -46,16 +46,14 @@ class SurahModel extends SurahBase {
       surahNameTranslation: surahNameTranslation,
       revelationPlace: revelationPlace,
       totalAyah: totalAyah,
-      surahAudio: surahAudio.map(
-        (key, value) => MapEntry(key, value.toEntity()),
-      ),
-      english: english,
-      arabic1: arabic1,
-      arabic2: arabic2,
-      bengali: bengali,
-      urdu: urdu,
-      turkish: turkish,
-      uzbek: uzbek,
+      surahAudio: audio.map((key, value) => MapEntry(key, value.toEntity())),
+      english: english ?? [],
+      arabic1: arabic1 ?? [],
+      arabic2: arabic2 ?? [],
+      bengali: bengali ?? [],
+      urdu: urdu ?? [],
+      turkish: turkish ?? [],
+      uzbek: uzbek ?? [],
     );
   }
 }

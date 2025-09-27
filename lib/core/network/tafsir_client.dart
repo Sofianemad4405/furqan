@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:furqan/core/models/tafsir_provider.dart';
 import 'package:furqan/core/models/verse_tafsir.dart';
 import 'package:furqan/core/utils/parse_error_logger.dart';
 import 'package:retrofit/http.dart';
@@ -22,4 +23,8 @@ abstract class TafsirClient {
     @Path("surahNo") int surahNo,
     @Path("ayahNumber") int ayahNumber,
   );
+
+  ///http://api.quran-tafseer.com/tafseer/
+  @GET("/")
+  Future<List<TafsirProvider>> getTafsirList();
 }

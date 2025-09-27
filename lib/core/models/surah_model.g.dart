@@ -14,7 +14,7 @@ SurahModel _$SurahModelFromJson(Map<String, dynamic> json) => SurahModel(
       revelationPlace: json['revelationPlace'] as String,
       totalAyah: (json['totalAyah'] as num).toInt(),
       surahNo: (json['surahNo'] as num).toInt(),
-      surahAudio: (json['surahAudio'] as Map<String, dynamic>).map(
+      audio: (json['audio'] as Map<String, dynamic>).map(
         (k, e) => MapEntry(k, AudioModel.fromJson(e as Map<String, dynamic>)),
       ),
       english:
@@ -40,7 +40,7 @@ Map<String, dynamic> _$SurahModelToJson(SurahModel instance) =>
       'revelationPlace': instance.revelationPlace,
       'totalAyah': instance.totalAyah,
       'surahNo': instance.surahNo,
-      'surahAudio': instance.surahAudio,
+      'audio': instance.audio,
       'english': instance.english,
       'arabic1': instance.arabic1,
       'arabic2': instance.arabic2,

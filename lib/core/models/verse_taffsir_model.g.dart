@@ -12,7 +12,11 @@ VerseTaffsirModel _$VerseTaffsirModelFromJson(Map<String, dynamic> json) =>
       surahNo: (json['surahNo'] as num).toInt(),
       ayahNo: (json['ayahNo'] as num).toInt(),
       tafsirs: (json['tafsirs'] as List<dynamic>)
-          .map((e) => ExplainModel.fromJson(e as Map<String, dynamic>))
+          .map(
+            (e) => ExplainModel.fromJson(
+              e != null ? e as Map<String, dynamic> : {},
+            ),
+          )
           .toList(),
     );
 
