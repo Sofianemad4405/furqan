@@ -1,6 +1,7 @@
 import 'package:furqan/core/models/audio_model.dart';
 import 'package:furqan/core/models/surah_base.dart';
 import 'package:furqan/core/models/surah_model.dart';
+import 'package:furqan/core/models/tafsir_provider.dart';
 import 'package:furqan/core/models/verse_tafsir.dart';
 import 'package:furqan/core/network/retrofit_client.dart';
 import 'package:furqan/core/network/tafsir_client.dart';
@@ -14,6 +15,7 @@ abstract class ReadingDataSource {
     int surahNo,
     int ayahNumber,
   );
+  Future<List<TafsirProvider>> getTafsirProviders();
 }
 
 class ReadingDataSourceImpl implements ReadingDataSource {
@@ -62,6 +64,16 @@ class ReadingDataSourceImpl implements ReadingDataSource {
         surahNo,
         ayahNumber,
       );
+      return response;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<TafsirProvider>> getTafsirProviders() async {
+    try {
+      final response = await _tafsirClient.getTafsirList();
       return response;
     } catch (e) {
       throw Exception(e.toString());

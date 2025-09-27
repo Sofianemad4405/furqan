@@ -1,3 +1,4 @@
+import 'package:furqan/features/reading/domain/entities/tafsir_provider_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'tafsir_provider.g.dart';
@@ -21,6 +22,16 @@ class TafsirProvider {
   factory TafsirProvider.fromJson(Map<String, dynamic> json) =>
       _$TafsirProviderFromJson(json);
   Map<String, dynamic> toJson() => _$TafsirProviderToJson(this);
+
+  TafsirProviderEntity toEntity() {
+    return TafsirProviderEntity(
+      id: id,
+      name: name,
+      language: language,
+      author: author,
+      bookName: bookName,
+    );
+  }
 }
 
 // {

@@ -3,6 +3,7 @@ import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/entities/tafsir_entity.dart';
 import 'package:furqan/features/reading/data/reading_data_source.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
+import 'package:furqan/features/reading/domain/entities/tafsir_provider_entity.dart';
 
 abstract class ReadingRepo {
   Future<List<SurahBaseEntity>> getSurahs();
@@ -13,6 +14,7 @@ abstract class ReadingRepo {
     int surahNo,
     int ayahNo,
   );
+  Future<List<TafsirProviderEntity>> getTafsirProviders();
 }
 
 class ReadingRepoImpl implements ReadingRepo {
@@ -51,5 +53,13 @@ class ReadingRepoImpl implements ReadingRepo {
       ayahNo,
     );
     return verseTafsir.toEntity();
+  }
+
+  @override
+  Future<List<TafsirProviderEntity>> getTafsirProviders() async {
+    final tafsirProviders = await _dataSource.getTafsirProviders();
+    return tafsirProviders
+        .map((tafsirProvider) => tafsirProvider.toEntity())
+        .toList();
   }
 }

@@ -6,6 +6,7 @@ import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/entities/tafsir_entity.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
+import 'package:furqan/features/reading/domain/entities/tafsir_provider_entity.dart';
 import 'package:furqan/features/reading/domain/reading_repo.dart';
 
 part 'reading_state.dart';
@@ -64,5 +65,10 @@ class ReadingCubit extends Cubit<ReadingState> {
       ayahNo,
     );
     return verseTafsir;
+  }
+
+  Future<List<TafsirProviderEntity>> getTafsirProviders() async {
+    final tafsirProviders = await _readingRepo.getTafsirProviders();
+    return tafsirProviders;
   }
 }

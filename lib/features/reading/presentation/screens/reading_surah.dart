@@ -68,153 +68,156 @@ class _ReadingSurahState extends State<ReadingSurah> {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
-        return Column(
-          children: [
-            SizedBox(
-              height: 90,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: SurahStats(
-                      icon: const Icon(
-                        Icons.alarm,
-                        color: Color(0xff598BF3),
-                        size: 15,
-                      ),
-                      title: 'Reading\nTime',
-                      iconColor: const Color(0xff598BF3),
-                      topColumn: Text(
-                        formatTime(_seconds),
-                        style: Theme.of(context).textTheme.labelMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  const Gap(10),
-                  Expanded(
-                    child: SurahStats(
-                      icon: const Icon(
-                        Icons.menu_book_sharp,
-                        color: Color(0xff27A57A),
-                        size: 15,
-                      ),
-                      title: 'Ayahs\nRead',
-                      iconColor: const Color(0xff27A57A),
-                      topColumn: Text(
-                        ayahsRead.toString(),
-                        style: Theme.of(context).textTheme.labelMedium,
-                      ),
-                    ),
-                  ),
-                  const Gap(10),
-                  Expanded(
-                    child: SurahStats(
-                      icon: Center(
-                        child: Text(
-                          "✨",
-                          style: Theme.of(context).textTheme.bodyMedium,
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 90,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SurahStats(
+                        icon: const Icon(
+                          Icons.alarm,
+                          color: Color(0xff598BF3),
+                          size: 15,
+                        ),
+                        title: 'Reading\nTime',
+                        iconColor: const Color(0xff598BF3),
+                        topColumn: Text(
+                          formatTime(_seconds),
+                          style: Theme.of(context).textTheme.labelMedium,
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      title: 'Hasanat',
-                      iconColor: const Color(0xffDDB557),
-                      topColumn: Text(
-                        "${ayahsRead * 10}",
-                        style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                    const Gap(10),
+                    Expanded(
+                      child: SurahStats(
+                        icon: const Icon(
+                          Icons.menu_book_sharp,
+                          color: Color(0xff27A57A),
+                          size: 15,
+                        ),
+                        title: 'Ayahs\nRead',
+                        iconColor: const Color(0xff27A57A),
+                        topColumn: Text(
+                          ayahsRead.toString(),
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                      ),
+                    ),
+                    const Gap(10),
+                    Expanded(
+                      child: SurahStats(
+                        icon: Center(
+                          child: Text(
+                            "✨",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
+                        title: 'Hasanat',
+                        iconColor: const Color(0xffDDB557),
+                        topColumn: Text(
+                          "${ayahsRead * 10}",
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Gap(50),
+              VerseCard(
+                surah: widget.surah,
+                ayahNumber: ayahNumber,
+                player: player,
+                surahVerses: surahVerses,
+              ),
+              const Gap(20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ///Previous Ayah
+                  GestureDetector(
+                    onTap: () {
+                      if (ayahNumber > 1) {
+                        setState(() {
+                          ayahNumber--;
+                        });
+                      }
+                    },
+                    child: CustomContainer(
+                      isDarkMood: state == ThemeMode.dark,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.arrow_back_ios, size: 12),
+                            const Gap(10),
+                            Text(
+                              "Previous",
+                              style: Theme.of(context).textTheme.labelLarge
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text("$ayahNumber of ${widget.surah.totalAyah}"),
+
+                  ///Next Ayah
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        if (ayahNumber < widget.surah.totalAyah) {
+                          ayahNumber++;
+                          ayahsRead++;
+                        }
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: QuranAppTheme.green,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Next",
+                              style: Theme.of(context).textTheme.labelLarge
+                                  ?.copyWith(color: Colors.white),
+                            ),
+                            const Gap(10),
+                            const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-            const Gap(50),
-            VerseCard(
-              surah: widget.surah,
-              ayahNumber: ayahNumber,
-              player: player,
-              surahVerses: surahVerses,
-            ),
-            const Gap(20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ///Previous Ayah
-                GestureDetector(
-                  onTap: () {
-                    if (ayahNumber > 1) {
-                      setState(() {
-                        ayahNumber--;
-                      });
-                    }
-                  },
-                  child: CustomContainer(
-                    isDarkMood: state == ThemeMode.dark,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.arrow_back_ios, size: 12),
-                          const Gap(10),
-                          Text(
-                            "Previous",
-                            style: Theme.of(context).textTheme.labelLarge
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurface,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Text("$ayahNumber of ${widget.surah.totalAyah}"),
-
-                ///Next Ayah
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      if (ayahNumber < widget.surah.totalAyah) {
-                        ayahNumber++;
-                        ayahsRead++;
-                      }
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: QuranAppTheme.green,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                      child: Row(
-                        children: [
-                          Text(
-                            "Next",
-                            style: Theme.of(context).textTheme.labelLarge
-                                ?.copyWith(color: Colors.white),
-                          ),
-                          const Gap(10),
-                          const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 12,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+              const Gap(200),
+            ],
+          ),
         );
       },
     );
