@@ -57,9 +57,7 @@ class TodayChallengesListView extends StatelessWidget {
                             children: [
                               Text(
                                 todayChallenges[index].challengeName,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.headlineMedium,
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                               Text(
                                 todayChallenges[index].challengeDesc ?? "",
@@ -76,7 +74,7 @@ class TodayChallengesListView extends StatelessWidget {
                       ),
                       const Gap(40),
                       LinearProgressIndicator(
-                        minHeight: 8,
+                        minHeight: 5,
                         borderRadius: BorderRadius.circular(12),
                         value: 0.5,
                         backgroundColor: QuranAppTheme.gray450,

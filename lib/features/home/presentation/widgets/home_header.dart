@@ -15,7 +15,7 @@ class HomeHeader extends StatelessWidget {
           children: [
             Text(
               "Welcome Back",
-              style: Theme.of(context).textTheme.displaySmall,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             const Gap(10),
             Text(

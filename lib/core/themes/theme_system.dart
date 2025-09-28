@@ -728,7 +728,9 @@ class QuranAppTheme {
   static const LinearGradient darkScaffoldGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [teal800, teal900, teal950],
+    colors: [emerald950, teal950, cyan950],
+
+    // dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950
   );
 
   /// Primary emerald gradient for buttons and accents
@@ -817,10 +819,10 @@ class QuranAppTheme {
     Color? borderColor,
   }) {
     return BoxDecoration(
-      color: backgroundColor ?? Colors.white.withOpacity(0.1),
+      color: backgroundColor ?? Colors.white.withValues(alpha: 0.1),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: borderColor ?? Colors.white.withOpacity(0.2),
+        color: borderColor ?? Colors.white.withValues(alpha: 0.2),
         width: 0.5,
       ),
       boxShadow: [
@@ -835,16 +837,16 @@ class QuranAppTheme {
 
   /// Dark mode glass container decoration
   static BoxDecoration darkGlassDecoration({
-    double borderRadius = 16.0,
+    double borderRadius = 20.0,
     Color? backgroundColor,
     Color? borderColor,
   }) {
     return BoxDecoration(
-      color: backgroundColor ?? Colors.black.withOpacity(0.2),
+      color: backgroundColor ?? Colors.black.withValues(alpha: 0.2),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: borderColor ?? Colors.white.withOpacity(0.1),
-        width: 0.9,
+        color: borderColor ?? Colors.white.withValues(alpha: 0.1),
+        width: 0.2,
       ),
       // boxShadow: [
       //   BoxShadow(

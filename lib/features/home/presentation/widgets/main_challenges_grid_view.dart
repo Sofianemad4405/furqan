@@ -35,12 +35,12 @@ class MainChallengesGridView extends StatelessWidget {
                     ),
                     Text(
                       mainChallenges[index].challengeName,
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      style: Theme.of(context).textTheme.titleMedium,
                     ),
                     Text(
                       mainChallenges[index].challengeDesc ??
                           "Start your journey",
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ),

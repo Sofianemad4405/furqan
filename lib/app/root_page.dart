@@ -11,6 +11,7 @@ import 'package:furqan/features/reading/presentation/screens/reading_page.dart';
 import 'package:furqan/features/search/presentation/screens/search_page.dart';
 import 'package:furqan/features/settings/presentation/screens/settings_page.dart';
 import 'package:furqan/features/stats/presentation/screens/stats_page.dart';
+import 'package:gap/gap.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -35,6 +36,11 @@ class _RootPageState extends State<RootPage> {
       ),
       child: Scaffold(
         appBar: AppBar(
+          // shadowColor: Colors.greenAccent,
+          // elevation: 6,
+          // backgroundColor: context.watch<ThemeCubit>().isDarkMood()
+          //     ? const Color(0xff041B17).withValues(alpha: 0.9)
+          //     : const Color(0xffE0F1ED),
           leading: const Icon(Icons.menu),
           title: const Text("Furqan"),
           actions: [
