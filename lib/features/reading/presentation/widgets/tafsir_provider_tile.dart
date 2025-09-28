@@ -32,6 +32,7 @@ class _TafsirProviderTileState extends State<TafsirProviderTile> {
             });
           },
           child: Container(
+            height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: widget.isDark
