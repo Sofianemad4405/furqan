@@ -38,17 +38,25 @@ class _VerseCardState extends State<VerseCard> {
   VerseTafsirEntity? verseTafsir;
   @override
   void initState() {
+    log("Toffy");
     getTafsirProviders();
     super.initState();
   }
 
   Future<void> getTafsirProviders() async {
-    final providers = await context.read<ReadingCubit>().getTafsirProviders();
-    setState(() {
-      tafsirProviders = providers;
-    });
-    if (providers.isNotEmpty) {
-      getVerseTafsir(providers[0].id);
+    try {
+      log("getting");
+      final providers = await context.read<ReadingCubit>().getTafsirProviders();
+      setState(() {
+        tafsirProviders = providers;
+      });
+      log("provo");
+      if (providers.isNotEmpty) {
+        log("getting verse tafsir");
+        getVerseTafsir(providers[0].id);
+      }
+    } on Exception catch (e) {
+      log("lol ${e.toString()}");
     }
   }
 
@@ -139,6 +147,7 @@ class _VerseCardState extends State<VerseCard> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        log("DIalog");
                         showDialog(
                           context: context,
                           builder: (context) {
@@ -221,6 +230,7 @@ class _VerseCardState extends State<VerseCard> {
                                           itemBuilder: (context, index) {
                                             final tafsirProvider =
                                                 tafsirProviders[index];
+                                            log(tafsirProvider.author);
                                             return Padding(
                                               padding: const EdgeInsets.all(
                                                 4.0,

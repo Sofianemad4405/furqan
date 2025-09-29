@@ -73,7 +73,13 @@ class ReadingCubit extends Cubit<ReadingState> {
   }
 
   Future<List<TafsirProviderEntity>> getTafsirProviders() async {
-    final tafsirProviders = await _readingRepo.getTafsirProviders();
-    return tafsirProviders;
+    try {
+      final tafsirProviders = await _readingRepo.getTafsirProviders();
+      log(tafsirProviders.length.toString());
+      return tafsirProviders;
+    } catch (e) {
+      log(e.toString());
+      return [];
+    }
   }
 }

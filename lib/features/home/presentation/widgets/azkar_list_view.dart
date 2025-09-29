@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
-import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
-import 'package:gap/gap.dart';
 
 class AzkarListView extends StatefulWidget {
   const AzkarListView({

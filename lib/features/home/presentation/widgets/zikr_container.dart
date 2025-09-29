@@ -71,36 +71,38 @@ class _ZikrContainerState extends State<ZikrContainer> {
               ),
               textDirection: TextDirection.rtl,
             ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: context.read<ThemeCubit>().isDarkMood()
-                    ? const Color(0xFF103036)
-                    : QuranAppTheme.emerald50,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Gap(8),
-                    Expanded(
-                      child: Text(
-                        widget.bless ?? "",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface,
+            if (widget.bless != null && widget.bless!.isNotEmpty)
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: context.read<ThemeCubit>().isDarkMood()
+                      ? const Color(0xFF103036)
+                      : QuranAppTheme.emerald50,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Gap(8),
+                      Expanded(
+                        child: Text(
+                          widget.bless ?? "",
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                          maxLines: 4,
+                          textDirection: TextDirection.rtl,
+                          // textAlign: TextAlign.center,
                         ),
-                        maxLines: 4,
-                        textDirection: TextDirection.rtl,
-                        // textAlign: TextAlign.center,
                       ),
-                    ),
-                    const Icon(Icons.lightbulb, color: Colors.yellow),
-                  ],
+                      const Icon(Icons.lightbulb, color: Colors.yellow),
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

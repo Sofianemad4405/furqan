@@ -101,6 +101,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
                                         );
                                       }
                                       if (state is ChoosingSurah) {
+                                        log("Choosing");
                                         return Expanded(
                                           child: ListView.builder(
                                             shrinkWrap: true,
@@ -189,6 +190,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
           } else if (state is SurahLoadingInReadingMode) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is SurahLoadedInReadingMode) {
+            log("SurahLoadedInReadingMode");
             return ReadingSurah(surah: state.surah);
           } else if (state is ErrorSurahInReadingMode) {
             log(state.message);

@@ -12,7 +12,7 @@ TafsirProvider _$TafsirProviderFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       language: json['language'] as String,
       author: json['author'] as String,
-      bookName: json['bookName'] as String,
+      bookName: json['book_name'] as String,
     );
 
 Map<String, dynamic> _$TafsirProviderToJson(TafsirProvider instance) =>
@@ -21,5 +21,5 @@ Map<String, dynamic> _$TafsirProviderToJson(TafsirProvider instance) =>
       'name': instance.name,
       'language': instance.language,
       'author': instance.author,
-      'bookName': instance.bookName,
+      'book_name': instance.bookName,
     };
