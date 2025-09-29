@@ -10,7 +10,7 @@ part of 'tafsir_client.dart';
 
 class _TafsirClient implements TafsirClient {
   _TafsirClient(this._dio, {this.tafsirBaseUrl, this.errorLogger}) {
-    tafsirBaseUrl ??= 'http://api.quran-tafseer.com/tafseer';
+    tafsirBaseUrl ??= 'http://api.quran-tafseer.com';
   }
 
   final Dio _dio;
@@ -33,13 +33,11 @@ class _TafsirClient implements TafsirClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/${tafseerId}/${surahNo}/${ayahNumber}',
+            '/tafseer/${tafseerId}/${surahNo}/${ayahNumber}',
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(
-            baseUrl: _combineBaseUrls(_dio.options.baseUrl, tafsirBaseUrl),
-          ),
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
     late VerseTafsir _value;
@@ -62,13 +60,11 @@ class _TafsirClient implements TafsirClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/',
+            '/tafseer/',
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(
-            baseUrl: _combineBaseUrls(_dio.options.baseUrl, tafsirBaseUrl),
-          ),
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<TafsirProvider> _value;
@@ -98,12 +94,12 @@ class _TafsirClient implements TafsirClient {
     return requestOptions;
   }
 
-  String _combineBaseUrls(String dioBaseUrl, String? tafsirBaseUrl) {
-    if (tafsirBaseUrl == null || tafsirBaseUrl.trim().isEmpty) {
+  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }
 
-    final url = Uri.parse(tafsirBaseUrl);
+    final url = Uri.parse(baseUrl);
 
     if (url.isAbsolute) {
       return url.toString();

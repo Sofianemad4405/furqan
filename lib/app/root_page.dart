@@ -22,26 +22,48 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   int _currentIndex = 0;
+
+  // اعمل key لكل تاب
+  final _navKeys = List.generate(6, (_) => GlobalKey<NavigatorState>());
+
+  void _refresh() => setState(() {});
+
+  Widget _buildOffstageNavigator(int index, Widget child) {
+    return Offstage(
+      offstage: _currentIndex != index,
+      child: Navigator(
+        key: _navKeys[index],
+        observers: [_RouteObserver(_refresh)],
+        onGenerateRoute: (settings) => MaterialPageRoute(builder: (_) => child),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final canPop = _navKeys[_currentIndex].currentState?.canPop() ?? false;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: context.watch<ThemeCubit>().isDarkMood()
               ? QuranAppTheme.darkScaffoldGradient.colors
               : QuranAppTheme.lightScaffoldGradient.colors,
-          begin: AlignmentGeometry.topLeft,
-          end: AlignmentGeometry.bottomRight,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
       ),
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
-          // shadowColor: Colors.greenAccent,
-          // elevation: 6,
-          // backgroundColor: context.watch<ThemeCubit>().isDarkMood()
-          //     ? const Color(0xff041B17).withValues(alpha: 0.9)
-          //     : const Color(0xffE0F1ED),
-          leading: const Icon(Icons.menu),
+          leading: canPop
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    _navKeys[_currentIndex].currentState?.maybePop();
+                  },
+                )
+              : const Icon(Icons.menu),
           title: const Text("Furqan"),
           actions: [
             IconButton(
@@ -54,32 +76,60 @@ class _RootPageState extends State<RootPage> {
           ],
         ),
         extendBody: true,
-        body: _currentIndex == 0
-            ? const HomeScreen()
-            : _currentIndex == 1
-            ? const ReadingScreen()
-            : _currentIndex == 2
-            ? const SearchScreen()
-            : _currentIndex == 3
-            ? const StatsScreen()
-            : _currentIndex == 4
-            ? const ChatScreen()
-            : const SettingsScreen(),
+        body: Stack(
+          children: [
+            _buildOffstageNavigator(0, const HomeScreen()),
+            _buildOffstageNavigator(1, const ReadingScreen()),
+            _buildOffstageNavigator(2, const SearchScreen()),
+            _buildOffstageNavigator(3, const StatsScreen()),
+            _buildOffstageNavigator(4, const ChatScreen()),
+            _buildOffstageNavigator(5, const SettingsScreen()),
+          ],
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: GlassBottomNavigation(
             activeTab: TabType.values[_currentIndex],
             onTabChange: (TabType tab) {
-              log(tab.name);
-              setState(() {
-                _currentIndex = tab.index;
-              });
+              if (_currentIndex == tab.index) {
+                // لو دوست على نفس التاب رجع للرووت
+                _navKeys[tab.index].currentState!.popUntil(
+                  (route) => route.isFirst,
+                );
+              } else {
+                setState(() {
+                  _currentIndex = tab.index;
+                });
+              }
             },
             currentIndex: _currentIndex,
           ),
         ),
       ),
     );
+  }
+}
+
+class _RouteObserver extends NavigatorObserver {
+  final VoidCallback onChange;
+  _RouteObserver(this.onChange);
+
+  void _safeNotify() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      onChange();
+    });
+  }
+
+  @override
+  void didPop(Route route, Route? previousRoute) {
+    _safeNotify();
+    super.didPop(route, previousRoute);
+  }
+
+  @override
+  void didPush(Route route, Route? previousRoute) {
+    _safeNotify();
+    super.didPush(route, previousRoute);
   }
 }

@@ -35,6 +35,19 @@ class QuranAppTheme {
   static const Color tafsirContainerBorderDark = Color(0xff005C42);
   static const Color tafsirSecondContainerBorderDark = Color(0xff0F1726);
 
+  ///Azkar containers gredient
+  static const List<Color> morningAzkar = [
+    Color(0xFFF77900),
+    Color(0xFFF7AC00),
+  ];
+  static const List<Color> nightAzkar = [Color(0xFF6D61F6), Color(0xFFB677FA)];
+  static const List<Color> afterPrayerAzkar = [
+    Color.fromARGB(255, 130, 198, 13),
+    Color.fromARGB(255, 164, 166, 75),
+  ];
+
+  static const List<Color> theRest = [Color(0xFF00CE92), Color(0xFF00B9A1)];
+
   ///home icons containers colors (light Theme)
 
   static const List<Color> homeIconsContainersColorsLight = [
@@ -823,15 +836,15 @@ class QuranAppTheme {
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ?? Colors.white.withValues(alpha: 0.2),
-        width: 0.5,
+        width: 0.2,
       ),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 20,
-          offset: const Offset(0, 8),
-        ),
-      ],
+      // boxShadow: [
+      //   BoxShadow(
+      //     color: Colors.black.withOpacity(0.1),
+      //     blurRadius: 20,
+      //     offset: const Offset(0, 8),
+      //   ),
+      // ],
     );
   }
 
@@ -845,7 +858,7 @@ class QuranAppTheme {
       color: backgroundColor ?? Colors.black.withValues(alpha: 0.2),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: borderColor ?? Colors.white.withValues(alpha: 0.1),
+        color: borderColor ?? Colors.white.withValues(alpha: 0.2),
         width: 0.2,
       ),
       // boxShadow: [

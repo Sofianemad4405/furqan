@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/utils/constants.dart';
+import 'package:furqan/features/home/presentation/screens/adhkar/azkar_screen.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 
 class MainChallengesGridView extends StatelessWidget {
@@ -22,27 +23,41 @@ class MainChallengesGridView extends StatelessWidget {
       itemBuilder: (context, index) {
         return BlocBuilder<ThemeCubit, ThemeMode>(
           builder: (context, state) {
-            return CustomContainer(
-              isDarkMood: state == ThemeMode.dark,
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      mainChallenges[index].challengeIcon,
-                      style: const TextStyle(fontSize: 24),
-                    ),
-                    Text(
-                      mainChallenges[index].challengeName,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      mainChallenges[index].challengeDesc ??
-                          "Start your journey",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
+            return GestureDetector(
+              onTap: index == 2
+                  ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const DhikrScreen();
+                          },
+                        ),
+                      );
+                    }
+                  : null,
+              child: CustomContainer(
+                isDarkMood: state == ThemeMode.dark,
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        mainChallenges[index].challengeIcon,
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                      Text(
+                        mainChallenges[index].challengeName,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Text(
+                        mainChallenges[index].challengeDesc ??
+                            "Start your journey",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );

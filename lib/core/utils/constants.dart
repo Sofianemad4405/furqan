@@ -2,6 +2,7 @@ import 'package:furqan/features/home/presentation/models/challenge_model.dart';
 
 const String baseUrl = "https://quranapi.pages.dev/api";
 const String tafsirBaseUrl = "http://api.quran-tafseer.com";
+const String dhikrBaseUrl = "https://ahegazy.github.io/muslimKit/json";
 const String arabic1 = "arabic1";
 const String arabic2 = "arabic2";
 const String bengali = "bengali";
@@ -43,4 +44,16 @@ List<ChallengeModel> todayChallenges = [
     challengeDesc: "Read at least 5 Ayahs with reflection",
     challengeCompletion: 5,
   ),
+];
+
+List<String> azkarCategories = [
+  "أذكار الصباح",
+  "أذكار المساء",
+  "أذكار بعد الصلاة",
+];
+
+List<String> azkarCategoriesEnglish = [
+  "Morning Azkar",
+  "Evening Azkar",
+  "Post Prayer Azkar",
 ];

@@ -73,9 +73,15 @@ class GlassBottomNavigation extends StatelessWidget {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    const Color(0xFF10B981).withOpacity(0.1),
-                    const Color(0xFF14B8A6).withOpacity(0.1),
-                    const Color(0xFF06B6D4).withOpacity(0.1),
+                    const Color(
+                      0xFF10B981,
+                    ).withValues(alpha: 0.07, colorSpace: ColorSpace.displayP3),
+                    const Color(
+                      0xFF14B8A6,
+                    ).withValues(alpha: 0.07, colorSpace: ColorSpace.displayP3),
+                    const Color(
+                      0xFF06B6D4,
+                    ).withValues(alpha: 0.07, colorSpace: ColorSpace.displayP3),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(20),
@@ -141,6 +147,8 @@ class GlassBottomNavigation extends StatelessWidget {
                                 AnimatedContainer(
                                   duration: const Duration(milliseconds: 300),
                                   child: SvgPicture.asset(
+                                    height: 20,
+                                    width: 20,
                                     tab['iconPath'] as String,
                                     colorFilter: ColorFilter.mode(
                                       isActive
