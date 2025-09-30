@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:furqan/core/entities/dhikr_entity.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
@@ -8,15 +9,11 @@ import 'package:gap/gap.dart';
 class ZikrContainer extends StatefulWidget {
   const ZikrContainer({
     super.key,
-    required this.zikr,
-    required this.count,
     required this.title,
-    required this.bless,
+    required this.dhikrEntity,
   });
-  final String zikr;
-  final int count;
   final String title;
-  final String? bless;
+  final DhikrEntity dhikrEntity;
 
   @override
   State<ZikrContainer> createState() => _ZikrContainerState();
@@ -50,7 +47,7 @@ class _ZikrContainerState extends State<ZikrContainer> {
                   ),
                   child: Center(
                     child: Text(
-                      "${widget.count}x",
+                      "${widget.dhikrEntity.repeat}x",
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.surface,
                         fontSize: 12,
@@ -63,15 +60,16 @@ class _ZikrContainerState extends State<ZikrContainer> {
             ),
             const Gap(20),
             Text(
-              widget.zikr,
+              widget.dhikrEntity.zekr,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 fontFamily: "Amiri",
-                wordSpacing: 2,
+                // wordSpacing: 2,
                 height: 2,
               ),
               textDirection: TextDirection.rtl,
             ),
-            if (widget.bless != null && widget.bless!.isNotEmpty)
+            const Gap(20),
+            if (widget.dhikrEntity.bless.isNotEmpty)
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
@@ -81,23 +79,25 @@ class _ZikrContainerState extends State<ZikrContainer> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Gap(8),
                       Expanded(
                         child: Text(
-                          widget.bless ?? "",
+                          widget.dhikrEntity.bless,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
+                                color: !context.read<ThemeCubit>().isDarkMood()
+                                    ? const Color(0xFF007552)
+                                    : const Color(0xFF5AE0AE),
                               ),
                           maxLines: 4,
                           textDirection: TextDirection.rtl,
-                          // textAlign: TextAlign.center,
+                          textAlign: TextAlign.justify,
                         ),
                       ),
+                      const Gap(10),
                       const Icon(Icons.lightbulb, color: Colors.yellow),
                     ],
                   ),

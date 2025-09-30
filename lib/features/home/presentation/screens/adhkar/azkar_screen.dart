@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/entities/azkar_section_entity.dart';
@@ -7,8 +5,8 @@ import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/cubit/adhkar_cubit.dart';
+import 'package:furqan/features/home/presentation/widgets/azkar_list_view.dart';
 import 'package:furqan/features/home/presentation/widgets/dhikr_list_tile.dart';
-import 'package:furqan/features/home/presentation/widgets/zikr_container.dart';
 import 'package:gap/gap.dart';
 
 class DhikrScreen extends StatefulWidget {
@@ -20,25 +18,28 @@ class DhikrScreen extends StatefulWidget {
 
 class _DhikrScreenState extends State<DhikrScreen> {
   AzkarSectionEntity? morningAzkar;
-  AzkarSectionEntity? nightAzkar;
+  AzkarSectionEntity? eveningAzkar;
   AzkarSectionEntity? postPratAzkar;
   @override
   void initState() {
     super.initState();
-    log("Iam dhikr");
     context.read<AdhkarCubit>().init();
-    getAzkar(morningAzkar, "azkar_sabah");
-    getAzkar(nightAzkar, "azkar_massa");
-    getAzkar(postPratAzkar, "PostPrayer_azkar");
+    getAzkar("azkar_massa");
+    getAzkar("azkar_sabah");
+    getAzkar("PostPrayer_azkar");
   }
 
-  Future<void> getAzkar(
-    AzkarSectionEntity? azkarSectionEntity,
-    String category,
-  ) async {
-    azkarSectionEntity = await context.read<AdhkarCubit>().getSectionAdhkar(
-      category,
-    );
+  Future<void> getAzkar(String category) async {
+    final result = await context.read<AdhkarCubit>().getSectionAdhkar(category);
+    setState(() {
+      if (category == "azkar_sabah") {
+        morningAzkar = result;
+      } else if (category == "azkar_massa") {
+        eveningAzkar = result;
+      } else if (category == "PostPrayer_azkar") {
+        postPratAzkar = result;
+      }
+    });
   }
 
   @override
@@ -62,7 +63,16 @@ class _DhikrScreenState extends State<DhikrScreen> {
                   children: [
                     DhikrListTile(
                       onTap: () {
-                        context.read<AdhkarCubit>().getAdhkar("azkar_sabah");
+                        // context.read<AdhkarCubit>().getAdhkar("azkar_sabah");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AzkarListView(
+                              titleTranslation: "Morning Azkar",
+                              azkarSectionEntity: morningAzkar,
+                            ),
+                          ),
+                        );
                       },
                       isDark: context.read<ThemeCubit>().isDarkMood(),
                       title: azkarCategories[0],
@@ -72,18 +82,32 @@ class _DhikrScreenState extends State<DhikrScreen> {
                     const Gap(20),
                     DhikrListTile(
                       onTap: () {
-                        context.read<AdhkarCubit>().getAdhkar("azkar_massa");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AzkarListView(
+                              titleTranslation: "Evening Azkar",
+                              azkarSectionEntity: eveningAzkar,
+                            ),
+                          ),
+                        );
                       },
                       englishTitle: azkarCategoriesEnglish[1],
                       isDark: context.read<ThemeCubit>().isDarkMood(),
                       title: azkarCategories[1],
-                      count: nightAzkar?.content.length ?? 0,
+                      count: eveningAzkar?.content.length ?? 0,
                     ),
                     const Gap(20),
                     DhikrListTile(
                       onTap: () {
-                        context.read<AdhkarCubit>().getAdhkar(
-                          "PostPrayer_azkar",
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AzkarListView(
+                              titleTranslation: "Post Prayer Azkar",
+                              azkarSectionEntity: postPratAzkar,
+                            ),
+                          ),
                         );
                       },
                       englishTitle: azkarCategoriesEnglish[2],
@@ -100,26 +124,9 @@ class _DhikrScreenState extends State<DhikrScreen> {
               if (state is AdhkarError) {
                 return Center(child: Text(state.message));
               }
-              if (state is AdhkarLoaded) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: state.adhkar.content.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ZikrContainer(
-                          zikr: state.adhkar.content[index].zekr,
-                          count: state.adhkar.content[index].repeat,
-                          title: state.adhkar.title,
-                          bless: state.adhkar.content[index].bless,
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }
+              // if (state is AdhkarLoaded) {
+
+              // }
               return const SizedBox();
             },
           ),

@@ -147,6 +147,11 @@ class _ReadingSurahState extends State<ReadingSurah> {
                           ayahNumber--;
                         });
                       }
+                      if (ayahNumber == 1) {
+                        context
+                            .read<ReadingCubit>()
+                            .toggleToSurahSelectionMode();
+                      }
                     },
                     child: CustomContainer(
                       isDarkMood: state == ThemeMode.dark,

@@ -29,6 +29,7 @@ class AdhkarCubit extends Cubit<AdhkarState> {
   Future<AzkarSectionEntity> getSectionAdhkar(String category) async {
     try {
       final adhkar = await homeRepo.getAdhkar(category);
+      log(adhkar.title);
       return adhkar;
     } on Exception catch (e) {
       throw Exception(e.toString());
