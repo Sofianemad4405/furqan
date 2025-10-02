@@ -39,6 +39,11 @@ class ReadingCubit extends Cubit<ReadingState> {
     return surah;
   }
 
+  Future<List<SurahBaseEntity>> getAllSurahs() async {
+    final surahs = await _readingRepo.getSurahs();
+    return surahs;
+  }
+
   Future<void> getSurahWithAudioAndTranslation(int surahNo) async {
     emit(SurahLoadingInReadingMode());
     try {
@@ -89,6 +94,17 @@ class ReadingCubit extends Cubit<ReadingState> {
       final tafsirProviders = await _readingRepo.getTafsirProviders();
       log(tafsirProviders.length.toString());
       return tafsirProviders;
+    } catch (e) {
+      log(e.toString());
+      return [];
+    }
+  }
+
+  Future<List<String>> getAvailableReciters() async {
+    try {
+      final reciters = await _readingRepo.getAvailableReciters();
+      log(reciters.length.toString());
+      return reciters;
     } catch (e) {
       log(e.toString());
       return [];

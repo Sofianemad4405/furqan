@@ -123,8 +123,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
                                                   Navigator.of(context).pop();
                                                 },
                                                 child: SurahListTile(
+                                                  surahNumber: index + 1,
                                                   surah: SurahBaseEntity(
-                                                    surahNumber: index + 1,
                                                     surahName: state
                                                         .surahs[index]
                                                         .surahName,
@@ -198,7 +198,7 @@ class _ReadingScreenState extends State<ReadingScreen> {
           } else if (state is SurahLoadedInListeningMode) {
             return ListeningToSurah(surah: state.surah);
           } else {
-            return const Text("data");
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),

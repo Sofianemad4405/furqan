@@ -141,10 +141,13 @@ class QuranAppTheme {
       // Others
       shadow: Colors.black26,
       scrim: Colors.black54,
-      inverseSurface: gray900,
-      onInverseSurface: gray50,
+      //sheikh container
+      inverseSurface: Color(0xFFDCEFEC),
+      //currentSurahBorder
+      onInverseSurface: Color(0xFF9EEAC7),
       inversePrimary: emerald400,
-      surfaceTint: emerald600,
+      //modal bottom sheet
+      surfaceTint: Color(0xff0F1726),
     );
 
     return ThemeData(
@@ -451,8 +454,8 @@ class QuranAppTheme {
       // Others
       shadow: Colors.black54,
       scrim: Colors.black87,
-      inverseSurface: gray50,
-      onInverseSurface: gray900,
+      inverseSurface: Color(0xFF00231D),
+      onInverseSurface: Color(0xff005C42),
       inversePrimary: emerald600,
       surfaceTint: emerald500,
     );

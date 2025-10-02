@@ -18,6 +18,7 @@ abstract class ReadingDataSource {
     int ayahNumber,
   );
   Future<List<TafsirProvider>> getTafsirProviders();
+  Future<List<String>> getAvailableReciters();
 }
 
 class ReadingDataSourceImpl implements ReadingDataSource {
@@ -82,6 +83,16 @@ class ReadingDataSourceImpl implements ReadingDataSource {
     try {
       final response = await _tafsirClient.getTafsirList();
       return response;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<String>> getAvailableReciters() async {
+    try {
+      final reciters = await _api.getAvailableReciters();
+      return reciters.values.toList();
     } catch (e) {
       throw Exception(e.toString());
     }
