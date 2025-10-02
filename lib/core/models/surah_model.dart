@@ -23,7 +23,6 @@ class SurahModel extends SurahBase {
     required super.surahNameTranslation,
     required super.revelationPlace,
     required super.totalAyah,
-    required this.surahNo,
     required this.audio,
     required this.english,
     required this.arabic1,
@@ -32,6 +31,7 @@ class SurahModel extends SurahBase {
     required this.urdu,
     required this.turkish,
     required this.uzbek,
+    required this.surahNo,
   });
   factory SurahModel.fromJson(Map<String, dynamic> json) =>
       _$SurahModelFromJson(json);

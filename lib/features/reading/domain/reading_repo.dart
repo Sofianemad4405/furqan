@@ -17,6 +17,7 @@ abstract class ReadingRepo {
     int ayahNo,
   );
   Future<List<TafsirProviderEntity>> getTafsirProviders();
+  Future<List<String>> getAvailableReciters();
 }
 
 class ReadingRepoImpl implements ReadingRepo {
@@ -66,6 +67,17 @@ class ReadingRepoImpl implements ReadingRepo {
           .toList();
     } catch (e) {
       log("error in getTafsirProviders ${e.toString()}");
+      return [];
+    }
+  }
+
+  @override
+  Future<List<String>> getAvailableReciters() async {
+    try {
+      final reciters = await _dataSource.getAvailableReciters();
+      return reciters;
+    } catch (e) {
+      log("error in getAvailableReciters ${e.toString()}");
       return [];
     }
   }

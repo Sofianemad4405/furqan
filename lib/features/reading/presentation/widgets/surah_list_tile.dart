@@ -4,8 +4,13 @@ import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:gap/gap.dart';
 
 class SurahListTile extends StatelessWidget {
-  const SurahListTile({super.key, required this.surah});
+  const SurahListTile({
+    super.key,
+    required this.surah,
+    required this.surahNumber,
+  });
   final SurahBaseEntity surah;
+  final int surahNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class SurahListTile extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            surah.surahNumber.toString(),
+                            surahNumber.toString(),
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                         ),

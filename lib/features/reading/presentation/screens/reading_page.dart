@@ -123,8 +123,8 @@ class _ReadingScreenState extends State<ReadingScreen> {
                                                   Navigator.of(context).pop();
                                                 },
                                                 child: SurahListTile(
+                                                  surahNumber: index + 1,
                                                   surah: SurahBaseEntity(
-                                                    surahNumber: index + 1,
                                                     surahName: state
                                                         .surahs[index]
                                                         .surahName,
