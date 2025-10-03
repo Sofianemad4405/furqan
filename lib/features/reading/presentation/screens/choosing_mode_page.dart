@@ -48,7 +48,6 @@ class _ChoosingModePageState extends State<ChoosingModePage> {
                 );
               },
               child: CustomContainer(
-                isDarkMood: state == ThemeMode.dark,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -114,7 +113,6 @@ class _ChoosingModePageState extends State<ChoosingModePage> {
                     );
               },
               child: CustomContainer(
-                isDarkMood: state == ThemeMode.dark,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -176,7 +174,6 @@ class _ChoosingModePageState extends State<ChoosingModePage> {
                 context.read<ReadingCubit>().toggleToSurahSelectionMode();
               },
               child: CustomContainer(
-                isDarkMood: state == ThemeMode.dark,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,

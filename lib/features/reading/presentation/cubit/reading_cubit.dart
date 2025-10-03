@@ -110,4 +110,8 @@ class ReadingCubit extends Cubit<ReadingState> {
       return [];
     }
   }
+
+  // Future<Duration?>getSurahDuration(int surahNo)async{
+
+  // }
 }

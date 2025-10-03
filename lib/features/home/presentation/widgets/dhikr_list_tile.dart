@@ -7,13 +7,11 @@ import 'package:gap/gap.dart';
 class DhikrListTile extends StatelessWidget {
   const DhikrListTile({
     super.key,
-    required this.isDark,
     required this.title,
     required this.englishTitle,
     required this.count,
     this.onTap,
   });
-  final bool isDark;
   final String title;
   final String englishTitle;
   final int count;
@@ -26,7 +24,6 @@ class DhikrListTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: CustomContainer(
-          isDarkMood: isDark,
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Row(

@@ -37,7 +37,6 @@ class MainChallengesGridView extends StatelessWidget {
                     }
                   : null,
               child: CustomContainer(
-                isDarkMood: state == ThemeMode.dark,
                 child: Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,

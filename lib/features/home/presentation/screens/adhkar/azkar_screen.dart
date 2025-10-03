@@ -74,7 +74,6 @@ class _DhikrScreenState extends State<DhikrScreen> {
                           ),
                         );
                       },
-                      isDark: context.read<ThemeCubit>().isDarkMood(),
                       title: azkarCategories[0],
                       englishTitle: azkarCategoriesEnglish[0],
                       count: morningAzkar?.content.length ?? 0,
@@ -93,7 +92,6 @@ class _DhikrScreenState extends State<DhikrScreen> {
                         );
                       },
                       englishTitle: azkarCategoriesEnglish[1],
-                      isDark: context.read<ThemeCubit>().isDarkMood(),
                       title: azkarCategories[1],
                       count: eveningAzkar?.content.length ?? 0,
                     ),
@@ -111,7 +109,6 @@ class _DhikrScreenState extends State<DhikrScreen> {
                         );
                       },
                       englishTitle: azkarCategoriesEnglish[2],
-                      isDark: context.read<ThemeCubit>().isDarkMood(),
                       title: azkarCategories[2],
                       count: postPratAzkar?.content.length ?? 0,
                     ),

@@ -2,21 +2,19 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:furqan/core/entities/audio_entity.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
-import 'package:furqan/core/themes/cubit/theme_cubit.dart';
+import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:provider/provider.dart';
 
 class ListeningToSurah extends StatefulWidget {
   const ListeningToSurah({super.key, required this.surah});
-
   final SurahEntity surah;
 
   @override
@@ -24,31 +22,45 @@ class ListeningToSurah extends StatefulWidget {
 }
 
 class _ListeningToSurahState extends State<ListeningToSurah> {
-  List<SurahBaseEntity> surahs = [];
-  SurahEntity? currentPlayingSurah;
-  List<String> reciters = [];
-  String? currentReciter;
-  int reciterId = 1;
-  List<AudioEntity> audios = [];
-  int currentAyah = 1;
-  int ayahsRead = 1;
-  bool isPlaying = false;
+  //audio player
   final player = AudioPlayer();
-  Duration? surahDuration;
+
+  ///Current Playing Surah
+  SurahEntity? currentPlayingSurah;
+
+  ///current reciter
+  String currentReciter = "";
+  bool hasChangedReciter = false;
+
+  ///current surah duration
+  Duration? currentSurahDuration;
+
+  ///All Surahs
+  List<SurahBaseEntity> surahs = [];
+
+  List<String> allSurahsAudios = [];
+
+  ///All reciters
+  List<String> reciters = [];
+
+  int reciterId = 1;
   @override
   void initState() {
     super.initState();
-    currentPlayingSurah = widget.surah;
-    getCurrentPlayingSurahDetails(widget.surah.surahNo);
-    getSurahs();
-    getAvailableReciters();
-    _loadAyah(widget.surah.surahNo, 1);
-    getCurrentSurahDuration(currentPlayingSurah!.surahAudio["1"]!.url);
+    _loadRecitersAndSurahs();
+    getCurrentSurahDuration(widget.surah.surahNo);
+    controlSurah();
   }
 
-  Future<void> getCurrentPlayingSurahDetails(int surahNum) async {
-    currentPlayingSurah = await context.read<ReadingCubit>().getSurah(surahNum);
-    setState(() {});
+  Future<void> _loadRecitersAndSurahs() async {
+    currentPlayingSurah = widget.surah;
+    reciters = await context.read<ReadingCubit>().getAvailableReciters();
+    surahs = await context.read<ReadingCubit>().getAllSurahs();
+    currentReciter = reciters[0];
+    reciterId = reciters.indexOf(currentReciter);
+    log(reciters.toString());
+    log(surahs.toString());
+    log(currentSurahDuration.toString());
   }
 
   Future<void> setCurrentReciter(String reciter) async {
@@ -56,30 +68,78 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
     setState(() {});
   }
 
-  Future<void> getSurahs() async {
-    surahs = await context.read<ReadingCubit>().getAllSurahs();
-  }
-
-  Future<void> getAvailableReciters() async {
-    reciters = await context.read<ReadingCubit>().getAvailableReciters();
-  }
-
-  Future<void> _loadAyah(int surahNo, int ayahNo) async {
-    audios = await context.read<ReadingCubit>().getVerseAudios(surahNo, ayahNo);
-    log(audios[0].url.toString());
-  }
-
-  Future<void> getCurrentSurahDuration(String url) async {
-    final player = AudioPlayer();
-    await player.setUrl(url);
-    surahDuration = await player.durationStream.firstWhere((d) => d != null);
+  Future<void> setCurrentSurah(SurahEntity surah) async {
+    currentPlayingSurah = surah;
     setState(() {});
   }
 
-  @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
+  Future<void> controlSurah() async {
+    if (player.playing) {
+      await player.pause();
+    } else {
+      if (player.audioSource == null || hasChangedReciter) {
+        await player.setUrl(
+          currentPlayingSurah?.surahAudio[(reciterId + 1).toString()]!.url ??
+              "",
+        );
+      }
+      await player.play(); // هيكمل من مكانه لو متوقف
+    }
+  }
+
+  Future<void> getCurrentSurahDuration(int surahNo) async {
+    currentPlayingSurah = await context.read<ReadingCubit>().getSurah(surahNo);
+    final surahAudio =
+        currentPlayingSurah?.surahAudio[(reciterId + 1).toString()]!.url;
+    await player.setUrl(surahAudio!);
+    await player.play();
+    final duration = await player.durationStream.firstWhere((d) => d != null);
+    setState(() {
+      currentSurahDuration = duration;
+    });
+  }
+
+  // Future<void> setPlaylist() async {
+  //   allSurahsAudios = List<String>.filled(surahs.length, "");
+  //   for (int i = 0; i < surahs.length; i++) {
+  //     allSurahsAudios[i] = await context
+  //         .read<ReadingCubit>()
+  //         .getSurah(i + 1)
+  //         .then((value) => value.surahAudio[(reciterId + 1).toString()]!.url);
+  //   }
+  //   final playlist = ConcatenatingAudioSource(
+  //     children: allSurahsAudios
+  //         .map((url) => AudioSource.uri(Uri.parse(url)))
+  //         .toList(),
+  //   );
+  //   player.setAudioSource(playlist);
+  //   await player.setShuffleModeEnabled(true);
+  // }
+
+  Future<void> previousSurah() async {
+    player.stop();
+    currentPlayingSurah = await context.read<ReadingCubit>().getSurah(
+      currentPlayingSurah!.surahNo - 1,
+    );
+    getCurrentSurahDuration(currentPlayingSurah!.surahNo);
+    player.setUrl(
+      currentPlayingSurah!.surahAudio[(reciterId + 1).toString()]!.url,
+    );
+    player.play();
+    setState(() {});
+  }
+
+  Future<void> nextSurah() async {
+    player.stop();
+    currentPlayingSurah = await context.read<ReadingCubit>().getSurah(
+      currentPlayingSurah!.surahNo + 1,
+    );
+    getCurrentSurahDuration(currentPlayingSurah!.surahNo);
+    player.setUrl(
+      currentPlayingSurah!.surahAudio[(reciterId + 1).toString()]!.url,
+    );
+    player.play();
+    setState(() {});
   }
 
   @override
@@ -88,7 +148,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ///Header
+          ///Heading
           Text(
             "Listening Mode",
             style: Theme.of(
@@ -102,17 +162,21 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
           ),
           const Gap(30),
 
+          ///Main Card
           CustomContainer(
-            isDarkMood: context.read<ThemeCubit>().isDarkMood(),
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
-                  ////Current Surah Choosing
+                  ///Surah ,Like & options
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(Icons.star, color: Colors.yellow),
+                      Text(
+                        surahIcons[(currentPlayingSurah?.surahNo ?? 1) - 1],
+                        style: const TextStyle(fontSize: 24),
+                      ),
+                      const Gap(10),
                       GestureDetector(
                         onTap: () {
                           showModalBottomSheet(
@@ -130,16 +194,20 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                   itemCount: surahs.length,
                                   itemBuilder: (context, index) {
                                     return ListTile(
-                                      onTap: () {
-                                        getCurrentPlayingSurahDetails(
-                                          index + 1,
+                                      onTap: () async {
+                                        final newSurah = await context
+                                            .read<ReadingCubit>()
+                                            .getSurah(index + 1);
+                                        setCurrentSurah(newSurah);
+                                        getCurrentSurahDuration(
+                                          newSurah.surahNo,
                                         );
-                                        currentAyah = 1;
                                         Navigator.pop(context);
+                                        await controlSurah();
                                       },
-                                      leading: const Icon(
-                                        Icons.wb_sunny_outlined,
-                                        color: Colors.orange,
+                                      leading: Text(
+                                        surahIcons[index],
+                                        style: const TextStyle(fontSize: 24),
                                       ),
                                       title: Text(surahs[index].surahName),
                                       subtitle: Row(
@@ -171,33 +239,34 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                               children: [
                                 Text(
                                   currentPlayingSurah!.surahName,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.headlineLarge,
+                                  style: Theme.of(context).textTheme.titleLarge,
                                 ),
                                 Text(
                                   currentPlayingSurah!.surahNameArabicLong,
-                                  style: Theme.of(context).textTheme.bodyLarge
+                                  style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(fontFamily: "Amiri"),
                                 ),
                               ],
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.keyboard_arrow_down),
-                            ),
+                            const Gap(10),
+                            const Icon(Icons.keyboard_arrow_down),
                           ],
                         ),
                       ),
                       const Gap(50),
-                      const Icon(Icons.favorite_rounded),
-                      const Icon(Icons.more_vert),
+                      IconButton(
+                        icon: const Icon(Icons.favorite_border),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.more_vert),
+                      ),
                     ],
                   ),
+                  const Gap(10),
 
-                  const Gap(30),
-
-                  ///mosque
+                  ///Reciter
                   GestureDetector(
                     onTap: () {
                       showModalBottomSheet(
@@ -216,21 +285,23 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                 return ListTile(
                                   onTap: () {
                                     setCurrentReciter(reciters[index]);
+                                    log(reciterId.toString());
+                                    log(index.toString());
+                                    log(hasChangedReciter.toString());
+                                    bool isDifferent = reciterId != index;
+                                    reciterId = index;
+                                    hasChangedReciter = isDifferent;
+                                    getCurrentSurahDuration(
+                                      currentPlayingSurah!.surahNo,
+                                    );
+                                    player.stop();
                                     Navigator.pop(context);
                                   },
-                                  leading: const Icon(
-                                    Icons.wb_sunny_outlined,
-                                    color: Colors.orange,
+                                  leading: Text(
+                                    recitersIcons[index],
+                                    style: const TextStyle(fontSize: 24),
                                   ),
                                   title: Text(reciters[index]),
-                                  // subtitle: Row(
-                                  //   children: [
-                                  //     Text(
-                                  //       "${reciters[index].totalAyah} Ayahs  •  ",
-                                  //     ),
-                                  //     Text(reciters[index].revelationPlace),
-                                  //   ],
-                                  // ),
                                   trailing: Text(
                                     reciters[index],
                                     style: Theme.of(context).textTheme.bodyLarge
@@ -253,14 +324,17 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            const Text("🕌", style: TextStyle(fontSize: 24)),
+                            Text(
+                              recitersIcons[reciterId],
+                              style: const TextStyle(fontSize: 24),
+                            ),
                             const Gap(20),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    currentReciter ?? "",
+                                    currentReciter,
                                     style: Theme.of(
                                       context,
                                     ).textTheme.labelLarge,
@@ -294,146 +368,56 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                       ),
                     ),
                   ),
-
                   const Gap(20),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Theme.of(context).colorScheme.surface,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
+
+                  ///timeline
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Ayah $currentAyah of ${currentPlayingSurah!.totalAyah}",
-                                style: Theme.of(context).textTheme.labelMedium
-                                    ?.copyWith(color: const Color(0xff007568)),
-                              ),
-                              const Spacer(),
-                              StreamBuilder(
-                                stream: player.positionStream,
-                                builder: (context, asyncSnapshot) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: const Color(0xff007568),
-                                      ),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 6,
-                                        vertical: 1,
-                                      ),
-                                      child: Text(
-                                        "${player.position.inSeconds / (player.duration?.inSeconds ?? 10) * 100}%",
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.labelMedium,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const Gap(20),
-                          StreamBuilder<Duration?>(
-                            stream: player.durationStream,
-                            builder: (context, snapshot) {
-                              final duration = snapshot.data ?? Duration.zero;
-                              return StreamBuilder<Duration>(
-                                stream: player.positionStream,
-                                builder: (context, asyncSnapshot) {
-                                  final position =
-                                      asyncSnapshot.data ?? Duration.zero;
-                                  return LinearProgressIndicator(
-                                    value: duration.inMilliseconds > 0
-                                        ? position.inMilliseconds /
-                                              duration.inMilliseconds
-                                        : 0,
-                                    minHeight: 7,
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: const Color(0xff007568),
-                                  );
-                                },
-                              );
+                          const Icon(Iconsax.clock, size: 16),
+                          const Gap(5),
+                          StreamBuilder(
+                            stream: player.positionStream,
+                            builder: (context, asyncSnapshot) {
+                              final position =
+                                  asyncSnapshot.data ?? Duration.zero;
+                              return Text(formatDuration(position));
                             },
-                          ),
-                          const Gap(10),
-                          Row(
-                            children: [
-                              // Text(
-                              //   "${player.position.inSeconds} / ${player.duration!.inSeconds}",
-                              //   style: Theme.of(context).textTheme.bodySmall,
-                              // ),
-                              const Spacer(),
-                              Text(
-                                "Ayah Progress",
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  const Gap(20),
-                  Row(
-                    children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
+                          border: Border.all(color: const Color(0xff5AE0AE)),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: const Color(0xff9EEAC7),
-                            width: 1,
-                          ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(
-                            "Ayah $ayahsRead of ${currentPlayingSurah!.totalAyah}",
-                            style: Theme.of(context).textTheme.titleSmall,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 2,
+                          ),
+                          child: StreamBuilder(
+                            stream: player.positionStream,
+                            builder: (context, asyncSnapshot) {
+                              final position =
+                                  asyncSnapshot.data ?? Duration.zero;
+                              return Text(
+                                "${((position.inSeconds / (currentSurahDuration?.inSeconds ?? 1)) * 100).toStringAsFixed(2)}%",
+                              );
+                            },
                           ),
                         ),
                       ),
-                      const Gap(20),
                       Text(
-                        "14% Complete",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const Spacer(),
-                      const Icon(Iconsax.clock, size: 12),
-                      const Gap(5),
-                      Text(
-                        "0:12 / 35:00",
-                        style: Theme.of(context).textTheme.bodySmall,
+                        formatDuration(currentSurahDuration ?? Duration.zero),
                       ),
                     ],
                   ),
-                  const Gap(20),
-                  LinearProgressIndicator(
-                    value: 0.14,
-                    color: const Color(0xff007568),
-                    minHeight: 7,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
                   const Gap(10),
-                  Row(
-                    children: [
-                      Text(
-                        "Current Ayah Progress",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const Spacer(),
-                      Text("4%", style: Theme.of(context).textTheme.bodySmall),
-                    ],
-                  ),
-                  const Gap(10),
+
+                  ///Linear progress indicator
                   StreamBuilder<Duration?>(
                     stream: player.durationStream,
                     builder: (context, snapshot) {
@@ -443,196 +427,108 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                         builder: (context, asyncSnapshot) {
                           final position = asyncSnapshot.data ?? Duration.zero;
                           return LinearProgressIndicator(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).colorScheme.surface,
                             value: duration.inMilliseconds > 0
                                 ? position.inMilliseconds /
                                       duration.inMilliseconds
                                 : 0,
-                            minHeight: 4,
+                            minHeight: 7,
                             borderRadius: BorderRadius.circular(12),
-                            color: const Color(0xff0094E9),
+                            color: const Color(0xff007568),
                           );
                         },
                       );
                     },
                   ),
-                  const Gap(30),
-                  ////pause & next & play & previous
-                  StreamBuilder<PlayerState>(
-                    stream: player.playerStateStream,
-                    builder: (context, asyncSnapshot) {
-                      final state = asyncSnapshot.data;
-                      final playing = state?.playing ?? false;
-                      final completed =
-                          state?.processingState == ProcessingState.completed;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ///Previous
-                            GestureDetector(
-                              onTap: () async {
-                                currentAyah--;
-                                if (currentAyah > 1) {
-                                  setState(() {
-                                    currentAyah--;
-                                  });
-                                  _loadAyah(
-                                    currentPlayingSurah?.surahNo ?? 1,
-                                    currentAyah,
-                                  );
-                                  await player.setUrl(audios[0].url);
-                                  await player.play();
-                                  setState(() {
-                                    isPlaying = true;
-                                  });
-                                }
-                              },
-                              child: SvgPicture.asset(
-                                height: 25,
-                                "assets/svgs/previous-svgrepo-com.svg",
-                              ),
-                            ),
 
-                            ///Play and pause
-                            GestureDetector(
-                              onTap: () async {
-                                if (player.playing) {
-                                  await player.pause();
-                                } else {
-                                  if (currentAyah ==
-                                      currentPlayingSurah?.totalAyah) {
-                                    setState(() {
-                                      currentAyah += 1;
-                                    });
-                                  }
-                                  try {
-                                    _loadAyah(
-                                      currentPlayingSurah?.surahNo ?? 1,
-                                      currentAyah,
-                                    );
-                                    await player.setUrl(audios[0].url);
-                                    log("sheikhhh ${audios[0].url}");
-                                    await player.play();
-                                  } catch (e) {
-                                    log(
-                                      "${e.toString()} ${e.runtimeType} errorrrrr",
-                                    );
-                                  }
-                                }
-                                setState(() {
-                                  isPlaying = !isPlaying;
-                                });
-                              },
-                              child: CircleAvatar(
-                                backgroundColor: const Color(0xff00B590),
-                                radius: 25,
-                                child: StreamBuilder<PlayerState>(
-                                  stream: player.playerStateStream,
-                                  builder: (context, snapshot) {
-                                    final state = snapshot.data;
-                                    final playing = state?.playing ?? false;
-                                    final completed =
-                                        state?.processingState ==
-                                        ProcessingState.completed;
-                                    return state?.processingState ==
-                                            ProcessingState.loading
-                                        ? const Center(
-                                            child: CircularProgressIndicator(
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        : SvgPicture.asset(
-                                            (playing && !completed)
-                                                ? "assets/svgs/pause-svgrepo-com.svg"
-                                                : "assets/svgs/play-svgrepo-com.svg",
-                                            height: 24,
-                                            width: 24,
-                                            colorFilter: const ColorFilter.mode(
-                                              Colors.white,
-                                              BlendMode.srcIn,
-                                            ),
-                                          );
-                                  },
-                                ),
-                              ),
-                            ),
-                            ////Stop
-                            SvgPicture.asset(
-                              height: 20,
-                              "assets/svgs/stop-svgrepo-com.svg",
-                            ),
-                            ////Next
-                            GestureDetector(
-                              onTap: () async {
-                                if (currentAyah <
-                                    (currentPlayingSurah?.totalAyah ?? 8)) {
-                                  if (currentPlayingSurah == null ||
-                                      audios.isEmpty)
-                                    return;
-                                  setState(() {
-                                    currentAyah++;
-                                  });
-                                  await player.stop();
-                                  log("current Ayah $currentAyah");
-                                  log(
-                                    "total Ayah ${currentPlayingSurah?.totalAyah}",
-                                  );
-                                  await _loadAyah(
-                                    currentPlayingSurah?.surahNo ?? 1,
-                                    currentAyah,
-                                  );
-                                  log("sheikhhh ${audios[0].url}");
-                                  await player.setUrl(audios[0].url);
-                                  await player.play();
-                                  setState(() {
-                                    isPlaying = true;
-                                  });
-                                }
-                              },
-                              child: SvgPicture.asset(
-                                height: 20,
-                                "assets/svgs/skip-next-svgrepo-com.svg",
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  const Gap(20),
+                  const Gap(10),
 
-                  ///operaitons
+                  ///Audio Operations
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      //repeat
-                      SvgPicture.asset(
-                        "assets/svgs/repeat-svgrepo-com.svg",
-                        height: 20,
+                      IconButton(
+                        tooltip: "Previous Surah",
+                        onPressed: () {
+                          previousSurah();
+                        },
+                        icon: SvgPicture.asset(
+                          "assets/svgs/previous-svgrepo-com.svg",
+                        ),
                       ),
-                      //shuffle
-                      SvgPicture.asset(
-                        "assets/svgs/shuffle-svgrepo-com.svg",
-                        height: 20,
+                      IconButton(
+                        tooltip: "Back 15s",
+                        onPressed: () {
+                          player.seek(
+                            player.position - const Duration(seconds: 15),
+                          );
+                        },
+                        icon: SvgPicture.asset(
+                          height: 16,
+                          width: 16,
+                          "assets/svgs/previous-svgrepo-com.svg",
+                        ),
                       ),
-                      //volume
-                      SvgPicture.asset(
-                        "assets/svgs/sound-volume-2-svgrepo-com.svg",
-                        height: 20,
+                      //Stop and play
+                      IconButton(
+                        onPressed: () async {
+                          controlSurah();
+                        },
+                        icon: CircleAvatar(
+                          backgroundColor: const Color(0xff00B590),
+                          radius: 25,
+                          child: StreamBuilder<PlayerState>(
+                            stream: player.playerStateStream,
+                            builder: (context, snapshot) {
+                              final state = snapshot.data;
+                              final playing = state?.playing ?? false;
+                              final completed =
+                                  state?.processingState ==
+                                  ProcessingState.completed;
+                              return state?.processingState ==
+                                      ProcessingState.loading
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : SvgPicture.asset(
+                                      (playing && !completed)
+                                          ? "assets/svgs/pause-svgrepo-com.svg"
+                                          : "assets/svgs/play-svgrepo-com.svg",
+                                      height: 24,
+                                      width: 24,
+                                      colorFilter: const ColorFilter.mode(
+                                        Colors.white,
+                                        BlendMode.srcIn,
+                                      ),
+                                    );
+                            },
+                          ),
+                        ),
                       ),
-                      //download
-                      SvgPicture.asset(
-                        "assets/svgs/download-svgrepo-com.svg",
-                        height: 20,
+
+                      //next
+                      IconButton(
+                        tooltip: "Forward 15s",
+                        onPressed: () {
+                          player.seek(
+                            player.position + const Duration(seconds: 15),
+                          );
+                        },
+                        icon: SvgPicture.asset(
+                          height: 16,
+                          width: 16,
+                          "assets/svgs/skip-next-svgrepo-com.svg",
+                        ),
                       ),
-                      //share
-                      SvgPicture.asset(
-                        "assets/svgs/share-svgrepo-com.svg",
-                        height: 20,
+                      IconButton(
+                        tooltip: "Next Surah",
+                        onPressed: () {
+                          nextSurah();
+                        },
+                        icon: SvgPicture.asset(
+                          "assets/svgs/skip-next-svgrepo-com.svg",
+                        ),
                       ),
                     ],
                   ),
@@ -640,7 +536,6 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
               ),
             ),
           ),
-          const Gap(100),
         ],
       ),
     );
@@ -666,4 +561,12 @@ Widget _buildBlurredSheet({
       ),
     ),
   );
+}
+
+String formatDuration(Duration d) {
+  String twoDigits(int n) => n.toString().padLeft(2, '0');
+  final hours = twoDigits(d.inHours);
+  final minutes = twoDigits(d.inMinutes.remainder(60));
+  final seconds = twoDigits(d.inSeconds.remainder(60));
+  return "$hours:$minutes:$seconds";
 }

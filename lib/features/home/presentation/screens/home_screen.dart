@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/features/home/presentation/widgets/current_streak.dart';
 import 'package:furqan/features/home/presentation/widgets/home_header.dart';
 import 'package:furqan/features/home/presentation/widgets/home_stats.dart';
@@ -7,7 +6,6 @@ import 'package:furqan/features/home/presentation/widgets/main_challenges_grid_v
 import 'package:furqan/features/home/presentation/widgets/today.dart';
 import 'package:furqan/features/home/presentation/widgets/today_challenges_list_view.dart';
 import 'package:gap/gap.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,7 +48,7 @@ class _HomeScreenState extends State<HomeScreen>
               const Gap(40),
 
               //// Home Stats
-              HomeStats(isDarkMode: context.read<ThemeCubit>().isDarkMood()),
+              const HomeStats(),
               const Gap(30),
 
               ///Today Challenges List View

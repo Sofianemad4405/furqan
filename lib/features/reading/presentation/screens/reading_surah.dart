@@ -154,7 +154,6 @@ class _ReadingSurahState extends State<ReadingSurah> {
                       }
                     },
                     child: CustomContainer(
-                      isDarkMood: state == ThemeMode.dark,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
@@ -247,7 +246,6 @@ class SurahStats extends StatelessWidget {
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
         return CustomContainer(
-          isDarkMood: state == ThemeMode.dark,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: Row(

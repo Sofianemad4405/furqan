@@ -74,7 +74,6 @@ class _VerseCardState extends State<VerseCard> {
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
         return CustomContainer(
-          isDarkMood: state == ThemeMode.dark,
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(

@@ -23,7 +23,6 @@ class _ZikrContainerState extends State<ZikrContainer> {
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      isDarkMood: context.watch<ThemeCubit>().isDarkMood(),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

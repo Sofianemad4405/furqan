@@ -21,7 +21,6 @@ class TodayChallengesListView extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: CustomContainer(
-                isDarkMood: state == ThemeMode.dark,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
