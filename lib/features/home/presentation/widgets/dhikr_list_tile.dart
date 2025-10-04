@@ -48,9 +48,8 @@ class DhikrListTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.displaySmall?.copyWith(fontFamily: "Amiri"),
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontFamily: "IBM Plex Sans Arabic"),
                     ),
                     const Gap(10),
                     Text(

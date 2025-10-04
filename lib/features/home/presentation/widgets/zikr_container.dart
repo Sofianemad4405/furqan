@@ -90,6 +90,7 @@ class _ZikrContainerState extends State<ZikrContainer> {
                                 color: !context.read<ThemeCubit>().isDarkMood()
                                     ? const Color(0xFF007552)
                                     : const Color(0xFF5AE0AE),
+                                fontFamily: "IBM Plex Sans Arabic",
                               ),
                           maxLines: 4,
                           textDirection: TextDirection.rtl,

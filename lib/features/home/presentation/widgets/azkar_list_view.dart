@@ -48,9 +48,9 @@ class _AzkarListViewState extends State<AzkarListView> {
                 children: [
                   Text(
                     widget.azkarSectionEntity?.title ?? "",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.headlineLarge?.copyWith(fontFamily: "Amiri"),
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontFamily: "IBM Plex Sans Arabic",
+                    ),
                   ),
                   const Gap(10),
                   Text(

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:ui';
 
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -50,6 +51,11 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
     _loadRecitersAndSurahs();
     getCurrentSurahDuration(widget.surah.surahNo);
     controlSurah();
+    player.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        nextSurah();
+      }
+    });
   }
 
   Future<void> _loadRecitersAndSurahs() async {
@@ -343,7 +349,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(
-                                        "مشاري راشد العفاسي",
+                                        reciterMapper(currentReciter),
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium
@@ -426,14 +432,20 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                         stream: player.positionStream,
                         builder: (context, asyncSnapshot) {
                           final position = asyncSnapshot.data ?? Duration.zero;
-                          return LinearProgressIndicator(
-                            value: duration.inMilliseconds > 0
-                                ? position.inMilliseconds /
-                                      duration.inMilliseconds
-                                : 0,
-                            minHeight: 7,
-                            borderRadius: BorderRadius.circular(12),
-                            color: const Color(0xff007568),
+                          return ProgressBar(
+                            progress: position,
+                            total: duration,
+                            progressBarColor: const Color(0xff007568),
+                            baseBarColor: Colors.grey.shade400,
+                            thumbColor: const Color(0xff007568),
+                            thumbRadius: 6,
+                            thumbGlowRadius: 2,
+                            timeLabelTextStyle: const TextStyle(
+                              color: Colors.white,
+                            ),
+                            onSeek: (duration) {
+                              player.seek(duration);
+                            },
                           );
                         },
                       );
@@ -536,6 +548,82 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
               ),
             ),
           ),
+          const Gap(20),
+          SizedBox(
+            height: 100,
+            child: Row(
+              children: [
+                Expanded(
+                  child: CustomContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${currentPlayingSurah!.totalAyah}",
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(color: const Color(0xff007568)),
+                          ),
+                          const Spacer(),
+                          Text(
+                            "Ayahs",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Expanded(
+                  child: CustomContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            formatDuration(currentSurahDuration!),
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(color: const Color(0xff007568)),
+                          ),
+                          const Spacer(),
+                          Text(
+                            "Duration",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Expanded(
+                  child: CustomContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            currentPlayingSurah!.revelationPlace,
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(color: const Color(0xff007568)),
+                          ),
+                          const Spacer(),
+                          Text(
+                            "Type",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -569,4 +657,21 @@ String formatDuration(Duration d) {
   final minutes = twoDigits(d.inMinutes.remainder(60));
   final seconds = twoDigits(d.inSeconds.remainder(60));
   return "$hours:$minutes:$seconds";
+}
+
+String reciterMapper(String reciterInEng) {
+  switch (reciterInEng) {
+    case "Mishary Rashid Al Afasy":
+      return "مشاري راشد العفاسي";
+    case "Abu Bakr Al Shatri":
+      return "أبو بكر الشاطري";
+    case "Nasser Al Qatami":
+      return "ناصر القطامي";
+    case "Yasser Al Dosari":
+      return "ياسر الدوسري";
+    case "Hani Ar Rifai":
+      return "هاني الرفاعي";
+    default:
+      return "";
+  }
 }
