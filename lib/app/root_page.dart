@@ -22,7 +22,6 @@ class RootPage extends StatefulWidget {
 class _RootPageState extends State<RootPage> {
   int _currentIndex = 0;
 
-  // اعمل key لكل تاب
   final _navKeys = List.generate(6, (_) => GlobalKey<NavigatorState>());
 
   void _refresh() => setState(() {});
