@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:furqan/core/di/get_it_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -83,6 +84,7 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
         data: {"name": name},
+        emailRedirectTo: "io.supabase.flutter://login-callback",
       );
       log(res.user.toString());
       emit(SignUpSuccess(authResponse: res));
@@ -110,9 +112,16 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signInWithEmailOtp(String email) async {
+  Future<void> signInWithEmailOtp({
+    required String email,
+    required BuildContext context,
+  }) async {
     try {
+      emit(SignInOtpLoading());
       await supabase.auth.signInWithOtp(email: email);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("OTP sent!")));
       emit(SignInOtpSuccess());
     } on Exception catch (e) {
       emit(SignInOtpError(e.toString()));
@@ -132,5 +141,25 @@ class AuthCubit extends Cubit<AuthState> {
   //   }
   // }
 
-  Future<void> resetPasswordForEmail(String email) async {}
+  Future<void> resetPassword({
+    required String email,
+    required BuildContext context,
+  }) async {
+    try {
+      await supabase.auth.resetPasswordForEmail(
+        email,
+        redirectTo: 'io.supabase.flutter://reset-password',
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password reset link sent to your email!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } on AuthApiException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message), backgroundColor: Colors.red),
+      );
+    }
+  }
 }

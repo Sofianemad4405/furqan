@@ -923,7 +923,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               ),
               child: Container(
                 alignment: Alignment.center,
-                child: (state is SignInLoading || state is SignUpLoading)
+                child:
+                    (state is SignInLoading ||
+                        state is SignUpLoading ||
+                        state is SignInOtpLoading)
                     ? const SizedBox(
                         width: 20,
                         height: 20,

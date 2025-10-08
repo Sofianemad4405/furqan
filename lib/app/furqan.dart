@@ -20,7 +20,7 @@ class Furqan extends StatelessWidget {
           darkTheme: QuranAppTheme.darkTheme,
           themeMode: state,
           // home: isLoggedIn ? const RootPage() : const AuthScreen(),
-          home: AuthScreen(onAuthComplete: (UserData p1) {}),
+          home: const RootPage(),
         );
       },
     );

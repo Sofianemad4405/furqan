@@ -847,15 +847,15 @@ class QuranAppTheme {
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ?? Colors.white.withValues(alpha: 0.2),
-        width: 0.2,
+        width: 0.6,
       ),
-      // boxShadow: [
-      //   BoxShadow(
-      //     color: Colors.black.withOpacity(0.1),
-      //     blurRadius: 20,
-      //     offset: const Offset(0, 8),
-      //   ),
-      // ],
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.1),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ],
     );
   }
 
@@ -870,15 +870,15 @@ class QuranAppTheme {
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ?? Colors.white.withValues(alpha: 0.2),
-        width: 0.2,
+        width: 0.9,
       ),
-      // boxShadow: [
-      //   BoxShadow(
-      //     color: Colors.black.withOpacity(0.3),
-      //     blurRadius: 20,
-      //     offset: const Offset(0, 8),
-      //   ),
-      // ],
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.2),
+          blurRadius: 20,
+          offset: const Offset(0, 8),
+        ),
+      ],
     );
   }
 

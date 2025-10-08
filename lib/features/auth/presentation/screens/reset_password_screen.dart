@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:furqan/features/auth/presentation/cubit/auth_cubit.dart';
 import 'dart:ui';
 import 'dart:math' as math;
 
@@ -87,6 +89,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen>
       _isLoading = true;
     });
 
+    await context.read<AuthCubit>().resetPassword(
+      email: _emailController.text,
+      context: context,
+    );
     // Simulate API call
     await Future.delayed(const Duration(milliseconds: 1500));
 
