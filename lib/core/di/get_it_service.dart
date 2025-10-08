@@ -4,6 +4,7 @@ import 'package:furqan/core/network/retrofit_client.dart';
 import 'package:furqan/core/network/tafsir_client.dart';
 import 'package:furqan/core/services/prefs.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
+import 'package:furqan/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:furqan/features/home/data/abstract_remote_data_source.dart';
 import 'package:furqan/features/home/data/remote_data_source_impl.dart';
 import 'package:furqan/features/home/domain/home_repo_abstract.dart';
@@ -14,6 +15,7 @@ import 'package:furqan/features/reading/domain/reading_repo.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
@@ -22,6 +24,7 @@ Future<void> init() async {
   sl.registerLazySingleton<AdhkarCubit>(
     () => AdhkarCubit(sl<HomeRepoAbstract>()),
   );
+  sl.registerLazySingleton<AuthCubit>(() => AuthCubit());
 
   sl.registerLazySingleton<ApiService>(
     () => ApiService(sl<DioFactory>().getDio()),
@@ -50,6 +53,9 @@ Future<void> init() async {
   sl.registerLazySingleton<RemoteDataSource>(
     () => RemoteDataSourceImpl(sl<AdhkarClient>()),
   );
+
+  ///supabase
+  sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 }
 
 Future<void> setupLocator() async {

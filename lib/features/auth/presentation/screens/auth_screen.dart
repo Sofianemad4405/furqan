@@ -2,7 +2,12 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:furqan/app/root_page.dart';
+import 'package:furqan/features/auth/data/models/user_data.dart';
+import 'package:furqan/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:furqan/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -83,46 +88,53 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Simulate API call
-    await Future.delayed(const Duration(milliseconds: 1500));
-
-    widget.onAuthComplete(
-      UserData(
+    if (_isLogin) {
+      await context.read<AuthCubit>().signInWithEmail(
         email: _emailController.text,
-        name: _nameController.text.isEmpty
-            ? _emailController.text.split('@')[0]
-            : _nameController.text,
-      ),
-    );
-
-    setState(() {
-      _isLoading = false;
-    });
+        password: _passwordController.text,
+      );
+      // Navigator.pushAndRemoveUntil(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) {
+      //       return const RootPage();
+      //     },
+      //   ),
+      //   (v) {
+      //     return false;
+      //   },
+      // );
+    } else {
+      await context.read<AuthCubit>().signUpNewUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+        name: _nameController.text,
+      );
+      setState(() {
+        _isLogin = true;
+      });
+    }
   }
 
-  Future<void> _handleSocialAuth(String provider) async {
-    setState(() {
-      _socialLoading = provider;
-    });
+  // Future<void> _handleSocialAuth(String provider) async {
+  //   setState(() {
+  //     _socialLoading = provider;
+  //   });
 
-    await Future.delayed(const Duration(milliseconds: 2000));
+  //   await Future.delayed(const Duration(milliseconds: 2000));
 
-    final mockUsers = {
-      'google': UserData(email: 'user@gmail.com', name: 'Google User'),
-      'facebook': UserData(email: 'user@facebook.com', name: 'Facebook User'),
-      'github': UserData(email: 'user@github.com', name: 'GitHub User'),
-    };
+  //   final mockUsers = {
+  //     'google': UserData(email: 'user@gmail.com', name: 'Google User'),
+  //     'facebook': UserData(email: 'user@facebook.com', name: 'Facebook User'),
+  //     'github': UserData(email: 'user@github.com', name: 'GitHub User'),
+  //   };
 
-    widget.onAuthComplete(mockUsers[provider]!);
+  //   widget.onAuthComplete(mockUsers[provider]!);
 
-    setState(() {
-      _socialLoading = null;
-    });
-  }
+  //   setState(() {
+  //     _socialLoading = null;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -362,6 +374,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
 
   Widget _buildHeader(ColorScheme colors) {
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(32),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -457,26 +470,66 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         child: Column(
           children: [
             // Social Login Buttons
-            _buildSocialButton(
-              colors: colors,
-              provider: 'google',
-              label: 'Continue with Google',
-              icon: _GoogleIcon(),
-              buttonColor: colors.googleButtonColor,
-              textColor: colors.socialButtonText,
+            BlocConsumer<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state is GoogleAuthSuccess) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const RootPage()),
+                  );
+                } else if (state is GoogleAuthError) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.error)));
+                }
+              },
+              builder: (context, state) {
+                return _buildSocialButton(
+                  colors: colors,
+                  provider: 'google',
+                  label: 'Continue with Google',
+                  icon: _GoogleIcon(),
+                  buttonColor: colors.googleButtonColor,
+                  textColor: colors.socialButtonText,
+                  onTap: () {
+                    context.read<AuthCubit>().googleSignIn();
+                  },
+                  isLoading: state is GoogleAuthLoading,
+                );
+              },
             ),
             const SizedBox(height: 12),
-            _buildSocialButton(
-              colors: colors,
-              provider: 'facebook',
-              label: 'Continue with Facebook',
-              icon: const Icon(
-                Icons.facebook,
-                color: Color(0xFF1877F2),
-                size: 20,
-              ),
-              buttonColor: colors.facebookButtonColor,
-              textColor: colors.facebookButtonText,
+            BlocConsumer<AuthCubit, AuthState>(
+              listener: (context, state) {
+                if (state is FacebookAuthSuccess) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const RootPage()),
+                  );
+                } else if (state is FacebookAuthError) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.error)));
+                }
+              },
+              builder: (context, state) {
+                return _buildSocialButton(
+                  colors: colors,
+                  provider: 'facebook',
+                  label: 'Continue with Facebook',
+                  icon: const Icon(
+                    Icons.facebook,
+                    color: Color(0xFF1877F2),
+                    size: 20,
+                  ),
+                  buttonColor: colors.facebookButtonColor,
+                  textColor: colors.facebookButtonText,
+                  onTap: () {
+                    context.read<AuthCubit>().signInWithFacebook();
+                  },
+                  isLoading: state is FacebookAuthLoading,
+                );
+              },
             ),
             const SizedBox(height: 12),
             _buildSocialButton(
@@ -486,6 +539,10 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               icon: SvgPicture.asset("assets/svgs/github-svgrepo-com.svg"),
               buttonColor: colors.githubButtonColor,
               textColor: colors.githubButtonText,
+              onTap: () {
+                context.read<AuthCubit>().signInWithGithub();
+              },
+              isLoading: false,
             ),
             const SizedBox(height: 24),
 
@@ -611,8 +668,38 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                     )
                   : const SizedBox.shrink(),
             ),
+            const Gap(10),
+            if (_isLogin)
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return ResetPasswordScreen(
+                          onBackToLogin: () {
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Forgot Password?',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xff009A86),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 24),
-
             // Submit Button
             _buildSubmitButton(colors),
             const SizedBox(height: 24),
@@ -693,15 +780,13 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
     required Widget icon,
     required Color buttonColor,
     required Color textColor,
+    required Function onTap,
+    required bool isLoading,
   }) {
-    final isLoading = _socialLoading == provider;
-
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: _socialLoading != null
-            ? null
-            : () => _handleSocialAuth(provider),
+        onTap: () => onTap(),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           height: 48,
@@ -792,71 +877,87 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildSubmitButton(ColorScheme colors) {
-    return SizedBox(
-      width: double.infinity,
-      height: 48,
-      child: ElevatedButton(
-        onPressed: (_isLoading || _socialLoading != null)
-            ? null
-            : _handleSubmit,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          padding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [
-                Color(0xFF10B981), // emerald-500
-                Color(0xFF0D9488), // teal-600
-              ],
-            ),
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF10B981).withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is SignInError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+          );
+        }
+        if (state is SignUpError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.error), backgroundColor: Colors.red),
+          );
+        }
+      },
+      builder: (context, state) {
+        return SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: _handleSubmit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              padding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-            ],
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            child: _isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _isLogin ? 'Sign In' : 'Create Account',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ],
+            ),
+            child: Ink(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF10B981), // emerald-500
+                    Color(0xFF0D9488), // teal-600
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF10B981).withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
                   ),
+                ],
+              ),
+              child: Container(
+                alignment: Alignment.center,
+                child: (state is SignInLoading || state is SignUpLoading)
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.white,
+                          ),
+                        ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _isLogin ? 'Sign In' : 'Create Account',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -1073,9 +1174,3 @@ class _DarkColors implements ColorScheme {
 }
 
 // User Data Model
-class UserData {
-  final String email;
-  final String name;
-
-  UserData({required this.email, required this.name});
-}
