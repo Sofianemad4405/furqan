@@ -737,14 +737,22 @@ class QuranAppTheme {
   static const LinearGradient lightScaffoldGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [emerald50, teal50, cyan50],
+    colors: [
+      Color(0xFFECFDF5), // emerald-50
+      Color(0xFFCCFBF1), // teal-50
+      Color(0xFFECFEFF), // cyan-50
+    ],
   );
 
   /// Dark mode scaffold gradient (emerald-950 → teal-950 → cyan-950)
   static const LinearGradient darkScaffoldGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [emerald950, teal950, cyan950],
+    colors: [
+      Color(0xFF022C22), // emerald-950
+      Color(0xFF042F2E), // teal-950
+      Color(0xFF083344),
+    ],
 
     // dark:from-emerald-950 dark:via-teal-950 dark:to-cyan-950
   );

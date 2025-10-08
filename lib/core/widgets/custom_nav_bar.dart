@@ -171,7 +171,7 @@ class GlassBottomNavigation extends StatelessWidget {
                                   AnimatedDefaultTextStyle(
                                     duration: const Duration(milliseconds: 300),
                                     style: TextStyle(
-                                      fontSize: 12,
+                                      fontSize: 9,
                                       fontWeight: isActive
                                           ? FontWeight.w800
                                           : FontWeight.w600,

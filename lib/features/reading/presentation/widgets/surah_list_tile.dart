@@ -15,7 +15,7 @@ class SurahListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: Container(
         height: 70,
         decoration: BoxDecoration(
@@ -25,51 +25,56 @@ class SurahListTile extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        height: 25,
-                        width: 25,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: QuranAppTheme.gray600,
-                            width: .5,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Center(
-                          child: Text(
-                            surahNumber.toString(),
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                        ),
+                  Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: QuranAppTheme.gray600,
+                        width: .5,
                       ),
-                      const Gap(5),
-                      Text(
-                        surah.surahName,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Center(
+                      child: Text(
+                        surahNumber.toString(),
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
-                    ],
+                    ),
                   ),
-                  const Spacer(),
-                  Text(
-                    "${surah.surahNameTranslation} . ${surah.totalAyah} Ayahs",
-                    style: Theme.of(context).textTheme.bodySmall,
+                  const Gap(5),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Text(
+                          surah.surahName,
+                          style: Theme.of(context).textTheme.labelMedium,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const Spacer(),
+                        Text(
+                          surah.surahNameArabic,
+                          style: const TextStyle(
+                            fontFamily: 'Amiri',
+                            color: QuranAppTheme.green,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
               const Spacer(),
               Text(
-                surah.surahNameArabic,
-                style: const TextStyle(
-                  fontFamily: 'Amiri',
-                  color: QuranAppTheme.green,
-                ),
+                "${surah.surahNameTranslation} . ${surah.totalAyah} Ayahs",
+                style: Theme.of(context).textTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),

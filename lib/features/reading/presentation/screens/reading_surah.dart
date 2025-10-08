@@ -87,7 +87,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                         iconColor: const Color(0xff598BF3),
                         topColumn: Text(
                           formatTime(_seconds),
-                          style: Theme.of(context).textTheme.labelMedium,
+                          style: Theme.of(context).textTheme.titleMedium,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -98,7 +98,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                         icon: const Icon(
                           Icons.menu_book_sharp,
                           color: Color(0xff27A57A),
-                          size: 15,
+                          size: 20,
                         ),
                         title: 'Ayahs\nRead',
                         iconColor: const Color(0xff27A57A),
@@ -247,29 +247,35 @@ class SurahStats extends StatelessWidget {
       builder: (context, state) {
         return CustomContainer(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    color: state == ThemeMode.dark
-                        ? iconColor.withValues(alpha: 0.4)
-                        : iconColor.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: icon,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: topColumn,
                 ),
                 const Gap(10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    topColumn,
-                    Text(title, style: Theme.of(context).textTheme.bodySmall),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          color: state == ThemeMode.dark
+                              ? iconColor.withValues(alpha: 0.4)
+                              : iconColor.withValues(alpha: 0.3),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: icon,
+                      ),
+                      const Gap(10),
+                      Text(title, style: Theme.of(context).textTheme.bodySmall),
+                    ],
+                  ),
                 ),
               ],
             ),

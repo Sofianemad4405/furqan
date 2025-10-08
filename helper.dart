@@ -1,21 +1,21 @@
-import 'dart:math' as math;
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
-import 'package:iconsax/iconsax.dart';
+import 'dart:ui';
+import 'dart:math' as math;
 
-class AuthScreen extends StatefulWidget {
+/// Complete Auth Screen for Quran App with Theme Toggle
+/// This is a single-file implementation matching the exact design from React/Tailwind
+class QuranAuthScreen extends StatefulWidget {
   final Function(UserData) onAuthComplete;
 
-  const AuthScreen({super.key, required this.onAuthComplete});
+  const QuranAuthScreen({Key? key, required this.onAuthComplete})
+    : super(key: key);
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<QuranAuthScreen> createState() => _QuranAuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
+class _QuranAuthScreenState extends State<QuranAuthScreen>
+    with TickerProviderStateMixin {
   bool _isLogin = true;
   bool _showPassword = false;
   bool _isLoading = false;
@@ -426,7 +426,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               ],
             ).createShader(bounds),
             child: const Text(
-              'FurQan',
+              'Al-Quran',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -483,7 +483,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               colors: colors,
               provider: 'github',
               label: 'Continue with GitHub',
-              icon: SvgPicture.asset("assets/svgs/github-svgrepo-com.svg"),
+              icon: Icon(Icons.code, color: colors.githubIconColor, size: 20),
               buttonColor: colors.githubButtonColor,
               textColor: colors.githubButtonText,
             ),
@@ -523,7 +523,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                           colors: colors,
                           controller: _nameController,
                           hint: 'Full Name',
-                          icon: Iconsax.user,
+                          icon: Icons.person_outline,
                           validator: (value) {
                             if (!_isLogin && (value == null || value.isEmpty)) {
                               return 'Please enter your name';
@@ -542,7 +542,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               colors: colors,
               controller: _emailController,
               hint: 'Email Address',
-              icon: Iconsax.sms,
+              icon: Icons.email_outlined,
               keyboardType: TextInputType.emailAddress,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -561,11 +561,11 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
               colors: colors,
               controller: _passwordController,
               hint: 'Password',
-              icon: Iconsax.lock,
+              icon: Icons.lock_outline,
               obscureText: !_showPassword,
               suffixIcon: IconButton(
                 icon: Icon(
-                  _showPassword ? Iconsax.eye : Iconsax.eye_slash,
+                  _showPassword ? Icons.visibility_off : Icons.visibility,
                   color: colors.iconColor,
                 ),
                 onPressed: () {
@@ -597,7 +597,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                           colors: colors,
                           controller: _confirmPasswordController,
                           hint: 'Confirm Password',
-                          icon: Iconsax.lock,
+                          icon: Icons.lock_outline,
                           obscureText: !_showPassword,
                           validator: (value) {
                             if (!_isLogin &&
@@ -728,7 +728,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           icon,
-                          const Gap(12),
+                          const SizedBox(width: 12),
                           Text(
                             isLoading ? 'Connecting...' : label,
                             style: TextStyle(
@@ -774,7 +774,6 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             validator: validator,
             style: TextStyle(color: colors.textColor),
             decoration: InputDecoration(
-              fillColor: colors.inputBackground,
               hintText: hint,
               hintStyle: TextStyle(color: colors.hintColor),
               prefixIcon: Icon(icon, color: colors.iconColor, size: 20),
@@ -868,9 +867,190 @@ class _GoogleIcon extends StatelessWidget {
     return SizedBox(
       width: 20,
       height: 20,
-      child: SvgPicture.asset("assets/svgs/google-svgrepo-com.svg"),
+      child: CustomPaint(painter: _GoogleIconPainter()),
     );
   }
+}
+
+class _GoogleIconPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..style = PaintingStyle.fill;
+
+    // Blue
+    paint.color = const Color(0xFF4285F4);
+    canvas.drawPath(
+      Path()
+        ..moveTo(size.width * 0.94, size.height * 0.51)
+        ..lineTo(size.width * 0.94, size.height * 0.51)
+        ..cubicTo(
+          size.width * 0.94,
+          size.height * 0.48,
+          size.width * 0.94,
+          size.height * 0.45,
+          size.width * 0.93,
+          size.height * 0.42,
+        )
+        ..lineTo(size.width * 0.50, size.height * 0.42)
+        ..lineTo(size.width * 0.50, size.height * 0.60)
+        ..lineTo(size.width * 0.75, size.height * 0.60)
+        ..cubicTo(
+          size.width * 0.74,
+          size.height * 0.66,
+          size.width * 0.70,
+          size.height * 0.71,
+          size.width * 0.66,
+          size.height * 0.74,
+        )
+        ..lineTo(size.width * 0.66, size.height * 0.86)
+        ..lineTo(size.width * 0.81, size.height * 0.86)
+        ..cubicTo(
+          size.width * 0.90,
+          size.height * 0.78,
+          size.width * 0.94,
+          size.height * 0.65,
+          size.width * 0.94,
+          size.height * 0.51,
+        )
+        ..close(),
+      paint,
+    );
+
+    // Green
+    paint.color = const Color(0xFF34A853);
+    canvas.drawPath(
+      Path()
+        ..moveTo(size.width * 0.50, size.height * 0.96)
+        ..cubicTo(
+          size.width * 0.62,
+          size.height * 0.96,
+          size.width * 0.73,
+          size.height * 0.92,
+          size.width * 0.81,
+          size.height * 0.86,
+        )
+        ..lineTo(size.width * 0.66, size.height * 0.74)
+        ..cubicTo(
+          size.width * 0.62,
+          size.height * 0.77,
+          size.width * 0.56,
+          size.height * 0.79,
+          size.width * 0.50,
+          size.height * 0.79,
+        )
+        ..cubicTo(
+          size.width * 0.38,
+          size.height * 0.79,
+          size.width * 0.28,
+          size.height * 0.71,
+          size.width * 0.24,
+          size.height * 0.60,
+        )
+        ..lineTo(size.width * 0.09, size.height * 0.60)
+        ..lineTo(size.width * 0.09, size.height * 0.72)
+        ..cubicTo(
+          size.width * 0.17,
+          size.height * 0.86,
+          size.width * 0.32,
+          size.height * 0.96,
+          size.width * 0.50,
+          size.height * 0.96,
+        )
+        ..close(),
+      paint,
+    );
+
+    // Yellow
+    paint.color = const Color(0xFFFBBC05);
+    canvas.drawPath(
+      Path()
+        ..moveTo(size.width * 0.24, size.height * 0.59)
+        ..cubicTo(
+          size.width * 0.23,
+          size.height * 0.56,
+          size.width * 0.23,
+          size.height * 0.53,
+          size.width * 0.23,
+          size.height * 0.50,
+        )
+        ..cubicTo(
+          size.width * 0.23,
+          size.height * 0.47,
+          size.width * 0.23,
+          size.height * 0.44,
+          size.width * 0.24,
+          size.height * 0.41,
+        )
+        ..lineTo(size.width * 0.24, size.height * 0.29)
+        ..lineTo(size.width * 0.09, size.height * 0.29)
+        ..cubicTo(
+          size.width * 0.06,
+          size.height * 0.36,
+          size.width * 0.04,
+          size.height * 0.43,
+          size.width * 0.04,
+          size.height * 0.50,
+        )
+        ..cubicTo(
+          size.width * 0.04,
+          size.height * 0.57,
+          size.width * 0.06,
+          size.height * 0.64,
+          size.width * 0.09,
+          size.height * 0.71,
+        )
+        ..lineTo(size.width * 0.15, size.height * 0.68)
+        ..lineTo(size.width * 0.19, size.height * 0.65)
+        ..close(),
+      paint,
+    );
+
+    // Red
+    paint.color = const Color(0xFFEA4335);
+    canvas.drawPath(
+      Path()
+        ..moveTo(size.width * 0.50, size.height * 0.22)
+        ..cubicTo(
+          size.width * 0.57,
+          size.height * 0.22,
+          size.width * 0.63,
+          size.height * 0.24,
+          size.width * 0.68,
+          size.height * 0.29,
+        )
+        ..lineTo(size.width * 0.81, size.height * 0.16)
+        ..cubicTo(
+          size.width * 0.73,
+          size.height * 0.09,
+          size.width * 0.62,
+          size.height * 0.04,
+          size.width * 0.50,
+          size.height * 0.04,
+        )
+        ..cubicTo(
+          size.width * 0.32,
+          size.height * 0.04,
+          size.width * 0.17,
+          size.height * 0.14,
+          size.width * 0.09,
+          size.height * 0.29,
+        )
+        ..lineTo(size.width * 0.24, size.height * 0.41)
+        ..cubicTo(
+          size.width * 0.28,
+          size.height * 0.30,
+          size.width * 0.38,
+          size.height * 0.22,
+          size.width * 0.50,
+          size.height * 0.22,
+        )
+        ..close(),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 // Color Schemes
@@ -1079,3 +1259,66 @@ class UserData {
 
   UserData({required this.email, required this.name});
 }
+
+// // Example Usage
+// void main() {
+//   runApp(const QuranAuthApp());
+// }
+
+// class QuranAuthApp extends StatelessWidget {
+//   const QuranAuthApp({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Quran Auth',
+//       debugShowCheckedModeBanner: false,
+//       theme: ThemeData(useMaterial3: true, fontFamily: 'SF Pro'),
+//       home: QuranAuthScreen(
+//         onAuthComplete: (user) {
+//           print('User authenticated: ${user.name} (${user.email})');
+//           // Navigate to your main app
+//         },
+//       ),
+//     );
+//   }
+// }
+
+
+  // Future<AuthResponse> _googleSignIn() async {
+  //   /// TODO: update the Web client ID with your own.
+  //   ///
+  //   /// Web Client ID that you registered with Google Cloud.
+  //   const webClientId =
+  //       '885310355539-7vksih53bkloogp9mb3ra6vst8jjnsah.apps.googleusercontent.com';
+
+  //   /// TODO: update the iOS client ID with your own.
+  //   ///
+  //   /// iOS Client ID that you registered with Google Cloud.
+  //   // const iosClientId = 'my-ios.apps.googleusercontent.com';
+
+  //   // Google sign in on Android will work without providing the Android
+  //   // Client ID registered on Google Cloud.
+
+  //   final GoogleSignIn googleSignIn = GoogleSignIn(
+  //     // clientId: iosClientId,
+  //     serverClientId: webClientId,
+  //   );
+  //   final googleUser = await googleSignIn.signIn();
+  //   final googleAuth = await googleUser!.authentication;
+  //   final accessToken = googleAuth.accessToken;
+  //   final idToken = googleAuth.idToken;
+
+  //   if (accessToken == null) {
+  //     throw 'No Access Token found.';
+  //   }
+  //   if (idToken == null) {
+  //     throw 'No ID Token found.';
+  //   }
+
+  //   return Supabase.instance.client.auth.signInWithIdToken(
+  //     provider: OAuthProvider.google,
+  //     idToken: idToken,
+  //     accessToken: accessToken,
+  //   );
+  // }

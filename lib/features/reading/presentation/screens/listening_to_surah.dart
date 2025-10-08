@@ -85,7 +85,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
     } else {
       if (player.audioSource == null || hasChangedReciter) {
         await player.setUrl(
-          currentPlayingSurah?.surahAudio[(reciterId + 1).toString()]!.url ??
+          currentPlayingSurah?.surahAudio[(reciterId + 1).toString()]?.url ??
               "",
         );
       }
@@ -96,7 +96,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
   Future<void> getCurrentSurahDuration(int surahNo) async {
     currentPlayingSurah = await context.read<ReadingCubit>().getSurah(surahNo);
     final surahAudio =
-        currentPlayingSurah?.surahAudio[(reciterId + 1).toString()]!.url;
+        currentPlayingSurah?.surahAudio[(reciterId + 1).toString()]?.url;
     await player.setUrl(surahAudio!);
     await player.play();
     final duration = await player.durationStream.firstWhere((d) => d != null);
@@ -129,7 +129,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
     );
     getCurrentSurahDuration(currentPlayingSurah!.surahNo);
     player.setUrl(
-      currentPlayingSurah!.surahAudio[(reciterId + 1).toString()]!.url,
+      currentPlayingSurah?.surahAudio[(reciterId + 1).toString()]?.url ?? "",
     );
     player.play();
     setState(() {});
@@ -171,7 +171,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
           ///Main Card
           CustomContainer(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(18.0),
               child: Column(
                 children: [
                   ///Surah ,Like & options
@@ -259,7 +259,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                           ],
                         ),
                       ),
-                      const Gap(50),
+                      const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.favorite_border),
                         onPressed: () {},

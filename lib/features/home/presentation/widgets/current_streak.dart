@@ -23,7 +23,7 @@ class CurrentStreak extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Current Stssssssssssreak",
+                  "Current Streak",
                   style: Theme.of(
                     context,
                   ).textTheme.headlineMedium?.copyWith(color: Colors.white),
@@ -54,9 +54,10 @@ class CurrentStreak extends StatelessWidget {
                 const Spacer(),
                 Text(
                   "0\ndays",
-                  style: Theme.of(
-                    context,
-                  ).textTheme.headlineLarge?.copyWith(color: Colors.white),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

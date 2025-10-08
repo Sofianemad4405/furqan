@@ -23,6 +23,8 @@ class _ZikrCounterState extends State<ZikrCounter>
   late AnimationController _controller;
   late Animation<double> _scale;
   late ConfettiController _confettiController;
+  final GlobalKey<_AnimatedRewardBoxState> rewardBoxKey =
+      GlobalKey<_AnimatedRewardBoxState>();
 
   @override
   void initState() {
@@ -41,10 +43,11 @@ class _ZikrCounterState extends State<ZikrCounter>
     _controller.forward();
     setState(() {
       count++;
-      if (count >= (widget.dhikr?.repeat ?? 1)) {
+      if (count == (widget.dhikr?.repeat ?? 1)) {
         _confettiController.play();
       }
     });
+    rewardBoxKey.currentState?.animate();
   }
 
   @override
@@ -56,6 +59,7 @@ class _ZikrCounterState extends State<ZikrCounter>
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: SingleChildScrollView(
@@ -112,42 +116,11 @@ class _ZikrCounterState extends State<ZikrCounter>
                     ),
                     if (widget.dhikr!.repeat <= count) const Gap(50),
                     if (widget.dhikr!.repeat <= count)
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      height: 30,
-                                      width: 30,
-                                      "assets/svgs/celebrations.svg",
-                                    ),
-                                    const Gap(10),
-                                    Text(
-                                      "Target Reached!",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                                const Text(
-                                  "+1 hasanat earned!",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: AnimatedRewardBox(
+                          count: count,
+                          key: rewardBoxKey,
                         ),
                       ),
                     const Gap(50),
@@ -166,8 +139,8 @@ class _ZikrCounterState extends State<ZikrCounter>
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 64,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: width * 0.1,
                                   ),
                                   child: Center(
                                     child: Row(
@@ -194,29 +167,32 @@ class _ZikrCounterState extends State<ZikrCounter>
                               ),
                             ),
                           ),
-                          const Gap(20),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Stack(
-                              children: [
-                                BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 4,
-                                    sigmaY: 4,
-                                  ),
-                                  child: Container(
-                                    color: Colors.black.withOpacity(0.1),
-                                    width: 50,
-                                    height: 50,
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.restart_alt_outlined,
-                                        color: Colors.white,
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () {},
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Stack(
+                                children: [
+                                  BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 4,
+                                      sigmaY: 4,
+                                    ),
+                                    child: Container(
+                                      color: Colors.black.withOpacity(0.1),
+                                      width: 50,
+                                      height: 50,
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.restart_alt_outlined,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -261,7 +237,7 @@ class _ZikrCounterState extends State<ZikrCounter>
                       topColumn: Expanded(
                         child: Center(
                           child: Text(
-                            "Hasanat\nEarned",
+                            "Hasanat Earned",
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                         ),
@@ -287,12 +263,81 @@ class _ZikrCounterState extends State<ZikrCounter>
                 Colors.purple,
               ],
             ),
-            const Gap(100),
+            const Gap(120),
             // CustomContainer(
             //   isDarkMood: context.read<ThemeCubit>().isDarkMood(),
             //   child: child,
             // ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class AnimatedRewardBox extends StatefulWidget {
+  final int count;
+  const AnimatedRewardBox({super.key, required this.count});
+
+  @override
+  State<AnimatedRewardBox> createState() => _AnimatedRewardBoxState();
+}
+
+class _AnimatedRewardBoxState extends State<AnimatedRewardBox> {
+  bool isScaled = false;
+  void animate() {
+    setState(() => isScaled = true); // يكبر شوية
+    Future.delayed(const Duration(milliseconds: 150), () {
+      setState(() => isScaled = false); // يرجع لحجمه الطبيعي
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: animate,
+        child: AnimatedScale(
+          scale: isScaled ? 1.2 : 1.0,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeInOut,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          height: 30,
+                          width: 30,
+                          "assets/svgs/celebrations.svg",
+                        ),
+                        const Gap(10),
+                        Text(
+                          "Target Reached!",
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "+ ${widget.count} hasanat earned!",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

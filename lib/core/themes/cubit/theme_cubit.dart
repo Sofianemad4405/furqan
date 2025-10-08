@@ -5,15 +5,11 @@ import 'package:flutter/material.dart';
 part 'theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
-  ThemeCubit() : super(ThemeMode.system);
+  ThemeCubit() : super(ThemeMode.light);
 
   // String language = 'en';
   void toggleTheme() {
-    if (state == ThemeMode.light) {
-      emit(ThemeMode.dark);
-    } else {
-      emit(ThemeMode.light);
-    }
+    emit(state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
   }
 
   void setTheme(ThemeMode themeMode) {

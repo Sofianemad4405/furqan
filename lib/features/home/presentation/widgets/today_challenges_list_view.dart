@@ -22,69 +22,76 @@ class TodayChallengesListView extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => const TodayChallenges()),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: CustomContainer(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 16,
-                ),
-                child: Column(
-                  children: [
-                    Row(
+          child: BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, state) {
+              bool isDark = state == ThemeMode.dark;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: CustomContainer(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 16,
+                    ),
+                    child: Column(
                       children: [
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            color: context.read<ThemeCubit>().isDarkMood()
-                                ? QuranAppTheme
-                                      .homeIconsContainersColorsDark[index]
-                                : QuranAppTheme
-                                      .homeIconsContainersColorsLight[index],
-                          ),
-                          child: Center(
-                            child: Text(
-                              todayChallenges[index].challengeIcon,
-                              style: Theme.of(context).textTheme.headlineMedium,
-                            ),
-                          ),
-                        ),
-                        const Gap(10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Text(
-                              todayChallenges[index].challengeName,
-                              style: Theme.of(context).textTheme.titleMedium,
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: isDark
+                                    ? QuranAppTheme
+                                          .homeIconsContainersColorsDark[index]
+                                    : QuranAppTheme
+                                          .homeIconsContainersColorsLight[index],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  todayChallenges[index].challengeIcon,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
                             ),
+                            const Gap(10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  todayChallenges[index].challengeName,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                ),
+                                Text(
+                                  todayChallenges[index].challengeDesc ?? "",
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
                             Text(
-                              todayChallenges[index].challengeDesc ?? "",
+                              "0/${todayChallenges[index].challengeCompletion}",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),
-                        const Spacer(),
-                        Text(
-                          "0/${todayChallenges[index].challengeCompletion}",
-                          style: Theme.of(context).textTheme.bodySmall,
+                        const Gap(40),
+                        LinearProgressIndicator(
+                          minHeight: 5,
+                          borderRadius: BorderRadius.circular(12),
+                          value: 0.5,
+                          backgroundColor: QuranAppTheme.gray450,
+                          color: QuranAppTheme.green,
                         ),
                       ],
                     ),
-                    const Gap(40),
-                    LinearProgressIndicator(
-                      minHeight: 5,
-                      borderRadius: BorderRadius.circular(12),
-                      value: 0.5,
-                      backgroundColor: QuranAppTheme.gray450,
-                      color: QuranAppTheme.green,
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         );
       },

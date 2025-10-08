@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
               ///Today Challenges List View
               Text(
                 "Today's Challenges",
-                style: Theme.of(context).textTheme.headlineSmall,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
               const Gap(10),
               const TodayChallengesListView(),
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen>
 
               ///Main Challenges Grid View
               const MainChallengesGridView(),
-              const Gap(90),
+              const Gap(120),
             ],
           ),
         ),
