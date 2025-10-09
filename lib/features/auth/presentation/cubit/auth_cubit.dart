@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:furqan/core/di/get_it_service.dart';
+import 'package:furqan/core/services/prefs.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -14,6 +15,7 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
   final supabase = sl<SupabaseClient>();
+  final prefs = sl<Prefs>();
 
   Future<void> googleSignIn() async {
     try {
@@ -43,9 +45,19 @@ class AuthCubit extends Cubit<AuthState> {
         idToken: idToken,
         accessToken: accessToken,
       );
-
+      final user = authResponse.user;
+      if (user != null) {
+        await prefs.saveUser(
+          name: user.userMetadata?['name'] ?? '',
+          email: user.email ?? '',
+          photo: user.userMetadata?['picture'] ?? '',
+          userId: user.id,
+        );
+        log("message");
+      }
       emit(GoogleAuthSuccess(authResponse: authResponse));
     } catch (e) {
+      log(e.toString());
       emit(GoogleAuthError(e.toString()));
     }
   }
@@ -100,12 +112,22 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     try {
       emit(SignInLoading());
+
       final AuthResponse res = await supabase.auth.signInWithPassword(
         email: email,
         password: password,
       );
-      log(res.user.toString());
-      emit(SignInSuccess(authResponse: res));
+
+      if (res.user != null) {
+        await prefs.saveUser(
+          name: res.user!.userMetadata?['name'] ?? '',
+          email: res.user!.email ?? '',
+          photo: res.user!.userMetadata?['photo'] ?? '',
+          userId: res.user!.id,
+        );
+
+        emit(SignInSuccess(authResponse: res));
+      }
     } on AuthApiException catch (e) {
       log(e.toString());
       emit(SignInError(e.message));
@@ -161,5 +183,16 @@ class AuthCubit extends Cubit<AuthState> {
         SnackBar(content: Text(e.message), backgroundColor: Colors.red),
       );
     }
+  }
+
+  Future<void> logout() async {
+    await supabase.auth.signOut();
+    await prefs.clear();
+  }
+
+  Future<bool> checkSession() async {
+    final session = supabase.auth.currentSession;
+    final isLoggedIn = await prefs.isLoggedIn();
+    return session != null && isLoggedIn;
   }
 }

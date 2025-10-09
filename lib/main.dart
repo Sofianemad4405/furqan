@@ -19,7 +19,9 @@ Future<void> main() async {
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNudWFob3VwY291cW9yZ2hzZW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3ODUwNzQsImV4cCI6MjA3NTM2MTA3NH0.q02YLI-m4DmhCwpV8mO1OWUPDgKGepbpW5Z87E_wokc',
   );
   final prefs = sl<Prefs>();
-  final loggedIn = prefs.isLoggedIn;
+  final supabase = sl<SupabaseClient>();
+  final isLoggedIn =
+      (await prefs.isLoggedIn()) && (supabase.auth.currentSession != null);
   runApp(
     MultiBlocProvider(
       providers: [
@@ -28,7 +30,7 @@ Future<void> main() async {
         BlocProvider(create: (context) => sl<AuthCubit>()),
         BlocProvider(create: (context) => sl<AdhkarCubit>()),
       ],
-      child: Furqan(isLoggedIn: loggedIn),
+      child: Furqan(isLoggedIn: isLoggedIn),
     ),
   );
 }

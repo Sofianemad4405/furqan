@@ -9,24 +9,33 @@ class Prefs {
   static const _keyEmail = 'user_email';
   static const _keyPhoto = 'user_photo';
   static const _keyIsLoggedIn = 'is_logged_in';
+  static const _keyUserId = 'user_id';
 
   Future<void> saveUser({
     required String name,
     required String email,
     required String photo,
+    required String userId,
   }) async {
     await _prefs.setString(_keyName, name);
     await _prefs.setString(_keyEmail, email);
     await _prefs.setString(_keyPhoto, photo);
     await _prefs.setBool(_keyIsLoggedIn, true);
+    await _prefs.setString(_keyUserId, userId);
   }
 
   String? get name => _prefs.getString(_keyName);
   String? get email => _prefs.getString(_keyEmail);
   String? get photo => _prefs.getString(_keyPhoto);
-  bool get isLoggedIn => _prefs.getBool(_keyIsLoggedIn) ?? false;
+  // bool get isLoggedIn => _prefs.getBool(_keyIsLoggedIn) ?? false;
+
+  Future<bool> isLoggedIn() async {
+    return _prefs.getBool(_keyIsLoggedIn) ?? false;
+  }
 
   Future<void> clear() async {
     await _prefs.clear();
   }
+
+  String? get userId => _prefs.getString(_keyUserId);
 }

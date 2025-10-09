@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
 
 class CurrentStreak extends StatelessWidget {
-  const CurrentStreak({super.key});
+  const CurrentStreak({super.key, required this.userProgress});
+  final UserProgress userProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +55,7 @@ class CurrentStreak extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  "0\ndays",
+                  "${userProgress.currentStreak}\ndays",
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Colors.white,
                     overflow: TextOverflow.ellipsis,

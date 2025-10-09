@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/core/widgets/custom_nav_bar.dart';
@@ -11,6 +12,9 @@ import 'package:furqan/features/reading/presentation/screens/reading_page.dart';
 import 'package:furqan/features/search/presentation/screens/search_page.dart';
 import 'package:furqan/features/settings/presentation/screens/settings_page.dart';
 import 'package:furqan/features/stats/presentation/screens/stats_page.dart';
+import 'package:furqan/features/user_data/models/user_progress.dart';
+import 'package:furqan/features/user_data/services/user_progress_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -37,10 +41,30 @@ class _RootPageState extends State<RootPage> {
     );
   }
 
+  UserProgress? userProgress;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProgress();
+  }
+
+  Future<void> _loadUserProgress() async {
+    final user = Supabase.instance.client.auth.currentUser;
+    final progressService = sl<UserProgressService>();
+
+    final progress = await progressService.getUserProgress(user!.id);
+
+    setState(() {
+      userProgress = progress;
+    });
+
+    log(user.id.toString());
+  }
+
   @override
   Widget build(BuildContext context) {
     final canPop = _navKeys[_currentIndex].currentState?.canPop() ?? false;
-
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -74,16 +98,24 @@ class _RootPageState extends State<RootPage> {
           ],
         ),
         extendBody: true,
-        body: Stack(
-          children: [
-            _buildOffstageNavigator(0, const HomeScreen()),
-            _buildOffstageNavigator(1, const ReadingScreen()),
-            _buildOffstageNavigator(2, const SearchScreen()),
-            _buildOffstageNavigator(3, const StatsScreen()),
-            _buildOffstageNavigator(4, const ChatScreen()),
-            _buildOffstageNavigator(5, const SettingsScreen()),
-          ],
-        ),
+        body: userProgress == null
+            ? const Center(child: CircularProgressIndicator())
+            : Stack(
+                children: [
+                  _buildOffstageNavigator(
+                    0,
+                    HomeScreen(userProgress: userProgress!),
+                  ),
+                  _buildOffstageNavigator(
+                    1,
+                    ReadingScreen(userProgress: userProgress!),
+                  ),
+                  _buildOffstageNavigator(2, const SearchScreen()),
+                  _buildOffstageNavigator(3, const StatsScreen()),
+                  _buildOffstageNavigator(4, const ChatScreen()),
+                  _buildOffstageNavigator(5, const SettingsScreen()),
+                ],
+              ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),

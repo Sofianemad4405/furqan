@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/features/home/presentation/widgets/current_streak.dart';
 import 'package:furqan/features/home/presentation/widgets/home_header.dart';
 import 'package:furqan/features/home/presentation/widgets/home_stats.dart';
 import 'package:furqan/features/home/presentation/widgets/main_challenges_grid_view.dart';
 import 'package:furqan/features/home/presentation/widgets/today.dart';
 import 'package:furqan/features/home/presentation/widgets/today_challenges_list_view.dart';
+import 'package:furqan/features/user_data/models/user_progress.dart';
+import 'package:furqan/features/user_data/services/user_progress_service.dart';
 import 'package:gap/gap.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.userProgress});
+  final UserProgress userProgress;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -48,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen>
               const Gap(40),
 
               //// Home Stats
-              const HomeStats(),
+              HomeStats(userProgress: widget.userProgress),
               const Gap(30),
 
               ///Today Challenges List View
@@ -57,11 +62,11 @@ class _HomeScreenState extends State<HomeScreen>
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const Gap(10),
-              const TodayChallengesListView(),
+              TodayChallengesListView(userProgress: widget.userProgress),
               const Gap(20),
 
               ///Current Streak
-              const CurrentStreak(),
+              CurrentStreak(userProgress: widget.userProgress),
               const Gap(20),
 
               ///Main Challenges Grid View

@@ -13,6 +13,8 @@ import 'package:furqan/features/home/presentation/screens/adhkar/cubit/adhkar_cu
 import 'package:furqan/features/reading/data/reading_data_source.dart';
 import 'package:furqan/features/reading/domain/reading_repo.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
+import 'package:furqan/features/user_data/controller/user_data_controller.dart';
+import 'package:furqan/features/user_data/services/user_progress_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -56,6 +58,12 @@ Future<void> init() async {
 
   ///supabase
   sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
+  sl.registerLazySingleton<UserProgressService>(() => UserProgressService());
+
+  ///user data
+  sl.registerLazySingleton<UserDataController>(
+    () => UserDataController(sl<UserProgressService>()),
+  );
 }
 
 Future<void> setupLocator() async {

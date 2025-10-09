@@ -25,26 +25,26 @@ List<ChallengeModel> mainChallenges = [
   ChallengeModel(challengeIcon: "🕌", challengeName: "Prayer Times"),
 ];
 
-List<ChallengeModel> todayChallenges = [
-  ChallengeModel(
-    challengeIcon: "📖",
-    challengeName: "Complete a Surah",
-    challengeDesc: "Read any complete Surah today",
-    challengeCompletion: 1,
-  ),
-  ChallengeModel(
-    challengeIcon: "❤️",
-    challengeName: "Act of Kindness",
-    challengeDesc: "Perform one act of charity or kindness",
-    challengeCompletion: 1,
-  ),
-  ChallengeModel(
-    challengeIcon: "📖",
-    challengeName: "Read 5 Ayahs",
-    challengeDesc: "Read at least 5 Ayahs with reflection",
-    challengeCompletion: 5,
-  ),
-];
+// List<ChallengeModel> todayChallenges = [
+//   ChallengeModel(
+//     challengeIcon: "📖",
+//     challengeName: "Complete a Surah",
+//     challengeDesc: "Read any complete Surah today",
+//     challengeCompletion: 1,
+//   ),
+//   ChallengeModel(
+//     challengeIcon: "❤️",
+//     challengeName: "Act of Kindness",
+//     challengeDesc: "Perform one act of charity or kindness",
+//     challengeCompletion: 1,
+//   ),
+//   ChallengeModel(
+//     challengeIcon: "📖",
+//     challengeName: "Read 5 Ayahs",
+//     challengeDesc: "Read at least 5 Ayahs with reflection",
+//     challengeCompletion: 5,
+//   ),
+// ];
 
 List<String> azkarCategories = [
   "أذكار الصباح",

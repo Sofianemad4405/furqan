@@ -6,10 +6,15 @@ import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/auth/data/models/user_data.dart';
 import 'package:furqan/features/auth/presentation/screens/auth_screen.dart';
 
-class Furqan extends StatelessWidget {
+class Furqan extends StatefulWidget {
   const Furqan({super.key, required this.isLoggedIn});
   final bool isLoggedIn;
 
+  @override
+  State<Furqan> createState() => _FurqanState();
+}
+
+class _FurqanState extends State<Furqan> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeMode>(
@@ -19,8 +24,9 @@ class Furqan extends StatelessWidget {
           theme: QuranAppTheme.lightTheme,
           darkTheme: QuranAppTheme.darkTheme,
           themeMode: state,
-          // home: isLoggedIn ? const RootPage() : const AuthScreen(),
-          home: const RootPage(),
+          home: widget.isLoggedIn
+              ? const RootPage()
+              : AuthScreen(onAuthComplete: (UserData p1) {}),
         );
       },
     );

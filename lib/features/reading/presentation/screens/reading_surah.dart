@@ -1,13 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
+import 'package:furqan/core/services/prefs.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:furqan/features/reading/presentation/widgets/verse_card.dart';
+import 'package:furqan/features/user_data/controller/user_data_controller.dart';
+import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
 import 'package:just_audio/just_audio.dart';
 
@@ -24,6 +28,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
   int ayahNumber = 1;
   final player = AudioPlayer();
   int ayahsRead = 0;
+  int surahsRead = 0;
 
   List<AudioEntity> surahVerses = [];
   late Timer _timer;
@@ -181,13 +186,33 @@ class _ReadingSurahState extends State<ReadingSurah> {
 
                   ///Next Ayah
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       setState(() {
                         if (ayahNumber < widget.surah.totalAyah) {
                           ayahNumber++;
                           ayahsRead++;
                         }
                       });
+                      await sl<UserDataController>().updateUserProgress(
+                        sl<Prefs>().userId!,
+                        {
+                          // 'surahs_read': ayahNumber,
+                          'total_hassanat': ayahsRead * 10,
+                        },
+                      );
+                      if (_seconds % 60 == 0) {
+                        await sl<UserDataController>().updateUserProgress(
+                          sl<Prefs>().userId!,
+                          {'minutes_of_reading_quraan': _seconds ~/ 60},
+                        );
+                      }
+                      if (ayahNumber == widget.surah.totalAyah) {
+                        surahsRead++;
+                        await sl<UserDataController>().updateUserProgress(
+                          sl<Prefs>().userId!,
+                          {'surahs_read': surahsRead},
+                        );
+                      }
                     },
                     child: Container(
                       decoration: BoxDecoration(

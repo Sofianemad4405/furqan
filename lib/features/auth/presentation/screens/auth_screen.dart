@@ -478,9 +478,14 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                     MaterialPageRoute(builder: (_) => const RootPage()),
                   );
                 } else if (state is GoogleAuthError) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(state.error)));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        state.error,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  );
                 }
               },
               builder: (context, state) {

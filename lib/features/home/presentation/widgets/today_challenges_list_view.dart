@@ -5,10 +5,12 @@ import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/screens/today_challenges/today_challenges.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
+import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
 
 class TodayChallengesListView extends StatelessWidget {
-  const TodayChallengesListView({super.key});
+  const TodayChallengesListView({super.key, required this.userProgress});
+  final UserProgress userProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -34,55 +36,59 @@ class TodayChallengesListView extends StatelessWidget {
                       vertical: 16,
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Container(
-                              height: 40,
-                              width: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: isDark
-                                    ? QuranAppTheme
-                                          .homeIconsContainersColorsDark[index]
-                                    : QuranAppTheme
-                                          .homeIconsContainersColorsLight[index],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  todayChallenges[index].challengeIcon,
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                              ),
-                            ),
-                            const Gap(10),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            ///challenge icon
+                            Row(
                               children: [
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: isDark
+                                        ? QuranAppTheme
+                                              .homeIconsContainersColorsDark[index]
+                                        : QuranAppTheme
+                                              .homeIconsContainersColorsLight[index],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      userProgress.todayChallenges[index].icon,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
+                                    ),
+                                  ),
+                                ),
+                                const Gap(10),
                                 Text(
-                                  todayChallenges[index].challengeName,
+                                  userProgress.todayChallenges[index].title,
                                   style: Theme.of(
                                     context,
                                   ).textTheme.titleMedium,
-                                ),
-                                Text(
-                                  todayChallenges[index].challengeDesc ?? "",
-                                  style: Theme.of(context).textTheme.bodySmall,
                                 ),
                               ],
                             ),
                             const Spacer(),
                             Text(
-                              "0/${todayChallenges[index].challengeCompletion}",
+                              "${userProgress.todayChallenges[index].finished}/${userProgress.todayChallenges[index].target}",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),
-                        const Gap(40),
+                        const Gap(20),
+                        Text(
+                          userProgress.todayChallenges[index].description,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        const Gap(20),
                         LinearProgressIndicator(
                           minHeight: 5,
                           borderRadius: BorderRadius.circular(12),
-                          value: 0.5,
+                          value: userProgress.todayChallenges[index].progress,
                           backgroundColor: QuranAppTheme.gray450,
                           color: QuranAppTheme.green,
                         ),

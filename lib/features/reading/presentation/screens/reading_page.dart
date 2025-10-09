@@ -9,10 +9,12 @@ import 'package:furqan/features/reading/presentation/screens/choosing_mode_page.
 import 'package:furqan/features/reading/presentation/screens/listening_to_surah.dart';
 import 'package:furqan/features/reading/presentation/screens/reading_surah.dart';
 import 'package:furqan/features/reading/presentation/widgets/surah_list_tile.dart';
+import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
 
 class ReadingScreen extends StatefulWidget {
-  const ReadingScreen({super.key});
+  const ReadingScreen({super.key, required this.userProgress});
+  final UserProgress userProgress;
 
   @override
   State<ReadingScreen> createState() => _ReadingScreenState();
