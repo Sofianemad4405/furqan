@@ -9,6 +9,7 @@ import 'package:furqan/features/home/data/abstract_remote_data_source.dart';
 import 'package:furqan/features/home/data/remote_data_source_impl.dart';
 import 'package:furqan/features/home/domain/home_repo_abstract.dart';
 import 'package:furqan/features/home/domain/home_repo_impl.dart';
+import 'package:furqan/features/home/presentation/cubit/home_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/cubit/adhkar_cubit.dart';
 import 'package:furqan/features/reading/data/reading_data_source.dart';
 import 'package:furqan/features/reading/domain/reading_repo.dart';
@@ -21,13 +22,15 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 final sl = GetIt.instance;
 Future<void> init() async {
-  sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
+  sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit(sl<Prefs>()));
   sl.registerLazySingleton<ReadingCubit>(() => ReadingCubit(sl<ReadingRepo>()));
   sl.registerLazySingleton<AdhkarCubit>(
     () => AdhkarCubit(sl<HomeRepoAbstract>()),
   );
   sl.registerLazySingleton<AuthCubit>(() => AuthCubit());
-
+  sl.registerLazySingleton<HomeCubit>(
+    () => HomeCubit(sl<UserDataController>(), sl<Prefs>()),
+  );
   sl.registerLazySingleton<ApiService>(
     () => ApiService(sl<DioFactory>().getDio()),
   );

@@ -13,6 +13,11 @@ class HomeCubit extends Cubit<HomeState> {
   final UserDataController _userDataController;
   final Prefs _prefs;
   final String? userId;
+
+  void init() {
+    loadUserData();
+  }
+
   Future<void> loadUserData() async {
     emit(HomeLoading());
     try {
@@ -28,7 +33,7 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       await _userDataController.updateUserProgress(userId!, updates);
       final userData = await _userDataController.getUserProgress(userId!);
-      emit(HomeUpdated(userProgress: userData));
+      emit(HomeLoaded(userProgress: userData));
     } catch (e) {
       emit(HomeError(message: e.toString()));
     }

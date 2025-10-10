@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/app/root_page.dart';
+import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/auth/data/models/user_data.dart';
@@ -15,6 +16,12 @@ class Furqan extends StatefulWidget {
 }
 
 class _FurqanState extends State<Furqan> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ThemeCubit>().init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeMode>(

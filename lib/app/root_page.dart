@@ -91,7 +91,6 @@ class _RootPageState extends State<RootPage> {
             IconButton(
               icon: const Icon(Icons.notifications, color: Colors.red),
               onPressed: () {
-                log("toggling");
                 context.read<ThemeCubit>().toggleTheme();
               },
             ),
@@ -99,13 +98,10 @@ class _RootPageState extends State<RootPage> {
         ),
         extendBody: true,
         body: userProgress == null
-            ? const Center(child: CircularProgressIndicator())
+            ? const HomeShimmer()
             : Stack(
                 children: [
-                  _buildOffstageNavigator(
-                    0,
-                    HomeScreen(userProgress: userProgress!),
-                  ),
+                  _buildOffstageNavigator(0, const HomeScreen()),
                   _buildOffstageNavigator(
                     1,
                     ReadingScreen(userProgress: userProgress!),

@@ -45,6 +45,7 @@ dependencies:
   provider: ^6.1.1
   retrofit: ^4.7.2
   shared_preferences: ^2.5.3
+  shimmer: ^3.0.0
   supabase_flutter: ^2.10.2
   url_launcher: ^6.2.1
 

@@ -7,6 +7,7 @@ import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/services/prefs.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/features/home/presentation/cubit/home_cubit.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:furqan/features/reading/presentation/widgets/verse_card.dart';
@@ -14,6 +15,7 @@ import 'package:furqan/features/user_data/controller/user_data_controller.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ReadingSurah extends StatefulWidget {
   const ReadingSurah({super.key, required this.surah});
@@ -54,6 +56,10 @@ class _ReadingSurahState extends State<ReadingSurah> {
         "${seconds.toString().padLeft(2, '0')}";
   }
 
+  int verseHassanat(String verse) {
+    return verse.length * 10;
+  }
+
   Future<void> getVersesAudios() async {
     final audios = await context.read<ReadingCubit>().getVerseAudios(
       widget.surah.surahNo,
@@ -71,6 +77,10 @@ class _ReadingSurahState extends State<ReadingSurah> {
 
   @override
   Widget build(BuildContext context) {
+    final homeCubit = context.read<HomeCubit>();
+    final currentProgress = (homeCubit.state is HomeLoaded)
+        ? (homeCubit.state as HomeLoaded).userProgress
+        : null;
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
         return SingleChildScrollView(
@@ -197,21 +207,33 @@ class _ReadingSurahState extends State<ReadingSurah> {
                         sl<Prefs>().userId!,
                         {
                           // 'surahs_read': ayahNumber,
-                          'total_hassanat': ayahsRead * 10,
                         },
                       );
                       if (_seconds % 60 == 0) {
-                        await sl<UserDataController>().updateUserProgress(
-                          sl<Prefs>().userId!,
-                          {'minutes_of_reading_quraan': _seconds ~/ 60},
-                        );
+                        homeCubit.updateUserData({
+                          'minutes_of_reading_quraan': _seconds ~/ 60,
+                        });
                       }
                       if (ayahNumber == widget.surah.totalAyah) {
+                        context
+                            .read<ReadingCubit>()
+                            .getSurahWithAudioAndTranslation(
+                              widget.surah.surahNo + 1,
+                            );
                         surahsRead++;
-                        await sl<UserDataController>().updateUserProgress(
-                          sl<Prefs>().userId!,
-                          {'surahs_read': surahsRead},
-                        );
+                        homeCubit.updateUserData({'surahs_read': surahsRead});
+                      }
+                      if (currentProgress != null) {
+                        final currentHasanat = currentProgress.totalHassanat;
+                        final newHasanat =
+                            currentHasanat +
+                            verseHassanat(
+                              widget.surah.arabic1?[ayahNumber - 1] ?? "",
+                            );
+
+                        homeCubit.updateUserData({
+                          'total_hassanat': newHasanat,
+                        });
                       }
                     },
                     child: Container(
@@ -272,7 +294,7 @@ class SurahStats extends StatelessWidget {
       builder: (context, state) {
         return CustomContainer(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -283,7 +305,7 @@ class SurahStats extends StatelessWidget {
                 ),
                 const Gap(10),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Row(
                     children: [
                       Container(

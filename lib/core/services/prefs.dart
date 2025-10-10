@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Prefs {
@@ -10,6 +11,7 @@ class Prefs {
   static const _keyPhoto = 'user_photo';
   static const _keyIsLoggedIn = 'is_logged_in';
   static const _keyUserId = 'user_id';
+  static const _keyThemeMode = 'theme_mode';
 
   Future<void> saveUser({
     required String name,
@@ -24,9 +26,14 @@ class Prefs {
     await _prefs.setString(_keyUserId, userId);
   }
 
+  Future<void> saveThemeMode(String themeMode) async {
+    await _prefs.setString(_keyThemeMode, themeMode);
+  }
+
   String? get name => _prefs.getString(_keyName);
   String? get email => _prefs.getString(_keyEmail);
   String? get photo => _prefs.getString(_keyPhoto);
+  String get themeMode => _prefs.getString(_keyThemeMode) ?? "dark";
   // bool get isLoggedIn => _prefs.getBool(_keyIsLoggedIn) ?? false;
 
   Future<bool> isLoggedIn() async {
