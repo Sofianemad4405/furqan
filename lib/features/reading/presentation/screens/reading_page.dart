@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/core/widgets/shimmer_container.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:furqan/features/reading/presentation/screens/choosing_mode_page.dart';
@@ -190,19 +191,57 @@ class _ReadingScreenState extends State<ReadingScreen> {
               surahName: state.surahName,
             );
           } else if (state is SurahLoadingInReadingMode) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: ListeningToSurahShimmer());
           } else if (state is SurahLoadedInReadingMode) {
             log("SurahLoadedInReadingMode");
             return ReadingSurah(surah: state.surah);
           } else if (state is ErrorSurahInReadingMode) {
             log(state.message);
             return Text(state.message);
+          } else if (state is SurahLoadingInListeningMode) {
+            return const Center(child: ListeningToSurahShimmer());
           } else if (state is SurahLoadedInListeningMode) {
             return ListeningToSurah(surah: state.surah);
+          } else if (state is ErrorSurahInListeningMode) {
+            log(state.message);
+            return Text(state.message);
           } else {
             return const Center(child: CircularProgressIndicator());
           }
         },
+      ),
+    );
+  }
+}
+
+class ListeningToSurahShimmer extends StatelessWidget {
+  const ListeningToSurahShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SingleChildScrollView(
+      child: Column(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ShimmerContainer(height: 40, width: 150),
+              ShimmerContainer(height: 20, width: 300),
+            ],
+          ),
+          Gap(10),
+          ShimmerContainer(height: 500),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ShimmerContainer(height: 100),
+              Gap(10),
+              ShimmerContainer(height: 100),
+              Gap(10),
+              ShimmerContainer(height: 100),
+            ],
+          ),
+        ],
       ),
     );
   }

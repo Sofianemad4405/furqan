@@ -175,4 +175,10 @@ List<String> surahIcons = [
   "👥", // الناس
 ];
 
-List<String> recitersIcons = ["🕌", "🌙", "⭐", "🎯", "💫"];
+List<String> recitersImgs = [
+  "assets/imgs/mashary.png",
+  "assets/imgs/abubakr.png",
+  "assets/imgs/nasser.png",
+  "assets/imgs/yasser.png",
+  "assets/imgs/hany.png",
+];

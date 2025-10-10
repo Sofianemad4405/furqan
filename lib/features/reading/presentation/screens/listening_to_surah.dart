@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' hide log;
 import 'dart:ui';
 
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
+import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/domain/entities/surah_base_entity.dart';
@@ -50,7 +52,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
     super.initState();
     _loadRecitersAndSurahs();
     getCurrentSurahDuration(widget.surah.surahNo);
-    controlSurah();
+    // controlSurah();
     player.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
         nextSurah();
@@ -64,9 +66,6 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
     surahs = await context.read<ReadingCubit>().getAllSurahs();
     currentReciter = reciters[0];
     reciterId = reciters.indexOf(currentReciter);
-    log(reciters.toString());
-    log(surahs.toString());
-    log(currentSurahDuration.toString());
   }
 
   Future<void> setCurrentReciter(String reciter) async {
@@ -159,7 +158,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
             "Listening Mode",
             style: Theme.of(
               context,
-            ).textTheme.headlineLarge?.copyWith(color: const Color(0xff00947B)),
+            ).textTheme.headlineLarge?.copyWith(color: const Color(0xff00B590)),
           ),
           const Gap(5),
           Text(
@@ -180,7 +179,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                     children: [
                       Text(
                         surahIcons[(currentPlayingSurah?.surahNo ?? 1) - 1],
-                        style: const TextStyle(fontSize: 24),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       const Gap(10),
                       GestureDetector(
@@ -195,44 +194,89 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                   context,
                                 ).colorScheme.inverseSurface,
                                 list: surahs,
-                                child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: surahs.length,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      onTap: () async {
-                                        final newSurah = await context
-                                            .read<ReadingCubit>()
-                                            .getSurah(index + 1);
-                                        setCurrentSurah(newSurah);
-                                        getCurrentSurahDuration(
-                                          newSurah.surahNo,
-                                        );
-                                        Navigator.pop(context);
-                                        await controlSurah();
-                                      },
-                                      leading: Text(
-                                        surahIcons[index],
-                                        style: const TextStyle(fontSize: 24),
+                                child: Column(
+                                  children: [
+                                    const Gap(10),
+                                    Text(
+                                      "Select Surah",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleLarge,
+                                    ),
+                                    const Gap(10),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: surahs.length,
+                                        itemBuilder: (context, index) {
+                                          bool isThisSurahPlaying =
+                                              currentPlayingSurah?.surahNo ==
+                                              index + 1;
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              border: isThisSurahPlaying
+                                                  ? Border.all(
+                                                      color: const Color(
+                                                        0xff005C42,
+                                                      ),
+                                                    )
+                                                  : null,
+                                              borderRadius: isThisSurahPlaying
+                                                  ? BorderRadius.circular(12)
+                                                  : null,
+                                              color: isThisSurahPlaying
+                                                  ? const Color(
+                                                      0xff005C42,
+                                                    ).withValues(alpha: 0.1)
+                                                  : null,
+                                            ),
+                                            child: ListTile(
+                                              onTap: () async {
+                                                final newSurah = await context
+                                                    .read<ReadingCubit>()
+                                                    .getSurah(index + 1);
+                                                setCurrentSurah(newSurah);
+                                                getCurrentSurahDuration(
+                                                  newSurah.surahNo,
+                                                );
+                                                Navigator.pop(context);
+                                                await controlSurah();
+                                              },
+                                              leading: Text(
+                                                surahIcons[index],
+                                                style: const TextStyle(
+                                                  fontSize: 24,
+                                                ),
+                                              ),
+                                              title: Text(
+                                                surahs[index].surahName,
+                                              ),
+                                              subtitle: Row(
+                                                children: [
+                                                  Text(
+                                                    "${surahs[index].totalAyah} Ayahs  •  ",
+                                                  ),
+                                                  Text(
+                                                    surahs[index]
+                                                        .revelationPlace,
+                                                  ),
+                                                ],
+                                              ),
+                                              trailing: Text(
+                                                surahs[index].surahNameArabic,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge
+                                                    ?.copyWith(
+                                                      fontFamily: "Amiri",
+                                                    ),
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                      title: Text(surahs[index].surahName),
-                                      subtitle: Row(
-                                        children: [
-                                          Text(
-                                            "${surahs[index].totalAyah} Ayahs  •  ",
-                                          ),
-                                          Text(surahs[index].revelationPlace),
-                                        ],
-                                      ),
-                                      trailing: Text(
-                                        surahs[index].surahNameArabic,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.copyWith(fontFamily: "Amiri"),
-                                      ),
-                                    );
-                                  },
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -245,7 +289,9 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                               children: [
                                 Text(
                                   currentPlayingSurah!.surahName,
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
                                 ),
                                 Text(
                                   currentPlayingSurah!.surahNameArabicLong,
@@ -255,18 +301,18 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                               ],
                             ),
                             const Gap(10),
-                            const Icon(Icons.keyboard_arrow_down),
+                            const Icon(Iconsax.arrow_down_14),
                           ],
                         ),
                       ),
-                      const Gap(50),
+                      const Spacer(),
                       IconButton(
-                        icon: const Icon(Icons.favorite_border),
+                        icon: const Icon(Iconsax.heart),
                         onPressed: () {},
                       ),
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.more_vert),
+                        icon: const Icon(Iconsax.more),
                       ),
                     ],
                   ),
@@ -284,55 +330,130 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                           return _buildBlurredSheet(
                             color: Theme.of(context).colorScheme.inverseSurface,
                             list: reciters,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: reciters.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  onTap: () {
-                                    setCurrentReciter(reciters[index]);
-                                    log(reciterId.toString());
-                                    log(index.toString());
-                                    log(hasChangedReciter.toString());
-                                    bool isDifferent = reciterId != index;
-                                    reciterId = index;
-                                    hasChangedReciter = isDifferent;
-                                    getCurrentSurahDuration(
-                                      currentPlayingSurah!.surahNo,
-                                    );
-                                    player.stop();
-                                    Navigator.pop(context);
-                                  },
-                                  leading: Text(
-                                    recitersIcons[index],
-                                    style: const TextStyle(fontSize: 24),
+                            child: Column(
+                              children: [
+                                const Gap(20),
+                                Text(
+                                  "Select Reciter",
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                                const Gap(20),
+                                Expanded(
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount: reciters.length,
+                                    itemBuilder: (context, index) {
+                                      bool isThisSheikhPlaying =
+                                          currentReciter == reciters[index];
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          border: isThisSheikhPlaying
+                                              ? Border.all(
+                                                  color: const Color(
+                                                    0xff005C42,
+                                                  ),
+                                                )
+                                              : null,
+                                          borderRadius: isThisSheikhPlaying
+                                              ? BorderRadius.circular(12)
+                                              : null,
+                                          color: isThisSheikhPlaying
+                                              ? const Color(
+                                                  0xff005C42,
+                                                ).withValues(alpha: 0.1)
+                                              : null,
+                                        ),
+                                        child: ListTile(
+                                          onTap: () {
+                                            setCurrentReciter(reciters[index]);
+                                            log(reciterId.toString());
+                                            log(index.toString());
+                                            log(hasChangedReciter.toString());
+                                            bool isDifferent =
+                                                reciterId != index;
+                                            reciterId = index;
+                                            hasChangedReciter = isDifferent;
+                                            getCurrentSurahDuration(
+                                              currentPlayingSurah!.surahNo,
+                                            );
+                                            player.stop();
+                                            Navigator.pop(context);
+                                          },
+                                          leading: Container(
+                                            width: 48,
+                                            height: 48,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: Colors.grey,
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: ClipOval(
+                                              child: Image.asset(
+                                                recitersImgs[index],
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
+                                          title: Text(
+                                            reciters[index],
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.titleMedium,
+                                          ),
+                                          trailing: Text(
+                                            reciterMapper(reciters[index]),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.copyWith(fontFamily: "Amiri"),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  title: Text(reciters[index]),
-                                  trailing: Text(
-                                    reciters[index],
-                                    style: Theme.of(context).textTheme.bodyLarge
-                                        ?.copyWith(fontFamily: "Amiri"),
-                                  ),
-                                );
-                              },
+                                ),
+                              ],
                             ),
                           );
                         },
                       );
                     },
                     child: Container(
-                      decoration: const BoxDecoration(
-                        color: Color(0xffDBEFEA),
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      decoration: BoxDecoration(
+                        color: context.watch<ThemeCubit>().isDarkMood()
+                            ? const Color(0xff022525)
+                            : const Color(0xffDBEFEB),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(24),
                         child: Row(
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            Text(
-                              recitersIcons[reciterId],
-                              style: const TextStyle(fontSize: 24),
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white, // الخلفية البيضا
+                                border: Border.all(
+                                  color: Theme.of(
+                                    context,
+                                  ).dividerColor, // لون البوردر
+                                  width: 1,
+                                ),
+                              ),
+                              child: ClipOval(
+                                child: Image.asset(
+                                  recitersImgs[reciterId],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
                             const Gap(20),
                             Expanded(
@@ -357,7 +478,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                         textDirection: TextDirection.rtl,
                                       ),
                                       const Gap(5),
-                                      const Icon(Icons.keyboard_arrow_down),
+                                      const Icon(Iconsax.arrow_down_14),
                                     ],
                                   ),
                                   Text(
@@ -396,6 +517,9 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                       ),
                       Container(
                         decoration: BoxDecoration(
+                          color: context.watch<ThemeCubit>().isDarkMood()
+                              ? const Color(0xff022525)
+                              : const Color(0xffDBEFEB),
                           border: Border.all(color: const Color(0xff5AE0AE)),
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -410,7 +534,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                               final position =
                                   asyncSnapshot.data ?? Duration.zero;
                               return Text(
-                                "${((position.inSeconds / (currentSurahDuration?.inSeconds ?? 1)) * 100).toStringAsFixed(2)}%",
+                                "${max(0, ((position.inSeconds / (currentSurahDuration?.inSeconds ?? 1)) * 100)).toStringAsFixed(2)}%",
                               );
                             },
                           ),
@@ -440,8 +564,8 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                             thumbColor: const Color(0xff007568),
                             thumbRadius: 6,
                             thumbGlowRadius: 2,
-                            timeLabelTextStyle: const TextStyle(
-                              color: Colors.white,
+                            timeLabelTextStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                             onSeek: (duration) {
                               player.seek(duration);
@@ -464,6 +588,10 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                           previousSurah();
                         },
                         icon: SvgPicture.asset(
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.onSurface,
+                            BlendMode.srcIn,
+                          ),
                           "assets/svgs/previous-svgrepo-com.svg",
                         ),
                       ),
@@ -475,12 +603,17 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                           );
                         },
                         icon: SvgPicture.asset(
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.onSurface,
+                            BlendMode.srcIn,
+                          ),
                           height: 16,
                           width: 16,
                           "assets/svgs/previous-svgrepo-com.svg",
                         ),
                       ),
-                      //Stop and play
+
+                      ///Stop and play
                       IconButton(
                         onPressed: () async {
                           controlSurah();
@@ -528,6 +661,10 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                           );
                         },
                         icon: SvgPicture.asset(
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.onSurface,
+                            BlendMode.srcIn,
+                          ),
                           height: 16,
                           width: 16,
                           "assets/svgs/skip-next-svgrepo-com.svg",
@@ -539,6 +676,10 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                           nextSurah();
                         },
                         icon: SvgPicture.asset(
+                          colorFilter: ColorFilter.mode(
+                            Theme.of(context).colorScheme.onSurface,
+                            BlendMode.srcIn,
+                          ),
                           "assets/svgs/skip-next-svgrepo-com.svg",
                         ),
                       ),
@@ -563,7 +704,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                           Text(
                             "${currentPlayingSurah!.totalAyah}",
                             style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(color: const Color(0xff007568)),
+                                ?.copyWith(color: const Color(0xff00B590)),
                           ),
                           const Spacer(),
                           Text(
@@ -584,9 +725,11 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            formatDuration(currentSurahDuration!),
+                            formatDuration(
+                              currentSurahDuration ?? const Duration(),
+                            ),
                             style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(color: const Color(0xff007568)),
+                                ?.copyWith(color: const Color(0xff00B590)),
                           ),
                           const Spacer(),
                           Text(
@@ -609,7 +752,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                           Text(
                             currentPlayingSurah!.revelationPlace,
                             style: Theme.of(context).textTheme.bodyLarge
-                                ?.copyWith(color: const Color(0xff007568)),
+                                ?.copyWith(color: const Color(0xff00B590)),
                           ),
                           const Spacer(),
                           Text(
@@ -652,6 +795,7 @@ Widget _buildBlurredSheet({
 }
 
 String formatDuration(Duration d) {
+  d = d.isNegative ? const Duration(seconds: 0) : d;
   String twoDigits(int n) => n.toString().padLeft(2, '0');
   final hours = twoDigits(d.inHours);
   final minutes = twoDigits(d.inMinutes.remainder(60));

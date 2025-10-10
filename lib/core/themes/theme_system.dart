@@ -870,7 +870,7 @@ class QuranAppTheme {
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
         color: borderColor ?? Colors.white.withValues(alpha: 0.2),
-        width: 0.9,
+        width: 0.6,
       ),
       boxShadow: [
         BoxShadow(
