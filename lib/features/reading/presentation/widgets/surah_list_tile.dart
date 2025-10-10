@@ -32,7 +32,7 @@ class SurahListTile extends StatelessWidget {
                 children: [
                   Container(
                     height: 20,
-                    width: 20,
+                    // width: 40,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: QuranAppTheme.gray600,
@@ -40,10 +40,13 @@ class SurahListTile extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Center(
-                      child: Text(
-                        surahNumber.toString(),
-                        style: Theme.of(context).textTheme.labelMedium,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: Center(
+                        child: Text(
+                          surahNumber.toString(),
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
                       ),
                     ),
                   ),

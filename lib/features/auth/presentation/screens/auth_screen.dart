@@ -93,17 +93,19 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      // Navigator.pushAndRemoveUntil(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) {
-      //       return const RootPage();
-      //     },
-      //   ),
-      //   (v) {
-      //     return false;
-      //   },
-      // );
+      if (mounted) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const RootPage();
+            },
+          ),
+          (v) {
+            return false;
+          },
+        );
+      }
     } else {
       await context.read<AuthCubit>().signUpNewUser(
         email: _emailController.text,

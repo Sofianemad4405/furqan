@@ -78,9 +78,19 @@ class _ReadingScreenState extends State<ReadingScreen> {
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
                                 children: [
-                                  const Row(
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [Icon(Icons.close, size: 16)],
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Icon(
+                                          Icons.close,
+                                          size: 16,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Text(
                                     "Select a Surah",

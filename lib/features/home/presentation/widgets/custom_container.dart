@@ -13,8 +13,8 @@ class CustomContainer extends StatelessWidget {
       decoration: QuranAppTheme.adaptiveGlassDecoration(
         context,
         backgroundColor: context.read<ThemeCubit>().isDarkMood()
-            ? const Color(0xff022D2C)
-            : const Color(0xffD0ECE5),
+            ? const Color(0XFF1D2737)
+            : const Color.fromARGB(255, 255, 255, 255),
         borderColor: context.read<ThemeCubit>().isDarkMood()
             ? const Color(0xff21252A)
             : QuranAppTheme.gray400,

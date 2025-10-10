@@ -20,16 +20,16 @@ class _TodayChallengesState extends State<TodayChallenges> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ///Header
-            const Header(),
-            const Gap(20),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              ///Header
+              const Header(),
+              const Gap(20),
 
-            //streak and completed
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
+              //streak and completed
+              Column(
                 children: [
                   const Streak(),
                   const Gap(20),
@@ -131,8 +131,8 @@ class _TodayChallengesState extends State<TodayChallenges> {
                   const Gap(150),
                 ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
