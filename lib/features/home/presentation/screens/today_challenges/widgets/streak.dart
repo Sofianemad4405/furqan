@@ -27,15 +27,15 @@ class Streak extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          height: 30,
-                          width: 30,
+                          height: 24,
+                          width: 24,
                           decoration: BoxDecoration(
                             color: const Color(0xFFC8F0DC),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: const SizedBox(
-                            height: 20,
-                            width: 20,
+                            height: 24,
+                            width: 24,
                             child: Center(
                               child: Icon(
                                 Iconsax.calendar,
@@ -45,10 +45,10 @@ class Streak extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const Gap(10),
+                        const Gap(5),
                         Text(
                           "Current Streak",
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
                       ],
                     ),
@@ -58,7 +58,7 @@ class Streak extends StatelessWidget {
                         const SizedBox(height: 40, width: 40),
                         Text(
                           "0 days",
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -71,40 +71,47 @@ class Streak extends StatelessWidget {
           Expanded(
             child: CustomContainer(
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Row(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 8,
+                ),
+                child: Column(
                   children: [
-                    Container(
-                      height: 30,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF4EFBA),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: Center(
-                          child: Icon(
-                            Iconsax.cup,
-                            color: Color(0xFFD09724),
-                            size: 16,
+                    Row(
+                      children: [
+                        Container(
+                          height: 24,
+                          width: 24,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF4EFBA),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: Center(
+                              child: Icon(
+                                Iconsax.cup,
+                                color: Color(0xFFD09724),
+                                size: 16,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                    const Gap(10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                        const Gap(5),
                         Text(
                           "Completed",
-                          style: Theme.of(context).textTheme.bodySmall,
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
-                        const Spacer(),
+                      ],
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        const SizedBox(height: 40, width: 40),
                         Text(
                           "0 days",
-                          style: Theme.of(context).textTheme.headlineSmall,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),

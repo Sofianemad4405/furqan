@@ -21,13 +21,15 @@ class VerseCard extends StatefulWidget {
     required this.surah,
     required this.ayahNumber,
     required this.player,
-    required this.surahVerses,
+    required this.verseAudios,
+    this.openSheet,
   });
 
   final SurahEntity surah;
   final int ayahNumber;
   final AudioPlayer player;
-  final List<AudioEntity> surahVerses;
+  final List<AudioEntity> verseAudios;
+  final Function()? openSheet;
 
   @override
   State<VerseCard> createState() => _VerseCardState();
@@ -93,18 +95,21 @@ class _VerseCardState extends State<VerseCard> {
                           ? Colors.white
                           : Colors.black,
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          widget.surah.surahName,
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(color: const Color(0xff1D6E58)),
-                        ),
-                        Text(
-                          "Ayah ${widget.ayahNumber}",
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
+                    GestureDetector(
+                      onTap: widget.openSheet,
+                      child: Column(
+                        children: [
+                          Text(
+                            widget.surah.surahName,
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(color: const Color(0xff1D6E58)),
+                          ),
+                          Text(
+                            "Ayah ${widget.ayahNumber}",
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
                     ),
                     GestureDetector(
                       onTap: () async {
@@ -114,7 +119,7 @@ class _VerseCardState extends State<VerseCard> {
                         } else {
                           try {
                             await widget.player.setUrl(
-                              widget.surahVerses[widget.ayahNumber - 1].url,
+                              widget.verseAudios[1].url,
                             );
                             await widget.player.play();
                           } catch (e) {
@@ -190,7 +195,15 @@ class _VerseCardState extends State<VerseCard> {
                                             ).textTheme.headlineSmall,
                                           ),
                                           const Spacer(),
-                                          const Icon(Icons.close, size: 16),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Icon(
+                                              Icons.close,
+                                              size: 16,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                       const Gap(5),
@@ -417,20 +430,22 @@ class _VerseCardState extends State<VerseCard> {
 
                     return Container(
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
                         color: (playing && !buffering && !completed)
                             ? QuranAppTheme.green
                             : Colors.transparent,
                       ),
-                      child: Text(
-                        widget.surah.arabic1?[widget.ayahNumber - 1] ??
-                            "Ayah Not found",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontFamily: "Amiri",
-                          fontSize: 24,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          widget.surah.arabic1?[widget.ayahNumber - 1] ??
+                              "Ayah Not found",
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(fontFamily: "Amiri", fontSize: 24),
+                          maxLines: 90,
+                          overflow: TextOverflow.ellipsis,
+                          textDirection: TextDirection.rtl,
                         ),
-                        maxLines: 90,
-                        overflow: TextOverflow.ellipsis,
-                        textDirection: TextDirection.rtl,
                       ),
                     );
                   },

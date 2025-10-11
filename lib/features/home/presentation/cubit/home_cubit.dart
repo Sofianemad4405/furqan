@@ -7,11 +7,11 @@ import 'package:furqan/features/user_data/models/user_progress.dart';
 part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit(this._userDataController, this._prefs)
-    : userId = _prefs.userId,
+  HomeCubit(this._userDataController, this.prefs)
+    : userId = prefs.userId,
       super(HomeInitial());
   final UserDataController _userDataController;
-  final Prefs _prefs;
+  final Prefs prefs;
   final String? userId;
 
   void init() {
@@ -26,6 +26,11 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (e) {
       emit(HomeError(message: e.toString()));
     }
+  }
+
+  Future<UserProgress> getUserProgress() async {
+    final userData = await _userDataController.getUserProgress(userId!);
+    return userData;
   }
 
   Future<void> updateUserData(Map<String, dynamic> updates) async {

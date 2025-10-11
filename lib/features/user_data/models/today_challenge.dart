@@ -15,7 +15,7 @@ class TodayChallenge {
     required this.finished,
   });
   double get progress {
-    if (target == 0) return 0; // لتجنب القسمة على صفر
+    if (target == 0) return 0;
     return finished / target;
   }
 

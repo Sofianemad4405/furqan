@@ -6,7 +6,7 @@ class CurrentStreakShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ShimmerContainer(height: 150, width: double.infinity);
+    return const ShimmerContainer(height: 150);
   }
 }
 

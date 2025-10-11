@@ -135,11 +135,11 @@ class HomeShimmer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ShimmerContainer(height: 60, width: double.infinity), // Header
+              ShimmerContainer(height: 60), // Header
               Gap(20),
               HomeStatsShimmer(),
               Gap(30),
-              ShimmerContainer(height: 40, width: 200), // "Today's Challenges"
+              ShimmerContainer(height: 40), // "Today's Challenges"
               Gap(10),
               TodayChallengesShimmer(),
               Gap(20),

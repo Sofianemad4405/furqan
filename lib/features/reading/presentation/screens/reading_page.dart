@@ -9,6 +9,7 @@ import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:furqan/features/reading/presentation/screens/choosing_mode_page.dart';
 import 'package:furqan/features/reading/presentation/screens/listening_to_surah.dart';
 import 'package:furqan/features/reading/presentation/screens/reading_surah.dart';
+import 'package:furqan/features/reading/presentation/widgets/reading_surah_shimmer.dart';
 import 'package:furqan/features/reading/presentation/widgets/surah_list_tile.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
@@ -201,19 +202,17 @@ class _ReadingScreenState extends State<ReadingScreen> {
               surahName: state.surahName,
             );
           } else if (state is SurahLoadingInReadingMode) {
-            return const Center(child: ListeningToSurahShimmer());
+            log("im");
+            return const Center(child: ReadingSurahShimmer());
           } else if (state is SurahLoadedInReadingMode) {
-            log("SurahLoadedInReadingMode");
             return ReadingSurah(surah: state.surah);
           } else if (state is ErrorSurahInReadingMode) {
-            log(state.message);
             return Text(state.message);
           } else if (state is SurahLoadingInListeningMode) {
             return const Center(child: ListeningToSurahShimmer());
           } else if (state is SurahLoadedInListeningMode) {
             return ListeningToSurah(surah: state.surah);
           } else if (state is ErrorSurahInListeningMode) {
-            log(state.message);
             return Text(state.message);
           } else {
             return const Center(child: CircularProgressIndicator());
@@ -235,8 +234,8 @@ class ListeningToSurahShimmer extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ShimmerContainer(height: 40, width: 150),
-              ShimmerContainer(height: 20, width: 300),
+              ShimmerContainer(height: 40),
+              ShimmerContainer(height: 20),
             ],
           ),
           Gap(10),

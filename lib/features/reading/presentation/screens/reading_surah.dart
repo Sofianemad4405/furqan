@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:developer' as logger;
+import 'dart:math';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/di/get_it_service.dart';
@@ -12,10 +15,8 @@ import 'package:furqan/features/home/presentation/widgets/custom_container.dart'
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:furqan/features/reading/presentation/widgets/verse_card.dart';
 import 'package:furqan/features/user_data/controller/user_data_controller.dart';
-import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:shimmer/shimmer.dart';
 
 class ReadingSurah extends StatefulWidget {
   const ReadingSurah({super.key, required this.surah});
@@ -31,19 +32,21 @@ class _ReadingSurahState extends State<ReadingSurah> {
   final player = AudioPlayer();
   int ayahsRead = 0;
   int surahsRead = 0;
+  HomeCubit homeCubit = sl<HomeCubit>();
 
-  List<AudioEntity> surahVerses = [];
+  List<AudioEntity> verseAudios = [];
   late Timer _timer;
   int _seconds = 0;
+
+  late ConfettiController _confettiController;
 
   @override
   void initState() {
     getVersesAudios();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        _seconds++;
-      });
-    });
+    _handleTimer();
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 2),
+    );
     super.initState();
   }
 
@@ -56,6 +59,21 @@ class _ReadingSurahState extends State<ReadingSurah> {
         "${seconds.toString().padLeft(2, '0')}";
   }
 
+  Future<void> _handleTimer() async {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      setState(() {
+        _seconds++;
+      });
+      if (_seconds % 60 == 0) {
+        final minutes = _seconds ~/ 60;
+
+        await homeCubit.updateUserData({'minutes_of_reading_quraan': minutes});
+
+        logger.log("✅ Updated minutes in Supabase: $minutes");
+      }
+    });
+  }
+
   int verseHassanat(String verse) {
     return verse.length * 10;
   }
@@ -65,22 +83,30 @@ class _ReadingSurahState extends State<ReadingSurah> {
       widget.surah.surahNo,
       ayahNumber,
     );
-    surahVerses = audios;
+    verseAudios = audios;
+  }
+
+  void _onSurahCompleted() {
+    setState(() {
+      _confettiController.play();
+    });
   }
 
   @override
   void dispose() {
     _timer.cancel();
     player.dispose();
+    _confettiController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeCubit = context.read<HomeCubit>();
+    final readingCubit = context.read<ReadingCubit>();
     final currentProgress = (homeCubit.state is HomeLoaded)
         ? (homeCubit.state as HomeLoaded).userProgress
         : null;
+    int userAyahsRead = currentProgress?.ayahsRead ?? 0;
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
         return SingleChildScrollView(
@@ -145,10 +171,11 @@ class _ReadingSurahState extends State<ReadingSurah> {
               ),
               const Gap(50),
               VerseCard(
+                openSheet: () {},
                 surah: widget.surah,
                 ayahNumber: ayahNumber,
                 player: player,
-                surahVerses: surahVerses,
+                verseAudios: verseAudios,
               ),
               const Gap(20),
               Row(
@@ -203,25 +230,31 @@ class _ReadingSurahState extends State<ReadingSurah> {
                           ayahsRead++;
                         }
                       });
-                      await sl<UserDataController>().updateUserProgress(
-                        sl<Prefs>().userId!,
-                        {
-                          // 'surahs_read': ayahNumber,
-                        },
-                      );
-                      if (_seconds % 60 == 0) {
-                        homeCubit.updateUserData({
-                          'minutes_of_reading_quraan': _seconds ~/ 60,
-                        });
-                      }
+                      userAyahsRead++;
+                      homeCubit.updateUserData({"ayahs_read": userAyahsRead});
+
                       if (ayahNumber == widget.surah.totalAyah) {
-                        context
-                            .read<ReadingCubit>()
-                            .getSurahWithAudioAndTranslation(
-                              widget.surah.surahNo + 1,
-                            );
-                        surahsRead++;
-                        homeCubit.updateUserData({'surahs_read': surahsRead});
+                        _onSurahCompleted();
+                        if (mounted) {
+                          readingCubit.getSurahWithAudioAndTranslation(
+                            widget.surah.surahNo + 1,
+                          );
+                        }
+                        if (!currentProgress!.surahsReadIds.contains(
+                          widget.surah.surahNo,
+                        )) {
+                          final surahsReadIds = currentProgress.surahsReadIds;
+                          int surahsRead = currentProgress.surahsRead;
+                          surahsReadIds.add(widget.surah.surahNo);
+                          surahsRead++;
+                          homeCubit.updateUserData({
+                            'surahs_read': surahsRead,
+                            'surahs_read_ids': surahsReadIds,
+                          });
+                        }
+                        if (widget.surah.surahNo == 114) {
+                          readingCubit.getSurahWithAudioAndTranslation(1);
+                        }
                       }
                       if (currentProgress != null) {
                         final currentHasanat = currentProgress.totalHassanat;
@@ -230,11 +263,14 @@ class _ReadingSurahState extends State<ReadingSurah> {
                             verseHassanat(
                               widget.surah.arabic1?[ayahNumber - 1] ?? "",
                             );
-
                         homeCubit.updateUserData({
                           'total_hassanat': newHasanat,
                         });
                       }
+                      verseAudios = await readingCubit.getVerseAudios(
+                        widget.surah.surahNo,
+                        ayahNumber,
+                      );
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -264,6 +300,21 @@ class _ReadingSurahState extends State<ReadingSurah> {
                       ),
                     ),
                   ),
+                ],
+              ),
+              ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                blastDirection: -pi / 2,
+                emissionFrequency: .2,
+                numberOfParticles: 25,
+                gravity: 0.2,
+                colors: const [
+                  Colors.red,
+                  Colors.blue,
+                  Colors.green,
+                  Colors.orange,
+                  Colors.purple,
                 ],
               ),
               const Gap(200),

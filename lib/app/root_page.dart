@@ -69,75 +69,72 @@ class _RootPageState extends State<RootPage> {
     final bool isDark = context.watch<ThemeCubit>().isDarkMood();
 
     // final canPop = _navKeys[_currentIndex].currentState?.canPop() ?? false;
-    return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? QuranAppTheme.darkScaffoldGradient.colors
-                : QuranAppTheme.lightScaffoldGradient.colors,
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? QuranAppTheme.darkScaffoldGradient.colors
+              : QuranAppTheme.lightScaffoldGradient.colors,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          // appBar: AppBar(
-          //   leading: canPop
-          //       ? IconButton(
-          //           icon: const Icon(Icons.arrow_back),
-          //           onPressed: () {
-          //             _navKeys[_currentIndex].currentState?.maybePop();
-          //           },
-          //         )
-          //       : const Icon(Icons.menu),
-          //   title: const Text("Furqan"),
-          //   actions: [
-          //     AnimatedThemeSwitcher(
-          //       isDark: isDark,
-          //       onChanged: (v) {
-          //         context.read<ThemeCubit>().toggleTheme();
-          //       },
-          //     ),
-          //   ],
-          // ),
-          appBar: const ModernAppBar(),
-          extendBody: true,
-          body: userProgress == null
-              ? const HomeShimmer()
-              : Stack(
-                  children: [
-                    _buildOffstageNavigator(0, const HomeScreen()),
-                    _buildOffstageNavigator(
-                      1,
-                      ReadingScreen(userProgress: userProgress!),
-                    ),
-                    _buildOffstageNavigator(2, const SearchScreen()),
-                    _buildOffstageNavigator(3, const StatsScreen()),
-                    _buildOffstageNavigator(4, const ChatScreen()),
-                    _buildOffstageNavigator(5, const SettingsScreen()),
-                  ],
-                ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: GlassBottomNavigation(
-              activeTab: TabType.values[_currentIndex],
-              onTabChange: (TabType tab) {
-                if (_currentIndex == tab.index) {
-                  // لو دوست على نفس التاب رجع للرووت
-                  _navKeys[tab.index].currentState!.popUntil(
-                    (route) => route.isFirst,
-                  );
-                } else {
-                  setState(() {
-                    _currentIndex = tab.index;
-                  });
-                }
-              },
-              currentIndex: _currentIndex,
-            ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        // appBar: AppBar(
+        //   leading: canPop
+        //       ? IconButton(
+        //           icon: const Icon(Icons.arrow_back),
+        //           onPressed: () {
+        //             _navKeys[_currentIndex].currentState?.maybePop();
+        //           },
+        //         )
+        //       : const Icon(Icons.menu),
+        //   title: const Text("Furqan"),
+        //   actions: [
+        //     AnimatedThemeSwitcher(
+        //       isDark: isDark,
+        //       onChanged: (v) {
+        //         context.read<ThemeCubit>().toggleTheme();
+        //       },
+        //     ),
+        //   ],
+        // ),
+        appBar: const ModernAppBar(title: "FurQan"),
+        extendBody: true,
+        body: userProgress == null
+            ? const HomeShimmer()
+            : Stack(
+                children: [
+                  _buildOffstageNavigator(0, const HomeScreen()),
+                  _buildOffstageNavigator(
+                    1,
+                    ReadingScreen(userProgress: userProgress!),
+                  ),
+                  _buildOffstageNavigator(2, const SearchScreen()),
+                  _buildOffstageNavigator(3, const StatsScreen()),
+                  _buildOffstageNavigator(4, const ChatScreen()),
+                  _buildOffstageNavigator(5, const SettingsScreen()),
+                ],
+              ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: GlassBottomNavigation(
+            activeTab: TabType.values[_currentIndex],
+            onTabChange: (TabType tab) {
+              if (_currentIndex == tab.index) {
+                // لو دوست على نفس التاب رجع للرووت
+                _navKeys[tab.index].currentState!.popUntil(
+                  (route) => route.isFirst,
+                );
+              } else {
+                setState(() {
+                  _currentIndex = tab.index;
+                });
+              }
+            },
+            currentIndex: _currentIndex,
           ),
         ),
       ),

@@ -3,7 +3,13 @@ import 'package:furqan/features/home/presentation/widgets/custom_container.dart'
 import 'package:gap/gap.dart';
 
 class Header extends StatelessWidget {
-  const Header({super.key});
+  const Header({
+    super.key,
+    required this.totalChallenges,
+    required this.completedChallenges,
+  });
+  final int totalChallenges;
+  final int completedChallenges;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +26,7 @@ class Header extends StatelessWidget {
                   children: [
                     Text(
                       "Daily Challenges",
-                      style: Theme.of(context).textTheme.displaySmall,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const Gap(5),
                     Text(
@@ -38,7 +44,7 @@ class Header extends StatelessWidget {
                     ),
                     const Gap(5),
                     Text(
-                      "0/10",
+                      "$completedChallenges/$totalChallenges",
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(color: const Color(0xFF009362)),
                     ),
@@ -59,7 +65,7 @@ class Header extends StatelessWidget {
                       ),
                       const Spacer(),
                       Text(
-                        "0%",
+                        "${completedChallenges / totalChallenges * 100}%",
                         style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(color: const Color(0xFF009362)),
                       ),
@@ -69,7 +75,7 @@ class Header extends StatelessWidget {
                   LinearProgressIndicator(
                     minHeight: 10,
                     borderRadius: BorderRadius.circular(16),
-                    value: 0,
+                    value: completedChallenges / totalChallenges,
                     backgroundColor: const Color(0xFFC4C4C7),
                     color: const Color(0xFF009362),
                   ),

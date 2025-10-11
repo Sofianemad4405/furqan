@@ -17,7 +17,7 @@ class MainChallengesGridShimmer extends StatelessWidget {
       itemCount: 4,
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return const ShimmerContainer(height: 150, width: double.infinity);
+        return const ShimmerContainer(height: 150);
       },
     );
   }

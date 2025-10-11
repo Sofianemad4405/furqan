@@ -3,13 +3,13 @@ import 'package:shimmer/shimmer.dart';
 
 class ShimmerContainer extends StatelessWidget {
   final double height;
-  final double width;
+  // final double width;
   final double borderRadius;
 
   const ShimmerContainer({
     super.key,
     this.height = 20,
-    this.width = double.infinity,
+    // this.width = double.infinity,
     this.borderRadius = 12,
   });
 
@@ -21,7 +21,7 @@ class ShimmerContainer extends StatelessWidget {
       highlightColor: theme.scaffoldBackgroundColor.withValues(alpha: 0.3),
       child: Container(
         height: height,
-        width: width,
+        // width: width,
         decoration: BoxDecoration(
           color: theme.scaffoldBackgroundColor.withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(borderRadius),

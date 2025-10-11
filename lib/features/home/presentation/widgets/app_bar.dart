@@ -111,57 +111,60 @@ class _ModernAppBarState extends State<ModernAppBar>
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
         final isDark = state == ThemeMode.dark;
-        return TweenAnimationBuilder<double>(
-          duration: const Duration(milliseconds: 500),
-          tween: Tween(begin: 0.0, end: 1.0),
-          curve: Curves.easeOut,
-          builder: (context, value, child) {
-            return Transform.translate(
-              offset: Offset(0, -50 * (1 - value)),
-              child: Opacity(opacity: value, child: child),
-            );
-          },
-          child: Container(
-            height: 80,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: isDark
-                      ? const Color(0x1AFFFFFF) // white/10
-                      : const Color(0x4DFFFFFF), // white/30
-                  width: 1,
+        return Padding(
+          padding: const EdgeInsets.only(top: 32),
+          child: TweenAnimationBuilder<double>(
+            duration: const Duration(milliseconds: 500),
+            tween: Tween(begin: 0.0, end: 1.0),
+            curve: Curves.easeOut,
+            builder: (context, value, child) {
+              return Transform.translate(
+                offset: Offset(0, -50 * (1 - value)),
+                child: Opacity(opacity: value, child: child),
+              );
+            },
+            child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: isDark
+                        ? const Color(0x1AFFFFFF) // white/10
+                        : const Color(0x4DFFFFFF), // white/30
+                    width: 1,
+                  ),
                 ),
               ),
-            ),
-            child: ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? const Color(0x99000000) // black/60
-                        : const Color(0xCCFFFFFF), // white/80
-                    boxShadow: [
-                      BoxShadow(
-                        color: isDark
-                            ? const Color(0x1A10B981) // emerald-400/10
-                            : const Color(0x0D10B981), // emerald-500/5
-                        blurRadius: 40,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    children: [
-                      // Animated Gradient Overlay
-                      _buildGradientOverlay(),
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? const Color(0x99000000) // black/60
+                          : const Color(0xCCFFFFFF), // white/80
+                      boxShadow: [
+                        BoxShadow(
+                          color: isDark
+                              ? const Color(0x1A10B981) // emerald-400/10
+                              : const Color(0x0D10B981), // emerald-500/5
+                          blurRadius: 40,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      children: [
+                        // Animated Gradient Overlay
+                        _buildGradientOverlay(),
 
-                      // Sparkle Effects
-                      _buildSparkles(),
+                        // Sparkle Effects
+                        _buildSparkles(),
 
-                      // Main Content
-                      _buildContent(isDark),
-                    ],
+                        // Main Content
+                        _buildContent(isDark),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -267,7 +270,7 @@ class _ModernAppBarState extends State<ModernAppBar>
 
   Widget _buildContent(bool isDark) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: Row(
         children: [
           // Logo Section
@@ -396,7 +399,7 @@ class _ModernAppBarState extends State<ModernAppBar>
       onTap: () => _showLanguageMenu(context),
       child: Container(
         height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
           color: isDark
               ? const Color(0x33000000) // black/20

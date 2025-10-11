@@ -189,7 +189,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                             backgroundColor: Colors.transparent,
                             isScrollControlled: true,
                             builder: (context) {
-                              return _buildBlurredSheet(
+                              return buildBlurredSheet(
                                 color: Theme.of(
                                   context,
                                 ).colorScheme.inverseSurface,
@@ -327,7 +327,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                             Colors.transparent, // مهم علشان نعمل البلور
                         isScrollControlled: true,
                         builder: (context) {
-                          return _buildBlurredSheet(
+                          return buildBlurredSheet(
                             color: Theme.of(context).colorScheme.inverseSurface,
                             list: reciters,
                             child: Column(
@@ -773,7 +773,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
   }
 }
 
-Widget _buildBlurredSheet({
+Widget buildBlurredSheet({
   required List<dynamic> list,
   required Widget? child,
   required Color color,

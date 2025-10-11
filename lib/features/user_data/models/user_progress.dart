@@ -12,6 +12,8 @@ class UserProgress {
   List<int> achievementsUnlockedIds;
   int duaasRecited;
   int zikrCount;
+  List<int> surahsReadIds;
+  int ayahsRead;
 
   UserProgress({
     required this.userId,
@@ -25,6 +27,8 @@ class UserProgress {
     required this.achievementsUnlockedIds,
     required this.duaasRecited,
     required this.zikrCount,
+    required this.surahsReadIds,
+    required this.ayahsRead,
   });
   Map<String, dynamic> toJson() {
     return {
@@ -39,12 +43,15 @@ class UserProgress {
       'zikr_count': zikrCount,
       'achievements_unlocked_ids': achievementsUnlockedIds,
       'today_challenges': todayChallenges,
+      'surahs_read_ids': surahsReadIds,
+      'ayahs_read': ayahsRead,
     };
   }
 
   factory UserProgress.fromJson(Map<String, dynamic> json) {
     final todayChallengesData = json['today_challenges'];
     return UserProgress(
+      ayahsRead: json['ayahs_read'] ?? 0,
       userId: json['user_id'] ?? '',
       totalHassanat: json['total_hassanat'] ?? 0,
       surahsRead: json['surahs_read'] ?? 0,
@@ -61,6 +68,7 @@ class UserProgress {
       ),
       duaasRecited: json['duaas_recited'] ?? 0,
       zikrCount: json['zikr_count'] ?? 0,
+      surahsReadIds: List<int>.from(json['surahs_read_ids'] ?? []),
     );
   }
 
@@ -107,8 +115,11 @@ class UserProgress {
     List<int>? achievementsUnlockedIds,
     int? duaasRecited,
     int? zikrCount,
+    List<int>? surahsReadIds,
+    int? ayahsRead,
   }) {
     return UserProgress(
+      ayahsRead: ayahsRead ?? this.ayahsRead,
       userId: userId ?? this.userId,
       totalHassanat: totalHassanat ?? this.totalHassanat,
       surahsRead: surahsRead ?? this.surahsRead,
@@ -123,6 +134,7 @@ class UserProgress {
           achievementsUnlockedIds ?? this.achievementsUnlockedIds,
       duaasRecited: duaasRecited ?? this.duaasRecited,
       zikrCount: zikrCount ?? this.zikrCount,
+      surahsReadIds: surahsReadIds ?? this.surahsReadIds,
     );
   }
 }
