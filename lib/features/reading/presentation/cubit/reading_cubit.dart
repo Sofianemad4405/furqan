@@ -14,6 +14,9 @@ part 'reading_state.dart';
 class ReadingCubit extends Cubit<ReadingState> {
   ReadingCubit(this._readingRepo) : super(ReadingInitial());
   final ReadingRepo _readingRepo;
+  void init() {
+    getSurahs();
+  }
 
   Future<void> getSurahs() async {
     emit(SurahsLoading());

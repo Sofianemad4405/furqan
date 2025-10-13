@@ -24,6 +24,11 @@ class ReadingScreen extends StatefulWidget {
 
 class _ReadingScreenState extends State<ReadingScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -202,7 +207,6 @@ class _ReadingScreenState extends State<ReadingScreen> {
               surahName: state.surahName,
             );
           } else if (state is SurahLoadingInReadingMode) {
-            log("im");
             return const Center(child: ReadingSurahShimmer());
           } else if (state is SurahLoadedInReadingMode) {
             return ReadingSurah(surah: state.surah);
