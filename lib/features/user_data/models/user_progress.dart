@@ -14,6 +14,7 @@ class UserProgress {
   int zikrCount;
   List<int> surahsReadIds;
   int ayahsRead;
+  Map<String, List<dynamic>> likedAyahs;
 
   UserProgress({
     required this.userId,
@@ -29,6 +30,7 @@ class UserProgress {
     required this.zikrCount,
     required this.surahsReadIds,
     required this.ayahsRead,
+    required this.likedAyahs,
   });
   Map<String, dynamic> toJson() {
     return {
@@ -45,6 +47,7 @@ class UserProgress {
       'today_challenges': todayChallenges,
       'surahs_read_ids': surahsReadIds,
       'ayahs_read': ayahsRead,
+      'liked_ayahs': likedAyahs,
     };
   }
 
@@ -69,6 +72,7 @@ class UserProgress {
       duaasRecited: json['duaas_recited'] ?? 0,
       zikrCount: json['zikr_count'] ?? 0,
       surahsReadIds: List<int>.from(json['surahs_read_ids'] ?? []),
+      likedAyahs: Map<String, List<dynamic>>.from(json['liked_ayahs'] ?? {}),
     );
   }
 
@@ -117,6 +121,7 @@ class UserProgress {
     int? zikrCount,
     List<int>? surahsReadIds,
     int? ayahsRead,
+    Map<String, List<int>>? likedAyahs,
   }) {
     return UserProgress(
       ayahsRead: ayahsRead ?? this.ayahsRead,
@@ -135,6 +140,7 @@ class UserProgress {
       duaasRecited: duaasRecited ?? this.duaasRecited,
       zikrCount: zikrCount ?? this.zikrCount,
       surahsReadIds: surahsReadIds ?? this.surahsReadIds,
+      likedAyahs: likedAyahs ?? this.likedAyahs,
     );
   }
 }

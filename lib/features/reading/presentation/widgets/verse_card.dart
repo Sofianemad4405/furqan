@@ -3,16 +3,21 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/entities/tafsir_entity.dart';
+import 'package:furqan/core/services/prefs.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/domain/entities/tafsir_provider_entity.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
+import 'package:furqan/features/reading/presentation/screens/listening_to_surah.dart';
 import 'package:furqan/features/reading/presentation/widgets/tafsir_provider_tile.dart';
 import 'package:gap/gap.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:just_audio/just_audio.dart';
 
 class VerseCard extends StatefulWidget {
@@ -23,6 +28,8 @@ class VerseCard extends StatefulWidget {
     required this.player,
     required this.verseAudios,
     this.openSheet,
+    this.toggleAyahToLikes,
+    required this.isLiked,
   });
 
   final SurahEntity surah;
@@ -30,6 +37,8 @@ class VerseCard extends StatefulWidget {
   final AudioPlayer player;
   final List<AudioEntity> verseAudios;
   final Function()? openSheet;
+  final Function()? toggleAyahToLikes;
+  final bool isLiked;
 
   @override
   State<VerseCard> createState() => _VerseCardState();
@@ -38,11 +47,27 @@ class VerseCard extends StatefulWidget {
 class _VerseCardState extends State<VerseCard> {
   List<TafsirProviderEntity> tafsirProviders = [];
   VerseTafsirEntity? verseTafsir;
+  List<String> reciters = [];
+  String currentReciter = "";
+  int reciterId = 1;
+  bool hasChangedReciter = false;
+
+  Future<void> setCurrentReciter(String reciter) async {
+    currentReciter = reciter;
+    setState(() {});
+  }
+
   @override
   void initState() {
-    log("Toffy");
     getTafsirProviders();
+    _loadReciters();
     super.initState();
+  }
+
+  Future<void> _loadReciters() async {
+    reciters = await context.read<ReadingCubit>().getAvailableReciters();
+    currentReciter = reciters[0];
+    reciterId = sl<Prefs>().readingModeDefaultReciter;
   }
 
   Future<void> getTafsirProviders() async {
@@ -73,6 +98,13 @@ class _VerseCardState extends State<VerseCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeCubit>().isDarkMood();
+    final ayahColor = isDark
+        ? const Color(0xff005C47)
+        : const Color(0xff9DEACA);
+    final surahNameColor = isDark
+        ? const Color(0xff56D4A6)
+        : const Color(0xff1D6E58);
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
         return CustomContainer(
@@ -83,17 +115,23 @@ class _VerseCardState extends State<VerseCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      Icons.save_outlined,
-                      color: state == ThemeMode.dark
-                          ? Colors.white
-                          : Colors.black,
+                    GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.ios_share_outlined,
+                        color: state == ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
+                      ),
                     ),
-                    Icon(
-                      Icons.favorite_border,
-                      color: state == ThemeMode.dark
-                          ? Colors.white
-                          : Colors.black,
+                    IconButton(
+                      onPressed: widget.toggleAyahToLikes,
+                      icon: Icon(
+                        widget.isLiked ? Iconsax.heart5 : Iconsax.heart,
+                        color: widget.isLiked
+                            ? Colors.red
+                            : Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                     GestureDetector(
                       onTap: widget.openSheet,
@@ -101,16 +139,132 @@ class _VerseCardState extends State<VerseCard> {
                         children: [
                           Text(
                             widget.surah.surahName,
-                            style: Theme.of(context).textTheme.titleSmall
-                                ?.copyWith(color: const Color(0xff1D6E58)),
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(color: surahNameColor),
                           ),
                           Text(
                             "Ayah ${widget.ayahNumber}",
-                            style: Theme.of(context).textTheme.bodySmall,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
                       ),
                     ),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor:
+                              Colors.transparent, // مهم علشان نعمل البلور
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return buildBlurredSheet(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.inverseSurface,
+                              list: reciters,
+                              child: Column(
+                                children: [
+                                  const Gap(20),
+                                  Text(
+                                    "Select Reciter",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleLarge,
+                                  ),
+                                  const Gap(20),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: reciters.length,
+                                      itemBuilder: (context, index) {
+                                        bool isThisSheikhPlaying =
+                                            currentReciter == reciters[index];
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            border: isThisSheikhPlaying
+                                                ? Border.all(
+                                                    color: const Color(
+                                                      0xff005C42,
+                                                    ),
+                                                  )
+                                                : null,
+                                            borderRadius: isThisSheikhPlaying
+                                                ? BorderRadius.circular(12)
+                                                : null,
+                                            color: isThisSheikhPlaying
+                                                ? const Color(
+                                                    0xff005C42,
+                                                  ).withValues(alpha: 0.1)
+                                                : null,
+                                          ),
+                                          child: ListTile(
+                                            onTap: () {
+                                              setCurrentReciter(
+                                                reciters[index],
+                                              );
+                                              sl<Prefs>()
+                                                  .saveReadingModeDefaultReciter(
+                                                    index,
+                                                  );
+                                              log(reciterId.toString());
+                                              log(index.toString());
+                                              log(hasChangedReciter.toString());
+                                              bool isDifferent =
+                                                  reciterId != index;
+                                              reciterId = index;
+                                              hasChangedReciter = isDifferent;
+                                            },
+                                            leading: Container(
+                                              width: 48,
+                                              height: 48,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: Colors.grey,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: ClipOval(
+                                                child: Image.asset(
+                                                  recitersImgs[index],
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            title: Text(
+                                              reciters[index],
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.titleMedium,
+                                            ),
+                                            trailing: Text(
+                                              reciterMapper(reciters[index]),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                    fontFamily: "Amiri",
+                                                  ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: SvgPicture.asset(
+                        "assets/svgs/microphone-svgrepo-com.svg",
+                        height: 30,
+                        width: 30,
+                      ),
+                    ),
+
                     GestureDetector(
                       onTap: () async {
                         log(widget.player.duration.toString());
@@ -119,7 +273,7 @@ class _VerseCardState extends State<VerseCard> {
                         } else {
                           try {
                             await widget.player.setUrl(
-                              widget.verseAudios[1].url,
+                              widget.verseAudios[reciterId].url,
                             );
                             await widget.player.play();
                           } catch (e) {
@@ -432,7 +586,7 @@ class _VerseCardState extends State<VerseCard> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
                         color: (playing && !buffering && !completed)
-                            ? QuranAppTheme.green
+                            ? ayahColor
                             : Colors.transparent,
                       ),
                       child: Padding(

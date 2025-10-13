@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/widgets/shimmer_container.dart';
-import 'package:furqan/features/home/presentation/cubit/home_cubit.dart';
+import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/widgets/current_streak.dart';
 import 'package:furqan/features/home/presentation/widgets/current_streak_shimmer.dart';
 import 'package:furqan/features/home/presentation/widgets/home_header.dart';
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
 
-    context.read<HomeCubit>().init();
+    context.read<UserProgressCubit>().init();
 
     _controller = AnimationController(
       vsync: this,
@@ -60,60 +60,65 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<HomeCubit, HomeState>(
+    return BlocConsumer<UserProgressCubit, UserProgresState>(
       listener: (context, state) {},
       builder: (context, state) {
-        if (state is HomeLoaded) {
+        if (state is UserProgressLoaded) {
           _controller.forward();
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ///Header
-                        const HomeHeader(),
-                        const Gap(10),
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<UserProgressCubit>().init();
+            },
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ///Header
+                          const HomeHeader(),
+                          const Gap(10),
 
-                        ///Today View
-                        const Today(),
-                        const Gap(40),
+                          ///Today View
+                          const Today(),
+                          const Gap(40),
 
-                        //// Home Stats
-                        HomeStats(userProgress: state.userProgress),
-                        const Gap(30),
+                          //// Home Stats
+                          HomeStats(userProgress: state.userProgress),
+                          const Gap(30),
 
-                        ///Today Challenges List View
-                        Text(
-                          "Today's Challenges",
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        const Gap(10),
-                        TodayChallengesListView(
-                          userProgress: state.userProgress,
-                        ),
-                        const Gap(20),
+                          ///Today Challenges List View
+                          Text(
+                            "Today's Challenges",
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const Gap(10),
+                          TodayChallengesListView(
+                            userProgress: state.userProgress,
+                          ),
+                          const Gap(20),
 
-                        ///Current Streak
-                        CurrentStreak(userProgress: state.userProgress),
-                        const Gap(20),
+                          ///Current Streak
+                          CurrentStreak(userProgress: state.userProgress),
+                          const Gap(20),
 
-                        ///Main Challenges Grid View
-                        const MainChallengesGridView(),
-                        const Gap(120),
-                      ],
+                          ///Main Challenges Grid View
+                          const MainChallengesGridView(),
+                          const Gap(120),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           );
-        } else if (state is HomeLoading) {
+        } else if (state is UserProgressLoading) {
           return const HomeShimmer();
         } else {
           return const Center(child: Text("Error"));

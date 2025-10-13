@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/azkar_screen.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/prayer_times_screen.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 
 class MainChallengesGridView extends StatelessWidget {
@@ -24,18 +25,18 @@ class MainChallengesGridView extends StatelessWidget {
         return BlocBuilder<ThemeCubit, ThemeMode>(
           builder: (context, state) {
             return GestureDetector(
-              onTap: index == 2
-                  ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return const DhikrScreen();
-                          },
-                        ),
-                      );
-                    }
-                  : null,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return index == 2
+                          ? const DhikrScreen()
+                          : const PrayerTimesScreen();
+                    },
+                  ),
+                );
+              },
               child: CustomContainer(
                 child: Center(
                   child: Column(

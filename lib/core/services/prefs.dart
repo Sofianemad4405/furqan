@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:furqan/core/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Prefs {
@@ -12,6 +13,7 @@ class Prefs {
   static const _keyIsLoggedIn = 'is_logged_in';
   static const _keyUserId = 'user_id';
   static const _keyThemeMode = 'theme_mode';
+  static const _keyReadingModeDefaultReciter = 'reading_mode_default_reciter';
 
   Future<void> saveUser({
     required String name,
@@ -43,6 +45,13 @@ class Prefs {
   Future<void> clear() async {
     await _prefs.clear();
   }
+
+  Future<void> saveReadingModeDefaultReciter(int reciterId) async {
+    await _prefs.setInt(_keyReadingModeDefaultReciter, reciterId);
+  }
+
+  int get readingModeDefaultReciter =>
+      _prefs.getInt(_keyReadingModeDefaultReciter) ?? 1;
 
   String? get userId => _prefs.getString(_keyUserId);
 }

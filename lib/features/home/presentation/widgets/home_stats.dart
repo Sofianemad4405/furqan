@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
-import 'package:furqan/features/home/presentation/cubit/home_cubit.dart';
+import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/models/stat_model.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_card.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
@@ -16,7 +16,7 @@ class HomeStats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isDark = context.watch<ThemeCubit>().isDarkMood();
-    return BlocBuilder<HomeCubit, HomeState>(
+    return BlocBuilder<UserProgressCubit, UserProgresState>(
       builder: (context, state) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

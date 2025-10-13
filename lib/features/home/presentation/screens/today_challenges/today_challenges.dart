@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:furqan/core/themes/theme_system.dart';
-import 'package:furqan/features/home/presentation/cubit/home_cubit.dart';
+import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/today_challenges/widgets/challeange.dart';
 import 'package:furqan/features/home/presentation/screens/today_challenges/widgets/header.dart';
 import 'package:furqan/features/home/presentation/screens/today_challenges/widgets/streak.dart';
@@ -21,15 +21,15 @@ class _TodayChallengesState extends State<TodayChallenges> {
   @override
   void initState() {
     super.initState();
-    context.read<HomeCubit>().init();
+    context.read<UserProgressCubit>().init();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<HomeCubit, HomeState>(
+      body: BlocBuilder<UserProgressCubit, UserProgresState>(
         builder: (context, state) {
-          if (state is HomeLoaded) {
+          if (state is UserProgressLoaded) {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),

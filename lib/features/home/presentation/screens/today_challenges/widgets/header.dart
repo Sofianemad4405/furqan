@@ -15,7 +15,7 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomContainer(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 36),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         child: Column(
           children: [
             Row(
@@ -24,9 +24,23 @@ class Header extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Daily Challenges",
-                      style: Theme.of(context).textTheme.headlineMedium,
+                    Row(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Theme.of(context).iconTheme.color,
+                          ),
+                        ),
+                        const Gap(10),
+                        Text(
+                          "Daily Challenges",
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                      ],
                     ),
                     const Gap(5),
                     Text(
