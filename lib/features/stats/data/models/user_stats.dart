@@ -1,21 +1,21 @@
 class UserStats {
-  final int totalHasanat;
-  final int readingTimeMinutes;
-  final int surahsCompleted;
-  final int dailyChallengesCompleted;
-  final int duasRecited;
-  final int dhikrCount;
-  final int currentStreak;
-  final int longestStreak;
+  int totalHasanat;
+  int readingTimeMinutes;
+  int surahsCompleted;
+  int dailyChallengesCompleted;
+  int duasRecited;
+  int dhikrCount;
+  int currentStreak;
+  int longestStreak;
 
   UserStats({
-    required this.totalHasanat,
-    required this.readingTimeMinutes,
-    required this.surahsCompleted,
-    required this.dailyChallengesCompleted,
-    required this.duasRecited,
-    required this.dhikrCount,
-    required this.currentStreak,
-    required this.longestStreak,
+    this.totalHasanat = 0,
+    this.readingTimeMinutes = 0,
+    this.surahsCompleted = 0,
+    this.dailyChallengesCompleted = 0,
+    this.duasRecited = 0,
+    this.dhikrCount = 0,
+    this.currentStreak = 0,
+    this.longestStreak = 0,
   });
 }
