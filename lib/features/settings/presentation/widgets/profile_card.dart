@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/features/settings/presentation/screens/profile_badge.dart';
+import 'package:furqan/features/settings/presentation/widgets/profile_badge.dart';
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({
@@ -7,8 +7,8 @@ class ProfileCard extends StatelessWidget {
     required this.userPhoto,
     required this.navigateToProfileEdit,
     required this.userName,
-    this.currentStreak = 0,
-    this.totalHasanat = 0,
+    required this.currentStreak,
+    required this.totalHasanat,
   });
   final String? userPhoto;
   final Function()? navigateToProfileEdit;
