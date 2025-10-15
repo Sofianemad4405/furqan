@@ -14,6 +14,8 @@ class AchievementsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return CustomContainer(
       // decoration: BoxDecoration(
       //   borderRadius: BorderRadius.circular(16),
@@ -53,11 +55,11 @@ class AchievementsGrid extends StatelessWidget {
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 1.1,
+                childAspectRatio: (height / width) * .45,
               ),
               itemCount: achievements.length,
               itemBuilder: (context, index) {

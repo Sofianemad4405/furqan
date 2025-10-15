@@ -23,9 +23,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
   bool _isLogin = true;
   bool _showPassword = false;
-  bool _isLoading = false;
   bool _isDarkMode = false;
-  String? _socialLoading;
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -362,7 +360,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
             border: Border.all(color: colors.glassBorder, width: 1),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withAlpha(25),
                 blurRadius: 40,
                 offset: const Offset(0, 20),
               ),
@@ -410,7 +408,7 @@ class _AuthScreenState extends State<AuthScreen> with TickerProviderStateMixin {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF10B981).withOpacity(0.3),
+                        color: const Color(0xFF10B981).withAlpha(77),
                         blurRadius: 16,
                         offset: const Offset(0, 4),
                       ),

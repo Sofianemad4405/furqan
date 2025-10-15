@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/today_challenges/widgets/challeange.dart';
 import 'package:furqan/features/home/presentation/screens/today_challenges/widgets/header.dart';

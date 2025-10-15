@@ -10,13 +10,15 @@ class MainStatsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisSpacing: 16,
       mainAxisSpacing: 16,
-      childAspectRatio: 2.2,
+      childAspectRatio: (height / width) * .8,
       children: [
         StatsCard(
           icon: '🌙',

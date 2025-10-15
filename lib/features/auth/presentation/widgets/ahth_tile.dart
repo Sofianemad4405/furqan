@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:iconsax/iconsax.dart';
 
 class AhthTile extends StatelessWidget {
   const AhthTile({

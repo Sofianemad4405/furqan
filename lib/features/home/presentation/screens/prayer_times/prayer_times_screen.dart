@@ -1,325 +1,18 @@
-// import 'package:flutter/material.dart';
-// import 'package:furqan/features/home/presentation/screens/today_challenges/widgets/streak.dart';
-// import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
-// import 'package:gap/gap.dart';
-// import 'package:iconsax/iconsax.dart';
-
-// class PrayerTimesScreen extends StatefulWidget {
-//   const PrayerTimesScreen({super.key});
-
-//   @override
-//   State<PrayerTimesScreen> createState() => _PrayerTimesScreenState();
-// }
-
-// class _PrayerTimesScreenState extends State<PrayerTimesScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     final colors = Theme.of(context).brightness == Brightness.light
-//         ? _LightColors()
-//         : _DarkColors();
-//     return Scaffold(
-//       body: SafeArea(
-//         child: SingleChildScrollView(
-//           physics: const BouncingScrollPhysics(),
-//           child: Padding(
-//             padding: const EdgeInsets.all(20.0),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 /// Header
-//                 Row(
-//                   children: [
-//                     IconButton(
-//                       onPressed: () {
-//                         Navigator.pop(context);
-//                       },
-//                       icon: const Icon(Icons.arrow_back),
-//                     ),
-//                     const Gap(5),
-//                     Column(
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Text(
-//                           "Prayer Times",
-//                           style: Theme.of(context).textTheme.titleMedium
-//                               ?.copyWith(
-//                                 color: colors.prayerTimes,
-//                                 fontSize: 18,
-//                               ),
-//                         ),
-//                         Text(
-//                           "Today • Monday, October 13",
-//                           style: Theme.of(context).textTheme.bodyLarge
-//                               ?.copyWith(color: colors.prayerTimes),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//                 const Gap(20),
-
-//                 /// Current Location
-//                 Container(
-//                   decoration: BoxDecoration(
-//                     color: colors.currentLocation,
-//                     borderRadius: BorderRadius.circular(10),
-//                   ),
-//                   padding: const EdgeInsets.all(12.0),
-//                   child: const Row(
-//                     children: [
-//                       Icon(Iconsax.location, color: Colors.white),
-//                       Gap(10),
-//                       Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                             "Current Location",
-//                             style: TextStyle(
-//                               color: Colors.white,
-//                               fontWeight: FontWeight.bold,
-//                             ),
-//                           ),
-//                           Text(
-//                             "Unknown • Africa/Cairo",
-//                             style: TextStyle(color: Colors.white),
-//                           ),
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-
-//                 const Gap(20),
-
-//                 /// Next Prayer Box
-//                 Container(
-//                   width: double.infinity,
-//                   decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(10),
-//                     gradient: LinearGradient(colors: colors.nextPrayerGradient),
-//                   ),
-//                   padding: const EdgeInsets.symmetric(vertical: 28),
-//                   child: Column(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       const Text("🕌", style: TextStyle(fontSize: 28)),
-//                       const Gap(5),
-//                       Text(
-//                         "Next: Fajr",
-//                         style: Theme.of(
-//                           context,
-//                         ).textTheme.titleMedium?.copyWith(color: Colors.white),
-//                       ),
-//                       const Gap(5),
-//                       Text(
-//                         "05:30 AM",
-//                         style: Theme.of(
-//                           context,
-//                         ).textTheme.titleMedium?.copyWith(color: Colors.white),
-//                       ),
-//                       const Gap(5),
-//                       Container(
-//                         decoration: BoxDecoration(
-//                           borderRadius: BorderRadius.circular(4),
-//                           color: Colors.white.withAlpha(20),
-//                           border: Border.all(color: Colors.white),
-//                         ),
-//                         padding: const EdgeInsets.symmetric(
-//                           vertical: 2,
-//                           horizontal: 4,
-//                         ),
-//                         child: const Text(
-//                           "in 3h 40m",
-//                           style: TextStyle(color: Colors.white, fontSize: 8),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//                 const Gap(20),
-
-//                 /// List of Prayers
-//                 // ListView.builder(
-//                 //   shrinkWrap: true,
-//                 //   itemCount: 5,
-//                 //   itemBuilder: (context, index) {
-//                 //     return _buildPrayerTile(true, colors, context);
-//                 //   },
-//                 // ),
-//                 _buildPrayerTile(true, colors, context),
-//                 _buildPrayerTile(false, colors, context),
-//                 _buildPrayerTile(false, colors, context),
-//                 _buildPrayerTile(false, colors, context),
-//                 _buildPrayerTile(false, colors, context),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-// abstract class ColorScheme {
-//   Color get prayerTimes;
-//   Color get currentLocation;
-//   List<Color> get nextPrayerGradient;
-//   Color get passedPrayerIcon;
-//   Color get nextPrayerIcon;
-//   Color get nextPrayerName;
-//   Color get borderColor;
-//   Color get passedPrayerNameColor;
-//   Color get tile;
-//   Color get next;
-// }
-
-// class _LightColors implements ColorScheme {
-//   @override
-//   Color get prayerTimes => const Color(0xFF005C5D);
-
-//   @override
-//   Color get currentLocation => const Color(0xFF00B491);
-
-//   @override
-//   List<Color> get nextPrayerGradient => [
-//     const Color(0xFFF5830C),
-//     const Color(0xFFF56261),
-//   ];
-
-//   @override
-//   Color get borderColor => const Color(0xFF5DE6B3);
-
-//   @override
-//   Color get nextPrayerName => const Color(0xff00756A);
-
-//   @override
-//   Color get passedPrayerIcon => const Color(0xFFE9ECED);
-
-//   @override
-//   Color get nextPrayerIcon => const Color(0xFF9EEAC7);
-
-//   @override
-//   Color get passedPrayerNameColor => const Color(0xFF5E6972);
-
-//   @override
-//   Color get tile => const Color(0xFFC5F1E2);
-
-//   @override
-//   Color get next => const Color(0xFF9EEAC7);
-// }
-
-// class _DarkColors implements ColorScheme {
-//   @override
-//   Color get prayerTimes => const Color(0xFF5AE0AE);
-
-//   @override
-//   Color get currentLocation => const Color(0xFF00B491);
-
-//   @override
-//   List<Color> get nextPrayerGradient => [
-//     const Color(0xFFF5830C),
-//     const Color(0xFFF56261),
-//   ];
-
-//   @override
-//   Color get borderColor => const Color(0xFF007552);
-
-//   @override
-//   Color get nextPrayerName => const Color(0xFF5AE0AE);
-
-//   @override
-//   Color get passedPrayerIcon => const Color(0xFF343E50);
-
-//   @override
-//   Color get nextPrayerIcon => const Color(0xFF005C42);
-
-//   @override
-//   Color get passedPrayerNameColor => const Color(0xFF8C929C);
-
-//   @override
-//   Color get tile => const Color(0xFF132F36);
-
-//   @override
-//   Color get next => const Color(0xFF005C42);
-// }
-
-// Widget _buildPrayerTile(bool isNext, ColorScheme colors, BuildContext context) {
-//   return Padding(
-//     padding: const EdgeInsets.only(bottom: 8),
-//     child: CustomContainer(
-//       decoration: BoxDecoration(
-//         color: isNext ? colors.tile : null,
-//         border: Border.all(
-//           color: isNext ? const Color(0xFF007552) : Colors.transparent,
-//         ),
-//         borderRadius: BorderRadius.circular(16),
-//       ),
-//       child: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: ListTile(
-//           contentPadding: EdgeInsets.zero,
-//           leading: Container(
-//             height: 40,
-//             width: 40,
-//             decoration: BoxDecoration(
-//               shape: BoxShape.circle,
-//               color: isNext ? colors.nextPrayerIcon : colors.passedPrayerIcon,
-//             ),
-//             child: const Center(child: Icon(Icons.sunny)),
-//           ),
-//           title: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(
-//                 "Fagr",
-//                 style: Theme.of(
-//                   context,
-//                 ).textTheme.titleLarge?.copyWith(color: colors.nextPrayerName),
-//               ),
-//               Text(
-//                 "Dawn prayer",
-//                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-//                   color: colors.passedPrayerNameColor,
-//                 ),
-//               ),
-//             ],
-//           ),
-//           trailing: Column(
-//             children: [
-//               Text(
-//                 "5:10 AM",
-//                 style: Theme.of(
-//                   context,
-//                 ).textTheme.titleLarge?.copyWith(color: colors.nextPrayerName),
-//               ),
-//               Container(
-//                 decoration: BoxDecoration(
-//                   color: colors.next,
-//                   borderRadius: BorderRadius.circular(4),
-//                 ),
-//                 child: Padding(
-//                   padding: const EdgeInsets.all(8.0),
-//                   child: Text(
-//                     "Next",
-//                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-//                       color: colors.nextPrayerName,
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     ),
-//   );
-// }
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:furqan/core/di/get_it_service.dart';
+import 'package:furqan/core/services/location_service.dart';
+import 'package:furqan/core/themes/cubit/theme_cubit.dart';
+import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/models/location_data.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/models/next_prayer_info.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/models/prayer_list_item.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/models/prayer_times.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/models/prayer_times_data.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
-/// Prayer Times Screen - Complete Flutter Implementation
-/// Matches the design of your React FurQan Quran app
 class PrayerTimesScreen extends StatefulWidget {
   const PrayerTimesScreen({super.key});
 
@@ -334,6 +27,9 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
   String? _error;
   PrayerTimesData? _prayerTimes;
   NextPrayerInfo? _nextPrayer;
+  final locationService = sl<LocationService>();
+  Position? userPosition;
+  Placemark? userPlaceMark;
 
   @override
   void initState() {
@@ -343,6 +39,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
       duration: const Duration(milliseconds: 600),
     );
     _animationController.forward();
+    _loadUserLocaionData();
     _loadPrayerTimes();
     _startNextPrayerTimer();
   }
@@ -353,13 +50,16 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
     super.dispose();
   }
 
+  void _loadUserLocaionData() {
+    locationService.getCurrentLocation();
+  }
+
   void _loadPrayerTimes() {
     setState(() {
       _isLoading = true;
       _error = null;
     });
 
-    // Simulate API call - Replace with actual prayer times API
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         setState(() {
@@ -374,9 +74,9 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
               isha: '19:45',
             ),
             location: LocationData(
-              city: 'Current Location',
-              country: 'Unknown',
-              timezone: 'UTC+3',
+              city: userPlaceMark?.locality ?? 'Unknown',
+              country: userPlaceMark?.country ?? 'Unknown',
+              timezone: userPosition?.floor?.toString() ?? "",
             ),
           );
           _updateNextPrayer();
@@ -387,7 +87,6 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
   }
 
   void _startNextPrayerTimer() {
-    // Update next prayer every minute
     Future.delayed(const Duration(minutes: 1), () {
       if (mounted) {
         _updateNextPrayer();
@@ -403,12 +102,42 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
     final currentMinutes = now.hour * 60 + now.minute;
 
     final prayers = [
-      PrayerInfo('Fajr', _prayerTimes!.times.fajr),
-      PrayerInfo('Sunrise', _prayerTimes!.times.sunrise),
-      PrayerInfo('Dhuhr', _prayerTimes!.times.dhuhr),
-      PrayerInfo('Asr', _prayerTimes!.times.asr),
-      PrayerInfo('Maghrib', _prayerTimes!.times.maghrib),
-      PrayerInfo('Isha', _prayerTimes!.times.isha),
+      PrayerListItem(
+        'Fajr',
+        _prayerTimes!.times.fajr,
+        'Fajr prayer',
+        Icons.wb_twilight,
+      ),
+      PrayerListItem(
+        'Sunrise',
+        _prayerTimes!.times.sunrise,
+        'Sunrise (no prayer)',
+        Icons.wb_sunny,
+      ),
+      PrayerListItem(
+        'Dhuhr',
+        _prayerTimes!.times.dhuhr,
+        'Dhuhr prayer',
+        Icons.wb_sunny,
+      ),
+      PrayerListItem(
+        'Asr',
+        _prayerTimes!.times.asr,
+        'Asr prayer',
+        Icons.wb_sunny,
+      ),
+      PrayerListItem(
+        'Maghrib',
+        _prayerTimes!.times.maghrib,
+        'Maghrib prayer',
+        Icons.wb_twilight,
+      ),
+      PrayerListItem(
+        'Isha',
+        _prayerTimes!.times.isha,
+        'Isha prayer',
+        Icons.nightlight,
+      ),
     ];
 
     for (final prayer in prayers) {
@@ -452,26 +181,14 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.watch<ThemeCubit>().isDarkMood();
 
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: isDark
-                ? [
-                    const Color(0xFF064E3B), // emerald-950
-                    const Color(0xFF115E59), // teal-950
-                    const Color(0xFF164E63), // cyan-950
-                  ]
-                : [
-                    const Color(0xFFECFDF5), // emerald-50
-                    const Color(0xFFCCFBF1), // teal-50
-                    const Color(0xFFCFFAFE), // cyan-50
-                  ],
-          ),
+          gradient: isDark
+              ? QuranAppTheme.darkScaffoldGradient
+              : QuranAppTheme.lightScaffoldGradient,
         ),
         child: SafeArea(
           child: Padding(
@@ -577,7 +294,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
           .animate(
             CurvedAnimation(
               parent: _animationController,
-              curve: const Interval(0.1, 1.0, curve: Curves.easeOut),
+              curve: const Interval(0, 1.0, curve: Curves.easeOut),
             ),
           ),
       child: Container(
@@ -607,7 +324,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
                   Text(
                     '${_prayerTimes!.location.country} • ${_prayerTimes!.location.timezone}',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withAlpha(204),
                       fontSize: 12,
                     ),
                   ),
@@ -626,7 +343,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
           .animate(
             CurvedAnimation(
               parent: _animationController,
-              curve: const Interval(0.2, 1.0, curve: Curves.easeOut),
+              curve: const Interval(0, 1.0, curve: Curves.easeOut),
             ),
           ),
       child: Container(
@@ -663,9 +380,9 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withAlpha(51),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withOpacity(0.3)),
+                border: Border.all(color: Colors.white.withAlpha(77)),
               ),
               child: Text(
                 'in ${_nextPrayer!.remaining}',
@@ -683,7 +400,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: isDark
-            ? const Color(0xFF7F1D1D).withOpacity(0.2)
+            ? const Color(0xFF7F1D1D).withAlpha(51)
             : const Color(0xFFFEF2F2),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
@@ -723,8 +440,8 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: isDark
-            ? Colors.white.withOpacity(0.05)
-            : Colors.white.withOpacity(0.7),
+            ? Colors.white.withAlpha(13)
+            : Colors.white.withAlpha(179),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -827,8 +544,8 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
             ? LinearGradient(
                 colors: isDark
                     ? [
-                        const Color(0xFF064E3B).withOpacity(0.3),
-                        const Color(0xFF115E59).withOpacity(0.3),
+                        const Color(0xFF064E3B).withAlpha(77),
+                        const Color(0xFF115E59).withAlpha(77),
                       ]
                     : [const Color(0xFFD1FAE5), const Color(0xFFCCFBF1)],
               )
@@ -836,10 +553,10 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
         color: isNext
             ? null
             : isPassed
-            ? (isDark ? Colors.white.withOpacity(0.05) : Colors.grey.shade50)
+            ? (isDark ? Colors.white.withAlpha(13) : Colors.grey.shade50)
             : (isDark
-                  ? Colors.white.withOpacity(0.07)
-                  : Colors.white.withOpacity(0.7)),
+                  ? Colors.white.withAlpha(18)
+                  : Colors.white.withAlpha(179)),
         borderRadius: BorderRadius.circular(16),
         border: isNext
             ? Border.all(
@@ -856,7 +573,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
                       (isDark
                               ? const Color(0xFF047857)
                               : const Color(0xFF10B981))
-                          .withOpacity(0.3),
+                          .withAlpha(77),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -871,7 +588,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
               color: isNext
                   ? (isDark ? const Color(0xFF047857) : const Color(0xFFA7F3D0))
                   : (isDark
-                        ? Colors.white.withOpacity(0.1)
+                        ? Colors.white.withAlpha(26)
                         : Colors.grey.shade200),
               borderRadius: BorderRadius.circular(12),
             ),
@@ -936,7 +653,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
                             : const Color(0xFFA7F3D0))
                       : isPassed
                       ? (isDark
-                            ? Colors.white.withOpacity(0.1)
+                            ? Colors.white.withAlpha(26)
                             : Colors.grey.shade300)
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(8),
@@ -970,7 +687,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
           .animate(
             CurvedAnimation(
               parent: _animationController,
-              curve: const Interval(0.8, 1.0, curve: Curves.easeOut),
+              curve: const Interval(0, 1.0, curve: Curves.easeOut),
             ),
           ),
       child: Container(
@@ -979,8 +696,8 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
           gradient: LinearGradient(
             colors: isDark
                 ? [
-                    const Color(0xFF581C87).withOpacity(0.2),
-                    const Color(0xFF1E40AF).withOpacity(0.2),
+                    const Color(0xFF581C87).withAlpha(51),
+                    const Color(0xFF1E40AF).withAlpha(51),
                   ]
                 : [const Color(0xFFF3E8FF), const Color(0xFFDBEAFE)],
           ),
@@ -1044,74 +761,5 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
 }
 
 // Data Models
-class PrayerTimes {
-  final String fajr;
-  final String sunrise;
-  final String dhuhr;
-  final String asr;
-  final String maghrib;
-  final String isha;
-
-  PrayerTimes({
-    required this.fajr,
-    required this.sunrise,
-    required this.dhuhr,
-    required this.asr,
-    required this.maghrib,
-    required this.isha,
-  });
-}
-
-class LocationData {
-  final String city;
-  final String country;
-  final String timezone;
-
-  LocationData({
-    required this.city,
-    required this.country,
-    required this.timezone,
-  });
-}
-
-class PrayerTimesData {
-  final DateTime date;
-  final PrayerTimes times;
-  final LocationData location;
-
-  PrayerTimesData({
-    required this.date,
-    required this.times,
-    required this.location,
-  });
-}
-
-class NextPrayerInfo {
-  final String name;
-  final String time;
-  final String remaining;
-
-  NextPrayerInfo({
-    required this.name,
-    required this.time,
-    required this.remaining,
-  });
-}
-
-class PrayerInfo {
-  final String name;
-  final String time;
-
-  PrayerInfo(this.name, this.time);
-}
-
-class PrayerListItem {
-  final String name;
-  final String time;
-  final String description;
-  final IconData icon;
-
-  PrayerListItem(this.name, this.time, this.description, this.icon);
-}
 
 enum PrayerStatus { next, passed, upcoming }

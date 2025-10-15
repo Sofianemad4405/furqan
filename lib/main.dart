@@ -23,6 +23,7 @@ Future<void> main() async {
   final supabase = sl<SupabaseClient>();
   final isLoggedIn =
       (await prefs.isLoggedIn()) && (supabase.auth.currentSession != null);
+
   runApp(
     MultiBlocProvider(
       providers: [

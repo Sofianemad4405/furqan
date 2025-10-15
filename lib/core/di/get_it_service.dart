@@ -2,6 +2,7 @@ import 'package:furqan/core/network/adhkar_client.dart';
 import 'package:furqan/core/network/dio_factory.dart';
 import 'package:furqan/core/network/retrofit_client.dart';
 import 'package:furqan/core/network/tafsir_client.dart';
+import 'package:furqan/core/services/location_service.dart';
 import 'package:furqan/core/services/prefs.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/features/auth/presentation/cubit/auth_cubit.dart';
@@ -71,5 +72,12 @@ Future<void> init() async {
 
 Future<void> setupLocator() async {
   final prefs = await SharedPreferences.getInstance();
+
+  sl.registerLazySingleton<SharedPreferences>(() => prefs);
+
+  sl.registerLazySingleton<LocationService>(
+    () => LocationService(sl<SharedPreferences>()),
+  );
+
   sl.registerLazySingleton(() => Prefs(prefs));
 }

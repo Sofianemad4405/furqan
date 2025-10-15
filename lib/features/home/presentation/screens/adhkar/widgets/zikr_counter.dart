@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:furqan/core/entities/dhikr_entity.dart';
 import 'package:furqan/core/themes/theme_system.dart';
-import 'package:furqan/features/reading/presentation/screens/reading_surah.dart';
+import 'package:furqan/features/reading/presentation/widgets/session_stats.dart';
 import 'package:gap/gap.dart';
 
 class ZikrCounter extends StatefulWidget {
@@ -210,7 +210,7 @@ class _ZikrCounterState extends State<ZikrCounter>
                 // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Expanded(
-                    child: SurahStats(
+                    child: SessionStats(
                       icon: const Icon(
                         Icons.alarm,
                         color: Color(0xff27A57A),
@@ -226,7 +226,7 @@ class _ZikrCounterState extends State<ZikrCounter>
                   ),
                   const Gap(20),
                   Expanded(
-                    child: SurahStats(
+                    child: SessionStats(
                       icon: const Icon(
                         Icons.alarm,
                         color: Color(0xff27A57A),

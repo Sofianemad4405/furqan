@@ -22,6 +22,7 @@ class ZikrContainer extends StatefulWidget {
 class _ZikrContainerState extends State<ZikrContainer> {
   @override
   Widget build(BuildContext context) {
+    ///دي الكارد اللي بيتعرض فيها الذكر
     return CustomContainer(
       child: Padding(
         padding: const EdgeInsets.all(16.0),

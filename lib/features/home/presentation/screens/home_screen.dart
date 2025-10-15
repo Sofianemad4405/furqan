@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:furqan/core/di/get_it_service.dart';
-import 'package:furqan/core/widgets/shimmer_container.dart';
+import 'package:furqan/core/widgets/shimmers/shimmer_container.dart';
 import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/widgets/current_streak.dart';
-import 'package:furqan/features/home/presentation/widgets/current_streak_shimmer.dart';
+import 'package:furqan/core/widgets/shimmers/current_streak_shimmer.dart';
 import 'package:furqan/features/home/presentation/widgets/home_header.dart';
 import 'package:furqan/features/home/presentation/widgets/home_stats.dart';
-import 'package:furqan/features/home/presentation/widgets/home_stats_shimmer.dart';
-import 'package:furqan/features/home/presentation/widgets/main_challenges_grid_shimmer.dart';
+import 'package:furqan/core/widgets/shimmers/home_stats_shimmer.dart';
+import 'package:furqan/core/widgets/shimmers/main_challenges_grid_shimmer.dart';
 import 'package:furqan/features/home/presentation/widgets/main_challenges_grid_view.dart';
 import 'package:furqan/features/home/presentation/widgets/today.dart';
 import 'package:furqan/features/home/presentation/widgets/today_challenges_list_view.dart';
-import 'package:furqan/features/home/presentation/widgets/today_challenges_shimmer.dart';
-import 'package:furqan/features/user_data/models/user_progress.dart';
-import 'package:furqan/features/user_data/services/user_progress_service.dart';
+import 'package:furqan/core/widgets/shimmers/today_challenges_shimmer.dart';
 import 'package:gap/gap.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen>
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.2), // نازل من تحت شوية
+      begin: const Offset(0, 0.2),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
@@ -98,9 +94,7 @@ class _HomeScreenState extends State<HomeScreen>
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const Gap(10),
-                          TodayChallengesListView(
-                            userProgress: state.userProgress,
-                          ),
+                          TodayChallengesList(userProgress: state.userProgress),
                           const Gap(20),
 
                           ///Current Streak

@@ -33,13 +33,10 @@ class _RootPageState extends State<RootPage> {
   void _refresh() => setState(() {});
 
   Widget _buildOffstageNavigator(int index, Widget child) {
-    return Offstage(
-      offstage: _currentIndex != index,
-      child: Navigator(
-        key: _navKeys[index],
-        observers: [_RouteObserver(_refresh)],
-        onGenerateRoute: (settings) => MaterialPageRoute(builder: (_) => child),
-      ),
+    return Navigator(
+      key: _navKeys[index],
+      observers: [_RouteObserver(_refresh)],
+      onGenerateRoute: (settings) => MaterialPageRoute(builder: (_) => child),
     );
   }
 
@@ -71,13 +68,9 @@ class _RootPageState extends State<RootPage> {
     // final canPop = _navKeys[_currentIndex].currentState?.canPop() ?? false;
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? QuranAppTheme.darkScaffoldGradient.colors
-              : QuranAppTheme.lightScaffoldGradient.colors,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        gradient: isDark
+            ? QuranAppTheme.darkScaffoldGradient
+            : QuranAppTheme.lightScaffoldGradient,
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -104,7 +97,8 @@ class _RootPageState extends State<RootPage> {
         extendBody: true,
         body: userProgress == null
             ? const HomeShimmer()
-            : Stack(
+            : IndexedStack(
+                index: _currentIndex,
                 children: [
                   _buildOffstageNavigator(0, const HomeScreen()),
                   _buildOffstageNavigator(
@@ -208,6 +202,7 @@ class _AnimatedThemeSwitcherState extends State<AnimatedThemeSwitcher>
       } else {
         _controller.reverse();
       }
+      _controller.value = _controller.value.clamp(0.0, 1.0);
     }
   }
 
@@ -241,7 +236,7 @@ class _AnimatedThemeSwitcherState extends State<AnimatedThemeSwitcher>
               Colors.grey.shade300,
               Colors.indigo.shade700,
               t,
-            )!.withOpacity(0.95);
+            )!.withValues(alpha: .95);
 
             // knob position
             final alignment = Alignment.lerp(
@@ -301,7 +296,7 @@ class _AnimatedThemeSwitcherState extends State<AnimatedThemeSwitcher>
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.18),
+                            color: Colors.black.withValues(alpha: 0.18),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),

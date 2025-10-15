@@ -1,0 +1,59 @@
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class LocationService {
+  final SharedPreferences _prefs;
+  final String _keyLocationPermission = 'location_permission';
+
+  LocationService(this._prefs);
+
+  Future<void> saveLocationPermission(bool permission) async {
+    await _prefs.setBool(_keyLocationPermission, permission);
+  }
+
+  bool get locationPermission =>
+      _prefs.getBool(_keyLocationPermission) ?? false;
+
+  Future<Position?> getCurrentLocation() async {
+    if (locationPermission) {
+      return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+    }
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return null;
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      await saveLocationPermission(false);
+      return null;
+    }
+
+    await saveLocationPermission(true);
+    return await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+  }
+
+  Future<Placemark> getUserAddress() async {
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    Placemark place = placemarks[0];
+
+    return place;
+  }
+}

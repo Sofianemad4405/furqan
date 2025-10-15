@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -184,12 +182,15 @@ class QuranAppTheme {
       // CARD THEME (Glassmorphism)
       // ========================================
       cardTheme: CardThemeData(
-        color: Colors.white.withOpacity(0.8),
+        color: Colors.white.withValues(alpha: 0.8),
         elevation: 0,
         shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: Colors.white.withOpacity(0.2), width: 1),
+          side: BorderSide(
+            color: Colors.white.withValues(alpha: 0.2),
+            width: 1,
+          ),
         ),
         margin: const EdgeInsets.all(8),
       ),
@@ -782,56 +783,6 @@ class QuranAppTheme {
   // STAT CARD COLORS (Hasanat, Surahs, Minutes)
   // ========================================
 
-  /// Light mode stat card colors
-  static const Map<String, Map<String, Color>> lightStatCardColors = {
-    'hasanat': {
-      'background': Color(0xFFF5F0E3), // green-50
-      'border': Color(0xFFF5E780), // green-200
-      'icon': Color(0xFFC88200), // green-600
-      'text': Color(0xFFC88200), // green-700
-      'number': Color(0xFF9F5B00), // green-800
-    },
-    'surahs': {
-      'background': Color(0xFFEAFAF3),
-      'border': Color(0xFFA2F1CD),
-      'icon': Color(0xFFC88200),
-      'text': Color(0xFF007552),
-      'number': Color(0xFF007552),
-    },
-    'minutes': {
-      'background': Color(0xFFF2E9F1),
-      'border': Color(0xFFE2CDF7),
-      'icon': Color(0xFF7D00D2),
-      'text': Color(0xFF7D00D2),
-      'number': Color(0xFF7D00D2),
-    },
-  };
-
-  /// Dark mode stat card colors
-  static const Map<String, Map<String, Color>> darkStatCardColors = {
-    'hasanat': {
-      'background': Color(0xFF282226), // green-900
-      'border': Color(0xFF844800), // green-800
-      'icon': Color(0xFF22C55E), // green-500
-      'text': Color(0xFFF5D61F), // green-400
-      'number': Color(0xFFF5D61F), // green-300
-    },
-    'surahs': {
-      'background': Color(0xFF122731),
-      'border': Color(0xFF005C42),
-      'icon': Color(0xFF00CC8C),
-      'text': Color(0xFF00CC8C),
-      'number': Color(0xFF00CC8C),
-    },
-    'minutes': {
-      'background': Color(0xFF2D2239),
-      'border': Color(0xFF6A10A9),
-      'icon': Color(0xFF6A10A9),
-      'text': Color(0xFF2D233B),
-      'number': Color(0xFFD1ABF5),
-    },
-  };
-
   // ========================================
   // GLASSMORPHISM UTILITIES
   // ========================================
@@ -944,10 +895,10 @@ extension QuranThemeExtension on BuildContext {
       QuranAppTheme.adaptiveGlassDecoration(this, borderRadius: borderRadius);
 
   /// Get stat card colors
-  Map<String, Color> getStatCardColors(String cardType) {
-    final colors = isDarkMode
-        ? QuranAppTheme.darkStatCardColors
-        : QuranAppTheme.lightStatCardColors;
-    return colors[cardType] ?? colors['hasanat']!;
-  }
+  // Map<String, Color> getStatCardColors(String cardType) {
+  //   final colors = isDarkMode
+  //       ? QuranAppTheme.darkStatCardColors
+  //       : QuranAppTheme.lightStatCardColors;
+  //   return colors[cardType] ?? colors['hasanat']!;
+  // }
 }

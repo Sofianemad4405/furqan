@@ -26,7 +26,7 @@ class ModernAppBar extends StatefulWidget implements PreferredSizeWidget {
 
   const ModernAppBar({
     super.key,
-    this.title = 'Al-Quran',
+    this.title = 'FurQan',
     this.showLanguageToggle = true,
     this.onMenuClick,
     this.onThemeChanged,
@@ -44,7 +44,6 @@ class ModernAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _ModernAppBarState extends State<ModernAppBar>
     with TickerProviderStateMixin {
-  bool _isThemeAnimating = false;
   late AnimationController _gradientController;
   late AnimationController _sparkle1Controller;
   late AnimationController _sparkle2Controller;
@@ -535,25 +534,6 @@ class _ModernAppBarState extends State<ModernAppBar>
                 ),
 
                 // Sparkle Animation
-                if (_isThemeAnimating)
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 600),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Center(
-                        child: Transform.scale(
-                          scale: value < 0.5 ? value * 2 : (1 - value) * 2,
-                          child: Icon(
-                            Icons.auto_awesome,
-                            size: 24,
-                            color: const Color(
-                              0xFF10B981,
-                            ).withOpacity(1 - value),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
               ],
             ),
           ),

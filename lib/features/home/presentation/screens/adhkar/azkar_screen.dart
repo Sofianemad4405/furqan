@@ -5,8 +5,8 @@ import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/cubit/adhkar_cubit.dart';
-import 'package:furqan/features/home/presentation/widgets/azkar_list_view.dart';
-import 'package:furqan/features/home/presentation/widgets/dhikr_list_tile.dart';
+import 'package:furqan/features/home/presentation/screens/adhkar/widgets/azkar_list_view.dart';
+import 'package:furqan/features/home/presentation/screens/adhkar/widgets/dhikr_list_tile.dart';
 import 'package:gap/gap.dart';
 
 class DhikrScreen extends StatefulWidget {
@@ -61,9 +61,9 @@ class _DhikrScreenState extends State<DhikrScreen> {
               if (state is AdhkarCategoriesLoaded) {
                 return Column(
                   children: [
+                    ///Azkar Elsaba7
                     DhikrListTile(
                       onTap: () {
-                        // context.read<AdhkarCubit>().getAdhkar("azkar_sabah");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -78,7 +78,10 @@ class _DhikrScreenState extends State<DhikrScreen> {
                       englishTitle: azkarCategoriesEnglish[0],
                       count: morningAzkar?.content.length ?? 0,
                     ),
+
                     const Gap(20),
+
+                    ///Azkar Elmasaa
                     DhikrListTile(
                       onTap: () {
                         Navigator.push(
@@ -96,6 +99,8 @@ class _DhikrScreenState extends State<DhikrScreen> {
                       count: eveningAzkar?.content.length ?? 0,
                     ),
                     const Gap(20),
+
+                    ///Azkar Elmasaa
                     DhikrListTile(
                       onTap: () {
                         Navigator.push(
@@ -121,9 +126,6 @@ class _DhikrScreenState extends State<DhikrScreen> {
               if (state is AdhkarError) {
                 return Center(child: Text(state.message));
               }
-              // if (state is AdhkarLoaded) {
-
-              // }
               return const SizedBox();
             },
           ),

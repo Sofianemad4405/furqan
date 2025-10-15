@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
-import 'package:furqan/features/home/presentation/widgets/custom_zikr_category_container.dart';
+import 'package:furqan/features/home/presentation/screens/adhkar/widgets/custom_zikr_category_container.dart';
 import 'package:gap/gap.dart';
 
 class DhikrListTile extends StatelessWidget {

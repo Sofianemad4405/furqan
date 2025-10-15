@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/core/widgets/shimmer_container.dart';
+import 'package:furqan/core/widgets/shimmers/shimmer_container.dart';
 import 'package:gap/gap.dart';
 
 class ReadingSurahShimmer extends StatelessWidget {
@@ -7,7 +7,7 @@ class ReadingSurahShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
-import 'dart:math' as math;
 
 import 'package:furqan/features/stats/data/models/ahievement.dart';
 import 'package:furqan/features/stats/data/models/user_stats.dart';
@@ -49,7 +48,7 @@ class _StatsScreenState extends State<StatsScreen>
         title: "First Steps",
         description: "Read your first Ayah",
         icon: "🌟",
-        unlocked: stats.surahsCompleted > 0,
+        unlocked: true,
       ),
       Achievement(
         title: "Consistent Reader",
@@ -107,7 +106,7 @@ class _StatsScreenState extends State<StatsScreen>
           parent: _controller,
           curve: Interval(
             index * 0.1,
-            0.6 + (index * 0.1),
+            (0.6 + (index * 0.1)).clamp(0.0, 1.0),
             curve: Curves.easeOut,
           ),
         ),
@@ -126,9 +125,6 @@ class _StatsScreenState extends State<StatsScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeCubit>().isDarkMood();
-    final maxWeeklyHasanat = weeklyProgress
-        .map((e) => e.hasanat)
-        .reduce(math.max);
 
     return SafeArea(
       child: SingleChildScrollView(
@@ -157,7 +153,7 @@ class _StatsScreenState extends State<StatsScreen>
               _cardAnimations[3],
               WeeklyActivity(
                 isDark: isDark,
-                maxHassanat: maxWeeklyHasanat,
+                maxHassanat: 156,
                 weeklyProgress: weeklyProgress,
               ),
             ),

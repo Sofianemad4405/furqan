@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:furqan/core/entities/azkar_section_entity.dart';
 import 'package:furqan/core/entities/dhikr_entity.dart';
 import 'package:furqan/core/themes/theme_system.dart';
-import 'package:furqan/features/home/presentation/widgets/custom_zikr_category_container.dart';
-import 'package:furqan/features/home/presentation/widgets/zikr_container.dart';
-import 'package:furqan/features/home/presentation/widgets/zikr_counter.dart';
+import 'package:furqan/features/home/presentation/screens/adhkar/widgets/custom_zikr_category_container.dart';
+import 'package:furqan/features/home/presentation/screens/adhkar/widgets/zikr_container.dart';
+import 'package:furqan/features/home/presentation/screens/adhkar/widgets/zikr_counter.dart';
 import 'package:gap/gap.dart';
 
 class AzkarListView extends StatefulWidget {

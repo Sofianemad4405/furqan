@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math' hide log;
 import 'dart:ui';
 
@@ -40,8 +39,6 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
 
   ///All Surahs
   List<SurahBaseEntity> surahs = [];
-
-  List<String> allSurahsAudios = [];
 
   ///All reciters
   List<String> reciters = [];
@@ -366,9 +363,6 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                         child: ListTile(
                                           onTap: () {
                                             setCurrentReciter(reciters[index]);
-                                            log(reciterId.toString());
-                                            log(index.toString());
-                                            log(hasChangedReciter.toString());
                                             bool isDifferent =
                                                 reciterId != index;
                                             reciterId = index;

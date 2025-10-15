@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/core/widgets/shimmer_container.dart';
+import 'package:furqan/core/widgets/shimmers/shimmer_container.dart';
 
 class TodayChallengesShimmer extends StatelessWidget {
   const TodayChallengesShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 3,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        return const Padding(
-          padding: EdgeInsets.only(top: 16),
-          child: ShimmerContainer(height: 100),
-        );
-      },
+    return SizedBox(
+      height: 3 * (100 + 16), // 3 items, 100 height + 16 padding
+      child: ListView.builder(
+        itemCount: 3,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 16),
+            child: ShimmerContainer(height: 100),
+          );
+        },
+      ),
     );
   }
 }

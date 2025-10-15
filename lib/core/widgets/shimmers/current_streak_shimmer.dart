@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/core/widgets/shimmer_container.dart';
+import 'package:furqan/core/widgets/shimmers/shimmer_container.dart';
 
 class CurrentStreakShimmer extends StatelessWidget {
   const CurrentStreakShimmer({super.key});

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
-import 'package:furqan/core/themes/theme_system.dart';
-import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/screens/today_challenges/today_challenges.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
 
-class TodayChallengesListView extends StatelessWidget {
-  const TodayChallengesListView({super.key, required this.userProgress});
+class TodayChallengesList extends StatelessWidget {
+  const TodayChallengesList({super.key, required this.userProgress});
   final UserProgress userProgress;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeCubit>().isDarkMood();
+    final colors = isDark ? _DarkMood() : _LightMood();
     return ListView.builder(
       itemCount: 3,
       shrinkWrap: true,
@@ -26,7 +26,6 @@ class TodayChallengesListView extends StatelessWidget {
           ),
           child: BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, state) {
-              bool isDark = state == ThemeMode.dark;
               return Padding(
                 padding: const EdgeInsets.only(bottom: 16),
                 child: CustomContainer(
@@ -41,36 +40,11 @@ class TodayChallengesListView extends StatelessWidget {
                         Row(
                           children: [
                             ///challenge icon
-                            Row(
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 40,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: isDark
-                                        ? QuranAppTheme
-                                              .homeIconsContainersColorsDark[index]
-                                        : QuranAppTheme
-                                              .homeIconsContainersColorsLight[index],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      userProgress.todayChallenges[index].icon,
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodyMedium,
-                                    ),
-                                  ),
-                                ),
-                                const Gap(10),
-                                Text(
-                                  userProgress.todayChallenges[index].title,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.titleMedium,
-                                ),
-                              ],
+                            _buildChallengeIconAndTitle(
+                              color: colors.iconsColors[index],
+                              userProgress: userProgress,
+                              context: context,
+                              index: index,
                             ),
                             const Spacer(),
                             Text(
@@ -89,8 +63,8 @@ class TodayChallengesListView extends StatelessWidget {
                           minHeight: 5,
                           borderRadius: BorderRadius.circular(12),
                           value: userProgress.todayChallenges[index].progress,
-                          backgroundColor: QuranAppTheme.gray450,
-                          color: QuranAppTheme.green,
+                          backgroundColor: Colors.grey,
+                          color: Colors.green,
                         ),
                       ],
                     ),
@@ -103,4 +77,67 @@ class TodayChallengesListView extends StatelessWidget {
       },
     );
   }
+}
+
+Widget _buildChallengeIconAndTitle({
+  required Color color,
+  required UserProgress userProgress,
+  required BuildContext context,
+  required int index,
+}) {
+  return Row(
+    children: [
+      Container(
+        height: 40,
+        width: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: color,
+        ),
+        child: Center(
+          child: Text(
+            userProgress.todayChallenges[index].icon,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ),
+      ),
+      const Gap(10),
+      Text(
+        userProgress.todayChallenges[index].title,
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+    ],
+  );
+}
+
+abstract class ColorScheme {
+  List<Color> get iconsColors;
+}
+
+class _DarkMood implements ColorScheme {
+  @override
+  List<Color> get iconsColors => [
+    ///Complete a Surah
+    const Color(0xFF143236),
+
+    ///Dhikr Session
+    const Color(0xFF1C2B4E),
+
+    ///Morning Duaas
+    const Color(0xFF2D224D),
+  ];
+}
+
+class _LightMood implements ColorScheme {
+  @override
+  List<Color> get iconsColors => [
+    ///Complete a Surah
+    const Color(0xFFC8F0DC),
+
+    ///Dhikr Session
+    const Color(0xFFD2E1F4),
+
+    ///Morning Duaas
+    const Color(0xFFE9DFF5),
+  ];
 }
