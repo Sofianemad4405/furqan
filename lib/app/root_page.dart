@@ -12,7 +12,7 @@ import 'package:furqan/features/home/presentation/screens/home_screen.dart';
 import 'package:furqan/features/home/presentation/widgets/app_bar.dart';
 import 'package:furqan/features/reading/presentation/screens/reading_page.dart';
 import 'package:furqan/features/search/presentation/screens/search_page.dart';
-import 'package:furqan/features/settings/presentation/screens/settings_page.dart';
+import 'package:furqan/features/settings/presentation/screens/settings_screen.dart';
 import 'package:furqan/features/stats/presentation/screens/stats_page.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:furqan/features/user_data/services/user_progress_service.dart';

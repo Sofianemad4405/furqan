@@ -18,7 +18,7 @@ abstract class ReadingDataSource {
     int ayahNumber,
   );
   Future<List<TafsirProvider>> getTafsirProviders();
-  Future<List<String>> getAvailableReciters();
+  Future<Map<String, String>> getAvailableReciters();
 }
 
 class ReadingDataSourceImpl implements ReadingDataSource {
@@ -89,10 +89,10 @@ class ReadingDataSourceImpl implements ReadingDataSource {
   }
 
   @override
-  Future<List<String>> getAvailableReciters() async {
+  Future<Map<String, String>> getAvailableReciters() async {
     try {
       final reciters = await _api.getAvailableReciters();
-      return reciters.values.toList();
+      return reciters;
     } catch (e) {
       throw Exception(e.toString());
     }

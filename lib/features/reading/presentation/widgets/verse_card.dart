@@ -47,7 +47,7 @@ class VerseCard extends StatefulWidget {
 class _VerseCardState extends State<VerseCard> {
   List<TafsirProviderEntity> tafsirProviders = [];
   VerseTafsirEntity? verseTafsir;
-  List<String> reciters = [];
+  Map<String, String> reciters = {};
   String currentReciter = "";
   int reciterId = 1;
   bool hasChangedReciter = false;
@@ -66,7 +66,7 @@ class _VerseCardState extends State<VerseCard> {
 
   Future<void> _loadReciters() async {
     reciters = await context.read<ReadingCubit>().getAvailableReciters();
-    currentReciter = reciters[0];
+    currentReciter = reciters.keys.first;
     reciterId = sl<Prefs>().readingModeDefaultReciter;
   }
 
@@ -161,7 +161,7 @@ class _VerseCardState extends State<VerseCard> {
                               color: Theme.of(
                                 context,
                               ).colorScheme.inverseSurface,
-                              list: reciters,
+                              list: reciters.values.toList(),
                               child: Column(
                                 children: [
                                   const Gap(20),
@@ -178,7 +178,8 @@ class _VerseCardState extends State<VerseCard> {
                                       itemCount: reciters.length,
                                       itemBuilder: (context, index) {
                                         bool isThisSheikhPlaying =
-                                            currentReciter == reciters[index];
+                                            currentReciter ==
+                                            reciters.values.toList()[index];
                                         return Container(
                                           decoration: BoxDecoration(
                                             border: isThisSheikhPlaying
@@ -200,7 +201,7 @@ class _VerseCardState extends State<VerseCard> {
                                           child: ListTile(
                                             onTap: () {
                                               setCurrentReciter(
-                                                reciters[index],
+                                                reciters.values.toList()[index],
                                               );
                                               sl<Prefs>()
                                                   .saveReadingModeDefaultReciter(
@@ -233,13 +234,15 @@ class _VerseCardState extends State<VerseCard> {
                                               ),
                                             ),
                                             title: Text(
-                                              reciters[index],
+                                              reciters.values.toList()[index],
                                               style: Theme.of(
                                                 context,
                                               ).textTheme.titleMedium,
                                             ),
                                             trailing: Text(
-                                              reciterMapper(reciters[index]),
+                                              reciterMapper(
+                                                reciters.values.toList()[index],
+                                              ),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyMedium

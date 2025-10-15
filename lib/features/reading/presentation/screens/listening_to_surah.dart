@@ -41,7 +41,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
   List<SurahBaseEntity> surahs = [];
 
   ///All reciters
-  List<String> reciters = [];
+  Map<String, String> reciters = {};
 
   int reciterId = 1;
   @override
@@ -61,8 +61,8 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
     currentPlayingSurah = widget.surah;
     reciters = await context.read<ReadingCubit>().getAvailableReciters();
     surahs = await context.read<ReadingCubit>().getAllSurahs();
-    currentReciter = reciters[0];
-    reciterId = reciters.indexOf(currentReciter);
+    currentReciter = reciters.values.toList()[0];
+    reciterId = reciters.keys.toList().indexOf(currentReciter);
   }
 
   Future<void> setCurrentReciter(String reciter) async {
@@ -85,7 +85,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
               "",
         );
       }
-      await player.play(); // هيكمل من مكانه لو متوقف
+      await player.play();
     }
   }
 
@@ -100,23 +100,6 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
       currentSurahDuration = duration;
     });
   }
-
-  // Future<void> setPlaylist() async {
-  //   allSurahsAudios = List<String>.filled(surahs.length, "");
-  //   for (int i = 0; i < surahs.length; i++) {
-  //     allSurahsAudios[i] = await context
-  //         .read<ReadingCubit>()
-  //         .getSurah(i + 1)
-  //         .then((value) => value.surahAudio[(reciterId + 1).toString()]!.url);
-  //   }
-  //   final playlist = ConcatenatingAudioSource(
-  //     children: allSurahsAudios
-  //         .map((url) => AudioSource.uri(Uri.parse(url)))
-  //         .toList(),
-  //   );
-  //   player.setAudioSource(playlist);
-  //   await player.setShuffleModeEnabled(true);
-  // }
 
   Future<void> previousSurah() async {
     player.stop();
@@ -326,7 +309,7 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                         builder: (context) {
                           return buildBlurredSheet(
                             color: Theme.of(context).colorScheme.inverseSurface,
-                            list: reciters,
+                            list: reciters.values.toList(),
                             child: Column(
                               children: [
                                 const Gap(20),
@@ -362,7 +345,9 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                         ),
                                         child: ListTile(
                                           onTap: () {
-                                            setCurrentReciter(reciters[index]);
+                                            setCurrentReciter(
+                                              reciters.values.toList()[index],
+                                            );
                                             bool isDifferent =
                                                 reciterId != index;
                                             reciterId = index;
@@ -392,13 +377,15 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                             ),
                                           ),
                                           title: Text(
-                                            reciters[index],
+                                            reciters.values.toList()[index],
                                             style: Theme.of(
                                               context,
                                             ).textTheme.titleMedium,
                                           ),
                                           trailing: Text(
-                                            reciterMapper(reciters[index]),
+                                            reciterMapper(
+                                              reciters.values.toList()[index],
+                                            ),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyMedium

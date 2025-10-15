@@ -103,14 +103,13 @@ class ReadingCubit extends Cubit<ReadingState> {
     }
   }
 
-  Future<List<String>> getAvailableReciters() async {
+  Future<Map<String, String>> getAvailableReciters() async {
     try {
       final reciters = await _readingRepo.getAvailableReciters();
-      log(reciters.length.toString());
       return reciters;
     } catch (e) {
       log(e.toString());
-      return [];
+      return {};
     }
   }
 
