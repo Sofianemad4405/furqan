@@ -14,6 +14,9 @@ part 'reading_state.dart';
 class ReadingCubit extends Cubit<ReadingState> {
   ReadingCubit(this._readingRepo) : super(ReadingInitial());
   final ReadingRepo _readingRepo;
+  void init() {
+    getSurahs();
+  }
 
   Future<void> getSurahs() async {
     emit(SurahsLoading());
@@ -39,6 +42,11 @@ class ReadingCubit extends Cubit<ReadingState> {
     return surah;
   }
 
+  Future<List<SurahBaseEntity>> getAllSurahs() async {
+    final surahs = await _readingRepo.getSurahs();
+    return surahs;
+  }
+
   Future<void> getSurahWithAudioAndTranslation(int surahNo) async {
     emit(SurahLoadingInReadingMode());
     try {
@@ -46,6 +54,18 @@ class ReadingCubit extends Cubit<ReadingState> {
       emit(SurahLoadedInReadingMode(surah: surah));
     } catch (e) {
       emit(ErrorSurahInReadingMode(message: e.toString()));
+    }
+  }
+
+  Future<void> getSurahWithAudioAndTranslationInListeningMode(
+    int surahNo,
+  ) async {
+    emit(SurahLoadingInListeningMode());
+    try {
+      final surah = await _readingRepo.getSurahWithAudioAndTranslation(surahNo);
+      emit(SurahLoadedInListeningMode(surah: surah));
+    } catch (e) {
+      emit(ErrorSurahInListeningMode(message: e.toString()));
     }
   }
 
@@ -73,7 +93,28 @@ class ReadingCubit extends Cubit<ReadingState> {
   }
 
   Future<List<TafsirProviderEntity>> getTafsirProviders() async {
-    final tafsirProviders = await _readingRepo.getTafsirProviders();
-    return tafsirProviders;
+    try {
+      final tafsirProviders = await _readingRepo.getTafsirProviders();
+      log(tafsirProviders.length.toString());
+      return tafsirProviders;
+    } catch (e) {
+      log(e.toString());
+      return [];
+    }
   }
+
+  Future<List<String>> getAvailableReciters() async {
+    try {
+      final reciters = await _readingRepo.getAvailableReciters();
+      log(reciters.length.toString());
+      return reciters;
+    } catch (e) {
+      log(e.toString());
+      return [];
+    }
+  }
+
+  // Future<Duration?>getSurahDuration(int surahNo)async{
+
+  // }
 }

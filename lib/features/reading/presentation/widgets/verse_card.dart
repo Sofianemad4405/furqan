@@ -3,16 +3,21 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/entities/tafsir_entity.dart';
+import 'package:furqan/core/services/prefs.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/domain/entities/tafsir_provider_entity.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
+import 'package:furqan/features/reading/presentation/screens/listening_to_surah.dart';
 import 'package:furqan/features/reading/presentation/widgets/tafsir_provider_tile.dart';
 import 'package:gap/gap.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:just_audio/just_audio.dart';
 
 class VerseCard extends StatefulWidget {
@@ -21,13 +26,19 @@ class VerseCard extends StatefulWidget {
     required this.surah,
     required this.ayahNumber,
     required this.player,
-    required this.surahVerses,
+    required this.verseAudios,
+    this.openSheet,
+    this.toggleAyahToLikes,
+    required this.isLiked,
   });
 
   final SurahEntity surah;
   final int ayahNumber;
   final AudioPlayer player;
-  final List<AudioEntity> surahVerses;
+  final List<AudioEntity> verseAudios;
+  final Function()? openSheet;
+  final Function()? toggleAyahToLikes;
+  final bool isLiked;
 
   @override
   State<VerseCard> createState() => _VerseCardState();
@@ -36,19 +47,43 @@ class VerseCard extends StatefulWidget {
 class _VerseCardState extends State<VerseCard> {
   List<TafsirProviderEntity> tafsirProviders = [];
   VerseTafsirEntity? verseTafsir;
+  List<String> reciters = [];
+  String currentReciter = "";
+  int reciterId = 1;
+  bool hasChangedReciter = false;
+
+  Future<void> setCurrentReciter(String reciter) async {
+    currentReciter = reciter;
+    setState(() {});
+  }
+
   @override
   void initState() {
     getTafsirProviders();
+    _loadReciters();
     super.initState();
   }
 
+  Future<void> _loadReciters() async {
+    reciters = await context.read<ReadingCubit>().getAvailableReciters();
+    currentReciter = reciters[0];
+    reciterId = sl<Prefs>().readingModeDefaultReciter;
+  }
+
   Future<void> getTafsirProviders() async {
-    final providers = await context.read<ReadingCubit>().getTafsirProviders();
-    setState(() {
-      tafsirProviders = providers;
-    });
-    if (providers.isNotEmpty) {
-      getVerseTafsir(providers[0].id);
+    try {
+      log("getting");
+      final providers = await context.read<ReadingCubit>().getTafsirProviders();
+      setState(() {
+        tafsirProviders = providers;
+      });
+      log("provo");
+      if (providers.isNotEmpty) {
+        log("getting verse tafsir");
+        getVerseTafsir(providers[0].id);
+      }
+    } on Exception catch (e) {
+      log("lol ${e.toString()}");
     }
   }
 
@@ -63,10 +98,16 @@ class _VerseCardState extends State<VerseCard> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeCubit>().isDarkMood();
+    final ayahColor = isDark
+        ? const Color(0xff005C47)
+        : const Color(0xff9DEACA);
+    final surahNameColor = isDark
+        ? const Color(0xff56D4A6)
+        : const Color(0xff1D6E58);
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
         return CustomContainer(
-          isDarkMood: state == ThemeMode.dark,
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -74,31 +115,156 @@ class _VerseCardState extends State<VerseCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
-                      Icons.save_outlined,
-                      color: state == ThemeMode.dark
-                          ? Colors.white
-                          : Colors.black,
+                    GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.ios_share_outlined,
+                        color: state == ThemeMode.dark
+                            ? Colors.white
+                            : Colors.black,
+                      ),
                     ),
-                    Icon(
-                      Icons.favorite_border,
-                      color: state == ThemeMode.dark
-                          ? Colors.white
-                          : Colors.black,
+                    IconButton(
+                      onPressed: widget.toggleAyahToLikes,
+                      icon: Icon(
+                        widget.isLiked ? Iconsax.heart5 : Iconsax.heart,
+                        color: widget.isLiked
+                            ? Colors.red
+                            : Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Text(
-                          widget.surah.surahName,
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(color: const Color(0xff1D6E58)),
-                        ),
-                        Text(
-                          "Ayah ${widget.ayahNumber}",
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ],
+                    GestureDetector(
+                      onTap: widget.openSheet,
+                      child: Column(
+                        children: [
+                          Text(
+                            widget.surah.surahName,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(color: surahNameColor),
+                          ),
+                          Text(
+                            "Ayah ${widget.ayahNumber}",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
                     ),
+                    GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor:
+                              Colors.transparent, // مهم علشان نعمل البلور
+                          isScrollControlled: true,
+                          builder: (context) {
+                            return buildBlurredSheet(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.inverseSurface,
+                              list: reciters,
+                              child: Column(
+                                children: [
+                                  const Gap(20),
+                                  Text(
+                                    "Select Reciter",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleLarge,
+                                  ),
+                                  const Gap(20),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: reciters.length,
+                                      itemBuilder: (context, index) {
+                                        bool isThisSheikhPlaying =
+                                            currentReciter == reciters[index];
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                            border: isThisSheikhPlaying
+                                                ? Border.all(
+                                                    color: const Color(
+                                                      0xff005C42,
+                                                    ),
+                                                  )
+                                                : null,
+                                            borderRadius: isThisSheikhPlaying
+                                                ? BorderRadius.circular(12)
+                                                : null,
+                                            color: isThisSheikhPlaying
+                                                ? const Color(
+                                                    0xff005C42,
+                                                  ).withValues(alpha: 0.1)
+                                                : null,
+                                          ),
+                                          child: ListTile(
+                                            onTap: () {
+                                              setCurrentReciter(
+                                                reciters[index],
+                                              );
+                                              sl<Prefs>()
+                                                  .saveReadingModeDefaultReciter(
+                                                    index,
+                                                  );
+                                              log(reciterId.toString());
+                                              log(index.toString());
+                                              log(hasChangedReciter.toString());
+                                              bool isDifferent =
+                                                  reciterId != index;
+                                              reciterId = index;
+                                              hasChangedReciter = isDifferent;
+                                            },
+                                            leading: Container(
+                                              width: 48,
+                                              height: 48,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: Colors.grey,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: ClipOval(
+                                                child: Image.asset(
+                                                  recitersImgs[index],
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            title: Text(
+                                              reciters[index],
+                                              style: Theme.of(
+                                                context,
+                                              ).textTheme.titleMedium,
+                                            ),
+                                            trailing: Text(
+                                              reciterMapper(reciters[index]),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                    fontFamily: "Amiri",
+                                                  ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: SvgPicture.asset(
+                        "assets/svgs/microphone-svgrepo-com.svg",
+                        height: 30,
+                        width: 30,
+                      ),
+                    ),
+
                     GestureDetector(
                       onTap: () async {
                         log(widget.player.duration.toString());
@@ -107,7 +273,7 @@ class _VerseCardState extends State<VerseCard> {
                         } else {
                           try {
                             await widget.player.setUrl(
-                              widget.surahVerses[widget.ayahNumber - 1].url,
+                              widget.verseAudios[reciterId].url,
                             );
                             await widget.player.play();
                           } catch (e) {
@@ -139,6 +305,7 @@ class _VerseCardState extends State<VerseCard> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        log("DIalog");
                         showDialog(
                           context: context,
                           builder: (context) {
@@ -182,7 +349,15 @@ class _VerseCardState extends State<VerseCard> {
                                             ).textTheme.headlineSmall,
                                           ),
                                           const Spacer(),
-                                          const Icon(Icons.close, size: 16),
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Icon(
+                                              Icons.close,
+                                              size: 16,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                       const Gap(5),
@@ -221,6 +396,7 @@ class _VerseCardState extends State<VerseCard> {
                                           itemBuilder: (context, index) {
                                             final tafsirProvider =
                                                 tafsirProviders[index];
+                                            log(tafsirProvider.author);
                                             return Padding(
                                               padding: const EdgeInsets.all(
                                                 4.0,
@@ -408,20 +584,22 @@ class _VerseCardState extends State<VerseCard> {
 
                     return Container(
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
                         color: (playing && !buffering && !completed)
-                            ? QuranAppTheme.green
+                            ? ayahColor
                             : Colors.transparent,
                       ),
-                      child: Text(
-                        widget.surah.arabic1?[widget.ayahNumber - 1] ??
-                            "Ayah Not found",
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontFamily: "Amiri",
-                          fontSize: 24,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          widget.surah.arabic1?[widget.ayahNumber - 1] ??
+                              "Ayah Not found",
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(fontFamily: "Amiri", fontSize: 24),
+                          maxLines: 90,
+                          overflow: TextOverflow.ellipsis,
+                          textDirection: TextDirection.rtl,
                         ),
-                        maxLines: 90,
-                        overflow: TextOverflow.ellipsis,
-                        textDirection: TextDirection.rtl,
                       ),
                     );
                   },

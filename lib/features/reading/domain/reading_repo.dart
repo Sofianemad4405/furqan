@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/entities/tafsir_entity.dart';
@@ -15,6 +17,7 @@ abstract class ReadingRepo {
     int ayahNo,
   );
   Future<List<TafsirProviderEntity>> getTafsirProviders();
+  Future<List<String>> getAvailableReciters();
 }
 
 class ReadingRepoImpl implements ReadingRepo {
@@ -57,9 +60,25 @@ class ReadingRepoImpl implements ReadingRepo {
 
   @override
   Future<List<TafsirProviderEntity>> getTafsirProviders() async {
-    final tafsirProviders = await _dataSource.getTafsirProviders();
-    return tafsirProviders
-        .map((tafsirProvider) => tafsirProvider.toEntity())
-        .toList();
+    try {
+      final tafsirProviders = await _dataSource.getTafsirProviders();
+      return tafsirProviders
+          .map((tafsirProvider) => tafsirProvider.toEntity())
+          .toList();
+    } catch (e) {
+      log("error in getTafsirProviders ${e.toString()}");
+      return [];
+    }
+  }
+
+  @override
+  Future<List<String>> getAvailableReciters() async {
+    try {
+      final reciters = await _dataSource.getAvailableReciters();
+      return reciters;
+    } catch (e) {
+      log("error in getAvailableReciters ${e.toString()}");
+      return [];
+    }
   }
 }

@@ -3,9 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/app/root_page.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/features/auth/data/models/user_data.dart';
+import 'package:furqan/features/auth/presentation/screens/auth_screen.dart';
 
-class Furqan extends StatelessWidget {
-  const Furqan({super.key});
+class Furqan extends StatefulWidget {
+  const Furqan({super.key, required this.isLoggedIn});
+  final bool isLoggedIn;
+
+  @override
+  State<Furqan> createState() => _FurqanState();
+}
+
+class _FurqanState extends State<Furqan> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ThemeCubit>().init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +30,9 @@ class Furqan extends StatelessWidget {
           theme: QuranAppTheme.lightTheme,
           darkTheme: QuranAppTheme.darkTheme,
           themeMode: state,
-          home: const RootPage(),
+          home: widget.isLoggedIn
+              ? const RootPage()
+              : AuthScreen(onAuthComplete: (UserData p1) {}),
         );
       },
     );

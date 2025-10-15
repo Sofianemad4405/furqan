@@ -10,7 +10,7 @@ part of 'tafsir_client.dart';
 
 class _TafsirClient implements TafsirClient {
   _TafsirClient(this._dio, {this.tafsirBaseUrl, this.errorLogger}) {
-    tafsirBaseUrl ??= 'http://api.quran-tafseer.com/tafseer';
+    tafsirBaseUrl ??= 'http://api.quran-tafseer.com';
   }
 
   final Dio _dio;
@@ -33,7 +33,7 @@ class _TafsirClient implements TafsirClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/${tafseerId}/${surahNo}/${ayahNumber}',
+            '/tafseer/${tafseerId}/${surahNo}/${ayahNumber}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -62,7 +62,7 @@ class _TafsirClient implements TafsirClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/',
+            '/tafseer/',
             queryParameters: queryParameters,
             data: _data,
           )

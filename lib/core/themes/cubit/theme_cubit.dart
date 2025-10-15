@@ -1,23 +1,23 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:furqan/core/services/prefs.dart';
 
 part 'theme_state.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
-  ThemeCubit() : super(ThemeMode.system);
+  ThemeCubit(this.prefs) : super(ThemeMode.light);
+  final Prefs prefs;
+
+  void init() {
+    final themeMode = prefs.themeMode;
+    emit(themeMode == "dark" ? ThemeMode.dark : ThemeMode.light);
+  }
 
   // String language = 'en';
   void toggleTheme() {
-    if (state == ThemeMode.light) {
-      emit(ThemeMode.dark);
-    } else {
-      emit(ThemeMode.light);
-    }
-  }
-
-  void setTheme(ThemeMode themeMode) {
-    emit(themeMode);
+    emit(state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light);
+    prefs.saveThemeMode(state == ThemeMode.dark ? "dark" : "light");
   }
 
   bool isDarkMood() {
