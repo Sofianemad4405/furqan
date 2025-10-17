@@ -12,13 +12,13 @@ class UserProgressService {
   }
 
   Future<UserProgress> getUserProgress(String userId) async {
-    final res = await supabase
+    final result = await supabase
         .from('user_progress')
         .select()
         .eq('user_id', userId)
         .maybeSingle();
 
-    if (res == null) {
+    if (result == null) {
       final defaultProgress = {
         'user_id': userId,
         'total_hassanat': 0,
@@ -41,6 +41,6 @@ class UserProgressService {
 
       return UserProgress.fromJson(inserted!);
     }
-    return UserProgress.fromJson(res);
+    return UserProgress.fromJson(result);
   }
 }
