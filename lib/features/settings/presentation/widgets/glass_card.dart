@@ -30,7 +30,7 @@ class GlassCard extends StatelessWidget {
               ),
             ],
           ),
-          child: child,
+          child: Padding(padding: const EdgeInsets.all(20), child: child),
         ),
       ),
     );

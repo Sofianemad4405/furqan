@@ -76,35 +76,39 @@ class _ReadingSurahState extends State<ReadingSurah> {
     });
   }
 
-  void addAyahToLikes(
-    int surahNo,
-    int ayahNumber,
-    UserProgress? currentProgress,
-  ) {
-    logger.log("toggling");
-    final current = currentProgress;
-    final surahNoStr = surahNo.toString();
+  // void addAyahToLikes(
+  //   int surahNo,
+  //   int ayahNumber,
+  //   UserProgress? currentProgress,
+  // ) {
+  //   logger.log("toggling");
+  //   final current = currentProgress;
+  //   final surahNoStr = surahNo.toString();
 
-    final mergedMap = <String, List<dynamic>>{};
-    current?.likedAyahs.forEach((key, value) {
-      mergedMap[key] = List<dynamic>.from(value);
-    });
+  //   final mergedMap = <String, List<dynamic>>{};
+  //   current?.likedAyahs.forEach((key, value) {
+  //     mergedMap[key] = List<dynamic>.from(value);
+  //   });
 
-    mergedMap.putIfAbsent(surahNoStr, () => []);
+  //   mergedMap.putIfAbsent(surahNoStr, () => []);
 
-    final isLiked = mergedMap[surahNoStr]!.contains(ayahNumber);
-    logger.log("isLiked: $isLiked, surahNo: $surahNoStr");
+  //   final isLiked = mergedMap[surahNoStr]!.contains(ayahNumber);
+  //   logger.log("isLiked: $isLiked, surahNo: $surahNoStr");
 
-    if (isLiked) {
-      mergedMap[surahNoStr]!.remove(ayahNumber);
-    } else {
-      mergedMap[surahNoStr]!.add(ayahNumber);
-    }
+  //   if (isLiked) {
+  //     setState(() {
+  //       mergedMap[surahNoStr]!.remove(ayahNumber);
+  //     });
+  //   } else {
+  //     setState(() {
+  //       mergedMap[surahNoStr]!.add(ayahNumber);
+  //     });
+  //   }
 
-    logger.log(mergedMap.toString());
+  //   logger.log(mergedMap.toString());
 
-    userProgressCubit.updateUserData({'liked_ayahs': mergedMap});
-  }
+  //   userProgressCubit.updateUserData({'liked_ayahs': mergedMap});
+  // }
 
   int verseHassanat(String verse) {
     return verse.length * 10;
@@ -190,6 +194,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
   @override
   Widget build(BuildContext context) {
     final readingCubit = context.read<ReadingCubit>();
+
     final currentProgress = (userProgressCubit.state is UserProgressLoaded)
         ? (userProgressCubit.state as UserProgressLoaded).userProgress
         : null;
@@ -205,21 +210,33 @@ class _ReadingSurahState extends State<ReadingSurah> {
               const Gap(50),
 
               ///ELcard ely feh elAyah
-              VerseCard(
-                openSheet: () {},
-                surah: widget.surah,
-                ayahNumber: ayahNumber,
-                player: player,
-                verseAudios: verseAudios,
-                isLiked:
-                    currentProgress?.likedAyahs[widget.surah.surahNo.toString()]
-                        ?.contains(ayahNumber) ??
-                    false,
-                toggleAyahToLikes: () {
-                  addAyahToLikes(
-                    widget.surah.surahNo,
-                    ayahNumber,
-                    currentProgress,
+              BlocBuilder<UserProgressCubit, UserProgresState>(
+                builder: (context, state) {
+                  bool isLiked = false;
+                  if (state is UserProgressLoaded) {
+                    final likes = state.userProgress.likedAyahs;
+                    final surahKey = widget.surah.surahNo.toString();
+                    isLiked = likes[surahKey]?.contains(ayahNumber) ?? false;
+                    logger.log("❤️ Ayah $ayahNumber liked? $isLiked");
+                  }
+                  if (state is UserProgressLoaded) {
+                    final likes = state.userProgress.likedAyahs;
+                    final surahKey = widget.surah.surahNo.toString();
+                    isLiked = likes[surahKey]?.contains(ayahNumber) ?? false;
+                  }
+                  return VerseCard(
+                    openSheet: () {},
+                    surah: widget.surah,
+                    ayahNumber: ayahNumber,
+                    player: player,
+                    verseAudios: verseAudios,
+                    isLiked: isLiked,
+                    toggleAyahToLikes: () {
+                      context.read<UserProgressCubit>().toggleAyahLike(
+                        widget.surah.surahNo,
+                        ayahNumber,
+                      );
+                    },
                   );
                 },
               ),
@@ -292,13 +309,13 @@ Widget _buildNextOrPrevious({
     //   }
     // },
     onTap: onTap,
-    child: CustomContainer(
-      decoration: isPrevious
-          ? BoxDecoration(
-              color: QuranAppTheme.green,
-              borderRadius: BorderRadius.circular(8),
-            )
-          : null,
+    child: Container(
+      decoration: BoxDecoration(
+        color: !isPrevious
+            ? Colors.green
+            : Theme.of(context).colorScheme.onPrimary,
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Row(
@@ -306,12 +323,17 @@ Widget _buildNextOrPrevious({
             Icon(
               isPrevious ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
               size: 12,
+              color: isPrevious
+                  ? Theme.of(context).colorScheme.onSurface
+                  : Colors.white,
             ),
             const Gap(10),
             Text(
               isPrevious ? "Previous" : "Next",
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface,
+                color: isPrevious
+                    ? Theme.of(context).colorScheme.onSurface
+                    : Colors.white,
               ),
             ),
           ],

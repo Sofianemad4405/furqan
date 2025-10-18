@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:furqan/core/services/prefs.dart';
@@ -42,5 +45,35 @@ class UserProgressCubit extends Cubit<UserProgresState> {
     } catch (e) {
       emit(UserProgressError(message: e.toString()));
     }
+  }
+
+  void toggleAyahLike(int surahNo, int ayahNumber) {
+    if (state is! UserProgressLoaded) return;
+
+    final currentState = state as UserProgressLoaded;
+    final current = currentState.userProgress;
+
+    // انسخ الماب والقوائم نسخ عميق (deep copy)
+    final updatedLikes = <String, List<int>>{};
+    current.likedAyahs.forEach((key, value) {
+      updatedLikes[key] = List<int>.from(value);
+    });
+
+    final surahKey = surahNo.toString();
+    final ayahs = updatedLikes[surahKey] ?? [];
+
+    if (ayahs.contains(ayahNumber)) {
+      ayahs.remove(ayahNumber);
+    } else {
+      ayahs.add(ayahNumber);
+    }
+
+    updatedLikes[surahKey] = List<int>.from(ayahs);
+
+    final updatedProgress = current.copyWith(likedAyahs: updatedLikes);
+
+    emit(UserProgressLoaded(userProgress: updatedProgress));
+
+    updateUserData({'liked_ayahs': updatedLikes});
   }
 }

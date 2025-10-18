@@ -26,7 +26,7 @@ class CustomContainer extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          // padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: isDark
                 ? const Color(0x33000000) // dark glass

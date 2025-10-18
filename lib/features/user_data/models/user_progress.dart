@@ -140,7 +140,11 @@ class UserProgress {
       duaasRecited: duaasRecited ?? this.duaasRecited,
       zikrCount: zikrCount ?? this.zikrCount,
       surahsReadIds: surahsReadIds ?? this.surahsReadIds,
-      likedAyahs: likedAyahs ?? this.likedAyahs,
+      likedAyahs: likedAyahs != null
+          ? likedAyahs.map((key, value) => MapEntry(key, List<int>.from(value)))
+          : this.likedAyahs.map(
+              (key, value) => MapEntry(key, List<int>.from(value)),
+            ),
     );
   }
 }

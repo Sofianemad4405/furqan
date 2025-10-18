@@ -153,8 +153,7 @@ class _VerseCardState extends State<VerseCard> {
                       onTap: () {
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor:
-                              Colors.transparent, // مهم علشان نعمل البلور
+                          backgroundColor: Colors.transparent,
                           isScrollControlled: true,
                           builder: (context) {
                             return buildBlurredSheet(
