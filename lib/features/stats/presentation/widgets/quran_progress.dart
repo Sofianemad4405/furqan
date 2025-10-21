@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
-import 'package:furqan/features/stats/data/models/user_stats.dart';
 import 'package:furqan/features/stats/presentation/widgets/progress_row.dart';
+import 'package:furqan/features/user_data/models/user_progress.dart';
 
 class QuranProgress extends StatelessWidget {
-  const QuranProgress({super.key, required this.isDark, required this.stats});
+  const QuranProgress({
+    super.key,
+    required this.isDark,
+    required this.userProgress,
+  });
   final bool isDark;
-  final UserStats stats;
+  final UserProgress userProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -55,15 +59,15 @@ class QuranProgress extends StatelessWidget {
             const SizedBox(height: 24),
             ProgressRow(
               label: 'Surahs Completed',
-              value: '${stats.surahsCompleted}/114',
-              progress: stats.surahsCompleted / 114,
+              value: '${userProgress.surahsRead}/114',
+              progress: userProgress.surahsRead / 114,
               isDark: isDark,
             ),
             const SizedBox(height: 16),
             ProgressRow(
               label: 'Daily Challenges',
-              value: stats.dailyChallengesCompleted.toString(),
-              progress: stats.dailyChallengesCompleted / 100,
+              value: userProgress.dailyChallengesCompleted.toString(),
+              progress: userProgress.dailyChallengesCompleted / 100,
               isDark: isDark,
             ),
           ],

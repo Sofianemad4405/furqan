@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/features/stats/data/models/user_stats.dart';
 import 'package:furqan/features/stats/data/utils/helpers.dart';
 import 'package:furqan/features/stats/presentation/widgets/stats_card.dart';
+import 'package:furqan/features/user_data/models/user_progress.dart';
 
 class MainStatsGrid extends StatelessWidget {
-  const MainStatsGrid({super.key, required this.isDark, required this.stats});
+  const MainStatsGrid({
+    super.key,
+    required this.isDark,
+    required this.userProgress,
+  });
   final bool isDark;
-  final UserStats stats;
+  final UserProgress userProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +26,7 @@ class MainStatsGrid extends StatelessWidget {
       children: [
         StatsCard(
           icon: '🌙',
-          value: stats.totalHasanat.toString(),
+          value: userProgress.totalHassanat.toString(),
           label: 'Total Hasanat',
           gradientColors: isDark
               ? [const Color(0xFF78350F), const Color(0xFF9A3412)]
@@ -38,7 +42,7 @@ class MainStatsGrid extends StatelessWidget {
         ),
         StatsCard(
           icon: '⏰',
-          value: formatTime(stats.readingTimeMinutes),
+          value: formatTime(userProgress.minutesOfReadingQuraan),
           label: 'Total Time',
           gradientColors: isDark
               ? [const Color(0xFF1E3A8A), const Color(0xFF3730A3)]
@@ -54,7 +58,7 @@ class MainStatsGrid extends StatelessWidget {
         ),
         StatsCard(
           icon: '📖',
-          value: '${stats.surahsCompleted}/114',
+          value: '${userProgress.surahsRead}/114',
           label: 'Surahs',
           gradientColors: isDark
               ? [const Color(0xFF064E3B), const Color(0xFF115E59)]
@@ -70,7 +74,7 @@ class MainStatsGrid extends StatelessWidget {
         ),
         StatsCard(
           icon: '🔥',
-          value: stats.currentStreak.toString(),
+          value: userProgress.currentStreak.toString(),
           label: 'Day Streak',
           gradientColors: isDark
               ? [const Color(0xFF9A3412), const Color(0xFF991B1B)]

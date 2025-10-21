@@ -217,7 +217,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                     final likes = state.userProgress.likedAyahs;
                     final surahKey = widget.surah.surahNo.toString();
                     isLiked = likes[surahKey]?.contains(ayahNumber) ?? false;
-                    logger.log("❤️ Ayah $ayahNumber liked? $isLiked");
+                    // logger.log("❤️ Ayah $ayahNumber liked? $isLiked");
                   }
                   if (state is UserProgressLoaded) {
                     final likes = state.userProgress.likedAyahs;
