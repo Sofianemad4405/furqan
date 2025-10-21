@@ -1,17 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:furqan/core/di/get_it_service.dart';
+import 'package:furqan/core/entities/prayer_response_entity.dart';
 import 'package:furqan/core/services/location_service.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
-import 'package:furqan/features/home/presentation/screens/prayer_times/models/location_data.dart';
-import 'package:furqan/features/home/presentation/screens/prayer_times/models/next_prayer_info.dart';
-import 'package:furqan/features/home/presentation/screens/prayer_times/models/prayer_list_item.dart';
-import 'package:furqan/features/home/presentation/screens/prayer_times/models/prayer_times.dart';
-import 'package:furqan/features/home/presentation/screens/prayer_times/models/prayer_times_data.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/data/models/next_prayer_info.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/data/models/prayer_list_item.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/presentation/cubit/prayer_times_cubit.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PrayerTimesScreen extends StatefulWidget {
   const PrayerTimesScreen({super.key});
@@ -25,11 +26,12 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
   late AnimationController _animationController;
   bool _isLoading = false;
   String? _error;
-  PrayerTimesData? _prayerTimes;
+  PrayerResponseEntity? _prayerTimes;
   NextPrayerInfo? _nextPrayer;
-  final locationService = sl<LocationService>();
+  late LocationService locationService;
   Position? userPosition;
   Placemark? userPlaceMark;
+  List<PrayerListItem> prayers = [];
 
   @override
   void initState() {
@@ -39,9 +41,33 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
       duration: const Duration(milliseconds: 600),
     );
     _animationController.forward();
-    _loadUserLocaionData();
-    _loadPrayerTimes();
-    _startNextPrayerTimer();
+    Future.microtask(() async {
+      await _initLocationService();
+      _loadPrayerTimes();
+      _loadCoordinates();
+      _startNextPrayerTimer();
+    });
+    context.read<PrayerTimesCubit>().getPrayerTimings(
+      DateTime.now().toString(),
+      userPosition?.latitude ?? 0,
+      userPosition?.longitude ?? 0,
+      2,
+    );
+  }
+
+  Future<void> _initLocationService() async {
+    final prefs = await SharedPreferences.getInstance();
+    locationService = LocationService(prefs);
+    await _loadAddress();
+  }
+
+  List<String?>? _userAddress;
+  Future<void> _loadAddress() async {
+    final address = await locationService.getUserAddress();
+    setState(() {
+      _userAddress = address ?? ['Location unavailable'];
+      _isLoading = false;
+    });
   }
 
   @override
@@ -50,40 +76,78 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
     super.dispose();
   }
 
-  void _loadUserLocaionData() {
-    locationService.getCurrentLocation();
-  }
-
-  void _loadPrayerTimes() {
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    Future.delayed(const Duration(seconds: 1), () {
-      if (mounted) {
+  Future<void> _loadCoordinates() async {
+    try {
+      final position = await locationService.getCurrentLocation();
+      if (position != null) {
         setState(() {
-          _prayerTimes = PrayerTimesData(
-            date: DateTime.now(),
-            times: PrayerTimes(
-              fajr: '05:15',
-              sunrise: '06:45',
-              dhuhr: '12:15',
-              asr: '15:45',
-              maghrib: '18:30',
-              isha: '19:45',
-            ),
-            location: LocationData(
-              city: userPlaceMark?.locality ?? 'Unknown',
-              country: userPlaceMark?.country ?? 'Unknown',
-              timezone: userPosition?.floor?.toString() ?? "",
-            ),
-          );
-          _updateNextPrayer();
-          _isLoading = false;
+          userPosition = position;
+        });
+      } else {
+        log("kokaaaa");
+        setState(() {
+          userPosition = null;
         });
       }
-    });
+    } on Exception catch (e) {
+      log(e.toString());
+    }
+  }
+
+  void _loadPrayerTimes() async {
+    // setState(() {
+    //   _isLoading = true;
+    //   _error = null;
+    // });
+
+    context.read<PrayerTimesCubit>().getPrayerTimings(
+      DateTime.now().toString(),
+      userPosition?.latitude ?? 0,
+      userPosition?.longitude ?? 0,
+      2,
+    );
+    _prayerTimes = await context
+        .read<PrayerTimesCubit>()
+        .getPrayerResponseEntity(userPosition);
+    prayers = [
+      PrayerListItem(
+        'Fajr',
+        _prayerTimes!.timings.fajr,
+        'Dawn prayer',
+        Icons.wb_twilight,
+      ),
+      PrayerListItem(
+        'Sunrise',
+        _prayerTimes!.timings.sunrise,
+        'Sunrise (no prayer)',
+        Icons.wb_sunny,
+      ),
+      PrayerListItem(
+        'Dhuhr',
+        _prayerTimes!.timings.dhuhr,
+        'Midday prayer',
+        Icons.wb_sunny,
+      ),
+      PrayerListItem(
+        'Asr',
+        _prayerTimes!.timings.asr,
+        'Afternoon prayer',
+        Icons.wb_sunny,
+      ),
+      PrayerListItem(
+        'Maghrib',
+        _prayerTimes!.timings.maghrib,
+        'Sunset prayer',
+        Icons.wb_twilight,
+      ),
+      PrayerListItem(
+        'Isha',
+        _prayerTimes!.timings.isha,
+        'Night prayer',
+        Icons.nightlight,
+      ),
+    ];
+    _updateNextPrayer();
   }
 
   void _startNextPrayerTimer() {
@@ -100,46 +164,6 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
 
     final now = DateTime.now();
     final currentMinutes = now.hour * 60 + now.minute;
-
-    final prayers = [
-      PrayerListItem(
-        'Fajr',
-        _prayerTimes!.times.fajr,
-        'Fajr prayer',
-        Icons.wb_twilight,
-      ),
-      PrayerListItem(
-        'Sunrise',
-        _prayerTimes!.times.sunrise,
-        'Sunrise (no prayer)',
-        Icons.wb_sunny,
-      ),
-      PrayerListItem(
-        'Dhuhr',
-        _prayerTimes!.times.dhuhr,
-        'Dhuhr prayer',
-        Icons.wb_sunny,
-      ),
-      PrayerListItem(
-        'Asr',
-        _prayerTimes!.times.asr,
-        'Asr prayer',
-        Icons.wb_sunny,
-      ),
-      PrayerListItem(
-        'Maghrib',
-        _prayerTimes!.times.maghrib,
-        'Maghrib prayer',
-        Icons.wb_twilight,
-      ),
-      PrayerListItem(
-        'Isha',
-        _prayerTimes!.times.isha,
-        'Isha prayer',
-        Icons.nightlight,
-      ),
-    ];
-
     for (final prayer in prayers) {
       final timeParts = prayer.time.split(':');
       final prayerMinutes =
@@ -173,7 +197,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
     setState(() {
       _nextPrayer = NextPrayerInfo(
         name: 'Fajr',
-        time: _prayerTimes!.times.fajr,
+        time: _prayerTimes!.timings.fajr,
         remaining: '${hours}h ${minutes}m',
       );
     });
@@ -191,41 +215,57 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
               : QuranAppTheme.lightScaffoldGradient,
         ),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                _buildHeader(isDark),
-                const SizedBox(height: 24),
-                Expanded(
-                  child: ListView(
+          child: BlocBuilder<PrayerTimesCubit, PrayerTimesState>(
+            builder: (context, state) {
+              if (state is PrayerTimesLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is PrayerTimesError) {
+                return Center(child: Text(state.error));
+              }
+              if (state is PrayerTimesLoaded) {
+                return Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
                     children: [
-                      if (_prayerTimes != null) ...[
-                        _buildLocationCard(isDark),
-                        const SizedBox(height: 16),
-                      ],
-                      if (_nextPrayer != null) ...[
-                        _buildNextPrayerCard(isDark),
-                        const SizedBox(height: 16),
-                      ],
-                      if (_error != null) ...[
-                        _buildErrorCard(isDark),
-                        const SizedBox(height: 16),
-                      ],
-                      if (_isLoading && _prayerTimes == null) ...[
-                        _buildLoadingCard(isDark),
-                        const SizedBox(height: 16),
-                      ],
-                      if (_prayerTimes != null) ...[
-                        _buildPrayerTimesList(isDark),
-                        const SizedBox(height: 24),
-                        _buildQuoteCard(isDark),
-                      ],
+                      _buildHeader(isDark),
+                      const SizedBox(height: 24),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            if (_prayerTimes != null) ...[
+                              _buildLocationCard(
+                                isDark,
+                                state.prayerResponseEntity.timezone,
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                            if (_nextPrayer != null) ...[
+                              _buildNextPrayerCard(isDark),
+                              const SizedBox(height: 16),
+                            ],
+                            if (_error != null) ...[
+                              _buildErrorCard(isDark),
+                              const SizedBox(height: 16),
+                            ],
+                            if (_isLoading && _prayerTimes == null) ...[
+                              _buildLoadingCard(isDark),
+                              const SizedBox(height: 16),
+                            ],
+                            if (_prayerTimes != null) ...[
+                              _buildPrayerTimesList(isDark),
+                              const SizedBox(height: 24),
+                              _buildQuoteCard(isDark),
+                            ],
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
         ),
       ),
@@ -271,7 +311,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
             ),
           ),
           IconButton(
-            onPressed: _isLoading ? null : _loadPrayerTimes,
+            onPressed: _loadAddress,
             icon: AnimatedRotation(
               turns: _isLoading ? 1 : 0,
               duration: const Duration(seconds: 1),
@@ -288,7 +328,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
     );
   }
 
-  Widget _buildLocationCard(bool isDark) {
+  Widget _buildLocationCard(bool isDark, String timezone) {
     return SlideTransition(
       position: Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero)
           .animate(
@@ -314,7 +354,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _prayerTimes!.location.city,
+                    _userAddress?[1] ?? 'Location unavailable',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
@@ -322,7 +362,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
                     ),
                   ),
                   Text(
-                    '${_prayerTimes!.location.country} • ${_prayerTimes!.location.timezone}',
+                    '${_userAddress?[2]} • ${_userAddress?[0]} $userPosition',
                     style: TextStyle(
                       color: Colors.white.withAlpha(204),
                       fontSize: 12,
@@ -460,45 +500,6 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
   }
 
   Widget _buildPrayerTimesList(bool isDark) {
-    final prayers = [
-      PrayerListItem(
-        'Fajr',
-        _prayerTimes!.times.fajr,
-        'Dawn prayer',
-        Icons.wb_twilight,
-      ),
-      PrayerListItem(
-        'Sunrise',
-        _prayerTimes!.times.sunrise,
-        'Sunrise (no prayer)',
-        Icons.wb_sunny,
-      ),
-      PrayerListItem(
-        'Dhuhr',
-        _prayerTimes!.times.dhuhr,
-        'Midday prayer',
-        Icons.wb_sunny,
-      ),
-      PrayerListItem(
-        'Asr',
-        _prayerTimes!.times.asr,
-        'Afternoon prayer',
-        Icons.wb_sunny,
-      ),
-      PrayerListItem(
-        'Maghrib',
-        _prayerTimes!.times.maghrib,
-        'Sunset prayer',
-        Icons.wb_twilight,
-      ),
-      PrayerListItem(
-        'Isha',
-        _prayerTimes!.times.isha,
-        'Night prayer',
-        Icons.nightlight,
-      ),
-    ];
-
     return Column(
       children: prayers.asMap().entries.map((entry) {
         final index = entry.key;

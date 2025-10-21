@@ -12,6 +12,10 @@ import 'package:furqan/features/home/domain/home_repo_abstract.dart';
 import 'package:furqan/features/home/domain/home_repo_impl.dart';
 import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/cubit/adhkar_cubit.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/data/prayer_times_abstract.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/domain/prayer_times_repo_abstract.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/domain/prayer_times_repo_impl.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/presentation/cubit/prayer_times_cubit.dart';
 import 'package:furqan/features/reading/data/reading_data_source.dart';
 import 'package:furqan/features/reading/domain/reading_repo.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
@@ -32,6 +36,7 @@ Future<void> init() async {
   sl.registerLazySingleton<UserProgressCubit>(
     () => UserProgressCubit(sl<UserDataController>(), sl<Prefs>()),
   );
+  sl.registerLazySingleton<PrayerTimesCubit>(() => PrayerTimesCubit());
   sl.registerLazySingleton<ApiService>(
     () => ApiService(sl<DioFactory>().getDio()),
   );
@@ -53,6 +58,11 @@ Future<void> init() async {
   sl.registerLazySingleton<ReadingRepo>(
     () => ReadingRepoImpl(sl<ReadingDataSource>()),
   );
+
+  sl.registerLazySingleton<PrayerTimesRepoAbstract>(
+    () => PrayerTimesRepoImpl(sl<PrayerTimesDataAbstract>()),
+  );
+
   sl.registerLazySingleton<HomeRepoAbstract>(
     () => HomeRepoImpl(sl<RemoteDataSource>()),
   );

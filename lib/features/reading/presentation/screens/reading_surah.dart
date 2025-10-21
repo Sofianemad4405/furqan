@@ -8,9 +8,7 @@ import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/entities/audio_entity.dart';
 import 'package:furqan/core/entities/surah_entity.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
-import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
-import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:furqan/features/reading/presentation/widgets/all_session_stats.dart';
 import 'package:furqan/features/reading/presentation/widgets/verse_card.dart';
@@ -198,7 +196,6 @@ class _ReadingSurahState extends State<ReadingSurah> {
     final currentProgress = (userProgressCubit.state is UserProgressLoaded)
         ? (userProgressCubit.state as UserProgressLoaded).userProgress
         : null;
-    int userAyahsRead = currentProgress?.ayahsRead ?? 0;
 
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
@@ -206,7 +203,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
           child: Column(
             children: [
               ///El headar bta3 elPage
-              AllSessionStats(seconds: _seconds, ayahsRead: userAyahsRead),
+              AllSessionStats(seconds: _seconds, ayahsRead: ayahsRead),
               const Gap(50),
 
               ///ELcard ely feh elAyah
@@ -258,7 +255,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                   _buildNextOrPrevious(
                     context: context,
                     onTap: () => _nextAyahHandler(
-                      userAyahsRead,
+                      ayahsRead,
                       currentProgress,
                       readingCubit,
                     ),

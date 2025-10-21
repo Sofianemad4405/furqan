@@ -37,9 +37,7 @@ class _TafsirClient implements TafsirClient {
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(
-            baseUrl: _combineBaseUrls(_dio.options.baseUrl, tafsirBaseUrl),
-          ),
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
     late VerseTafsir _value;
@@ -66,9 +64,7 @@ class _TafsirClient implements TafsirClient {
             queryParameters: queryParameters,
             data: _data,
           )
-          .copyWith(
-            baseUrl: _combineBaseUrls(_dio.options.baseUrl, tafsirBaseUrl),
-          ),
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<TafsirProvider> _value;
@@ -98,12 +94,12 @@ class _TafsirClient implements TafsirClient {
     return requestOptions;
   }
 
-  String _combineBaseUrls(String dioBaseUrl, String? tafsirBaseUrl) {
-    if (tafsirBaseUrl == null || tafsirBaseUrl.trim().isEmpty) {
+  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }
 
-    final url = Uri.parse(tafsirBaseUrl);
+    final url = Uri.parse(baseUrl);
 
     if (url.isAbsolute) {
       return url.toString();

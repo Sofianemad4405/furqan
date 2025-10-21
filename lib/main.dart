@@ -7,6 +7,7 @@ import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/cubit/adhkar_cubit.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/presentation/cubit/prayer_times_cubit.dart';
 import 'package:furqan/features/reading/presentation/cubit/reading_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -32,6 +33,7 @@ Future<void> main() async {
         BlocProvider(create: (context) => sl<AuthCubit>()),
         BlocProvider(create: (context) => sl<AdhkarCubit>()),
         BlocProvider(create: (context) => sl<UserProgressCubit>()..init()),
+        BlocProvider(create: (context) => sl<PrayerTimesCubit>()),
       ],
       child: Furqan(isLoggedIn: isLoggedIn),
     ),

@@ -16,16 +16,18 @@ class LocationService {
       _prefs.getBool(_keyLocationPermission) ?? false;
 
   Future<Position?> getCurrentLocation() async {
-    if (locationPermission) {
-      return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      await Geolocator.openLocationSettings();
+
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return null;
+      }
     }
 
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return null;
-
     LocationPermission permission = await Geolocator.checkPermission();
+
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
@@ -37,23 +39,23 @@ class LocationService {
     }
 
     await saveLocationPermission(true);
+
     return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
   }
 
-  Future<Placemark> getUserAddress() async {
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+  Future<List<String?>?> getUserAddress() async {
+    Position? position = await getCurrentLocation();
+    if (position == null) return null;
 
     List<Placemark> placemarks = await placemarkFromCoordinates(
       position.latitude,
       position.longitude,
     );
 
-    Placemark place = placemarks[0];
+    Placemark place = placemarks.first;
 
-    return place;
+    return ["${place.street}", "${place.locality}", "${place.country}"];
   }
 }

@@ -3,6 +3,7 @@ import 'package:furqan/features/home/presentation/models/challenge_model.dart';
 const String baseUrl = "https://quranapi.pages.dev/api";
 const String tafsirBaseUrl = "http://api.quran-tafseer.com";
 const String dhikrBaseUrl = "https://ahegazy.github.io/muslimKit/json";
+const String prayerTimesBaseUrl = "https://api.aladhan.com/v1/timings";
 const String arabic1 = "arabic1";
 const String arabic2 = "arabic2";
 const String bengali = "bengali";

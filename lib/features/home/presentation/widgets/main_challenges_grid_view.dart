@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/azkar_screen.dart';
-import 'package:furqan/features/home/presentation/screens/prayer_times/prayer_times_screen.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/presentation/screens/prayer_times_screen.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 
 class MainChallengesGridView extends StatelessWidget {

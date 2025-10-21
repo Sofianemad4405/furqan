@@ -119,6 +119,7 @@ class _StatsScreenState extends State<StatsScreen>
         unlocked: userProgress.longestStreak >= 30,
       ),
     ];
+    setState(() {});
   }
 
   @override
