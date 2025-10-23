@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:furqan/features/stats/data/models/user_stats.dart';
 import 'package:furqan/features/stats/presentation/widgets/additional_stats_card.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';

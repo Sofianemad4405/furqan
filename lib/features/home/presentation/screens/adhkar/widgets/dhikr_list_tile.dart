@@ -11,8 +11,10 @@ class DhikrListTile extends StatelessWidget {
     required this.englishTitle,
     required this.count,
     this.onTap,
+    required this.icon,
   });
   final String title;
+  final String icon;
   final String englishTitle;
   final int count;
   final Function()? onTap;
@@ -40,7 +42,7 @@ class DhikrListTile extends StatelessWidget {
                         : title == "أذكار بعد الصلاة"
                         ? QuranAppTheme.afterPrayerAzkar
                         : QuranAppTheme.theRest,
-                    iconPath: "assets/svgs/bell-icon.svg",
+                    iconPath: icon,
                   ),
                 ),
                 Column(

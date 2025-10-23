@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/entities/prayer_response_entity.dart';
 import 'package:furqan/features/home/presentation/screens/prayer_times/domain/prayer_times_repo_abstract.dart';
+import 'package:furqan/features/stats/data/utils/helpers.dart';
 import 'package:geolocator/geolocator.dart';
 
 part 'prayer_times_state.dart';
@@ -38,9 +39,9 @@ class PrayerTimesCubit extends Cubit<PrayerTimesState> {
     try {
       final prayerTimesRepoAbstract = sl.get<PrayerTimesRepoAbstract>();
       final response = await prayerTimesRepoAbstract.getPrayerTimings(
-        DateTime.now().toString(),
-        userPosition?.latitude ?? 0,
-        userPosition?.longitude ?? 0,
+        formattedDate(),
+        userPosition?.latitude ?? 30.5727787,
+        userPosition?.longitude ?? 31.582086,
         2,
       );
       emit(PrayerTimesLoaded(prayerResponseEntity: response));

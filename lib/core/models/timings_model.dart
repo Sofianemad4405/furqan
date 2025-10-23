@@ -1,7 +1,7 @@
 import 'package:furqan/core/entities/timings_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'timings_model.g.dart';
+// part 'timings_model.g.dart';
 
 @JsonSerializable()
 class TimingsModel {
@@ -31,9 +31,34 @@ class TimingsModel {
     required this.lastthird,
   });
 
-  factory TimingsModel.fromJson(Map<String, dynamic> json) =>
-      _$TimingsModelFromJson(json);
-  Map<String, dynamic> toJson() => _$TimingsModelToJson(this);
+  factory TimingsModel.fromJson(Map<String, dynamic> json) {
+    return TimingsModel(
+      fajr: json['Fajr'] ?? '',
+      sunrise: json['Sunrise'] ?? '',
+      dhuhr: json['Dhuhr'] ?? '',
+      asr: json['Asr'] ?? '',
+      sunset: json['Sunset'] ?? '',
+      maghrib: json['Maghrib'] ?? '',
+      isha: json['Isha'] ?? '',
+      imsak: json['Imsak'] ?? '',
+      midnight: json['Midnight'] ?? '',
+      firstthird: json['Firstthird'] ?? '',
+      lastthird: json['Lastthird'] ?? '',
+    );
+  }
+  Map<String, dynamic> toJson() => {
+    'Fajr': fajr,
+    'Sunrise': sunrise,
+    'Dhuhr': dhuhr,
+    'Asr': asr,
+    'Sunset': sunset,
+    'Maghrib': maghrib,
+    'Isha': isha,
+    'Imsak': imsak,
+    'Midnight': midnight,
+    'Firstthird': firstthird,
+    'Lastthird': lastthird,
+  };
 
   TimingsEntity toEntity() {
     return TimingsEntity(

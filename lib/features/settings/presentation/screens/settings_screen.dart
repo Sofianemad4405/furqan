@@ -23,6 +23,7 @@ import 'package:furqan/features/settings/presentation/widgets/quick_actions.dart
 import 'package:furqan/features/settings/presentation/widgets/settings_header.dart';
 import 'package:furqan/features/settings/presentation/widgets/taps.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 
 class SettingsScreen extends StatefulWidget {
   final VoidCallback? onLogout;
@@ -102,10 +103,9 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   void _navigateToProfileEdit() {
-    Navigator.push(
+    Navigator.of(
       context,
-      MaterialPageRoute(builder: (_) => const ProfileEditScreen()),
-    );
+    ).push(GetPageRoute(page: () => const ProfileEditScreen()));
   }
 
   /// Quick Actions Handlers

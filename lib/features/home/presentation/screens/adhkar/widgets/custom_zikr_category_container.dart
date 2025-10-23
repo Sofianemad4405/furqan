@@ -23,7 +23,12 @@ class CustomZikrCategoryContainer extends StatelessWidget {
           end: AlignmentGeometry.bottomRight,
         ),
       ),
-      child: Center(child: SvgPicture.asset(iconPath)),
+      child: Center(
+        child: SvgPicture.asset(
+          iconPath,
+          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+        ),
+      ),
     );
   }
 }

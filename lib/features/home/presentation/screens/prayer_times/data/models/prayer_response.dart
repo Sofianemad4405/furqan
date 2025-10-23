@@ -14,7 +14,7 @@ class PrayerResponse {
   });
 
   factory PrayerResponse.fromJson(Map<String, dynamic> json) {
-    final data = json['data'];
+    final data = json['data'] ?? json;
     return PrayerResponse(
       timings: TimingsModel.fromJson(data['timings']),
       date: DateModel.fromJson(data['date']),

@@ -42,7 +42,7 @@ class LocationService {
 
     return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
-    );
+    ).timeout(const Duration(seconds: 10));
   }
 
   Future<List<String?>?> getUserAddress() async {
@@ -52,7 +52,7 @@ class LocationService {
     List<Placemark> placemarks = await placemarkFromCoordinates(
       position.latitude,
       position.longitude,
-    );
+    ).timeout(const Duration(seconds: 10));
 
     Placemark place = placemarks.first;
 

@@ -6,15 +6,18 @@ import 'package:furqan/features/home/presentation/screens/adhkar/widgets/custom_
 import 'package:furqan/features/home/presentation/screens/adhkar/widgets/zikr_container.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/widgets/zikr_counter.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 
 class AzkarListView extends StatefulWidget {
   const AzkarListView({
     super.key,
     required this.titleTranslation,
     required this.azkarSectionEntity,
+    required this.icon,
   });
   final AzkarSectionEntity? azkarSectionEntity;
   final String titleTranslation;
+  final String icon;
   @override
   State<AzkarListView> createState() => _AzkarListViewState();
 }
@@ -26,8 +29,16 @@ class _AzkarListViewState extends State<AzkarListView> {
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       child: Column(
         children: [
+          const Gap(20),
           Row(
             children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: const Icon(Icons.arrow_back),
+              ),
+              const Gap(20),
               SizedBox(
                 height: 55,
                 width: 55,
@@ -39,7 +50,7 @@ class _AzkarListViewState extends State<AzkarListView> {
                       : widget.azkarSectionEntity?.title == "أذكار بعد الصلاة"
                       ? QuranAppTheme.afterPrayerAzkar
                       : QuranAppTheme.theRest,
-                  iconPath: "assets/svgs/bell-icon.svg",
+                  iconPath: widget.icon,
                 ),
               ),
               const Gap(10),
@@ -69,15 +80,12 @@ class _AzkarListViewState extends State<AzkarListView> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return ZikrCounter(
-                            dhikr: widget.azkarSectionEntity?.content[index],
-                            title: widget.azkarSectionEntity?.title ?? "",
-                          );
-                        },
+                    Navigator.of(context).push(
+                      GetPageRoute(
+                        page: () => ZikrCounter(
+                          dhikr: widget.azkarSectionEntity?.content[index],
+                          title: widget.azkarSectionEntity?.title ?? "",
+                        ),
                       ),
                     );
                   },

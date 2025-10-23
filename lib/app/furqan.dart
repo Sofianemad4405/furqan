@@ -5,6 +5,7 @@ import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/features/auth/data/models/user_data.dart';
 import 'package:furqan/features/auth/presentation/screens/auth_screen.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 class Furqan extends StatefulWidget {
   const Furqan({super.key, required this.isLoggedIn});
@@ -25,7 +26,7 @@ class _FurqanState extends State<Furqan> {
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeMode>(
       builder: (context, state) {
-        return MaterialApp(
+        return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: QuranAppTheme.lightTheme,
           darkTheme: QuranAppTheme.darkTheme,

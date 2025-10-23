@@ -5,6 +5,7 @@ import 'package:furqan/features/home/presentation/screens/today_challenges/today
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 
 class TodayChallengesList extends StatelessWidget {
   const TodayChallengesList({super.key, required this.userProgress});
@@ -20,10 +21,11 @@ class TodayChallengesList extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const TodayChallenges()),
-          ),
+          onTap: () {
+            Navigator.of(
+              context,
+            ).push(GetPageRoute(page: () => const TodayChallenges()));
+          },
           child: BlocBuilder<ThemeCubit, ThemeMode>(
             builder: (context, state) {
               return Padding(

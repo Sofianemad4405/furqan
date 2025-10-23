@@ -6,7 +6,7 @@ import 'package:furqan/features/home/presentation/screens/prayer_times/data/pray
 
 class PrayerTimesImpl implements PrayerTimesDataAbstract {
   final PrayerTimesClient prayerTimesClient;
-  PrayerTimesImpl({required this.prayerTimesClient});
+  PrayerTimesImpl(this.prayerTimesClient);
 
   @override
   Future<PrayerResponse> getPrayerTimings(

@@ -1,5 +1,6 @@
 import 'package:furqan/core/network/adhkar_client.dart';
 import 'package:furqan/core/network/dio_factory.dart';
+import 'package:furqan/core/network/prayer_times_client.dart';
 import 'package:furqan/core/network/retrofit_client.dart';
 import 'package:furqan/core/network/tafsir_client.dart';
 import 'package:furqan/core/services/location_service.dart';
@@ -13,6 +14,7 @@ import 'package:furqan/features/home/domain/home_repo_impl.dart';
 import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/cubit/adhkar_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/prayer_times/data/prayer_times_abstract.dart';
+import 'package:furqan/features/home/presentation/screens/prayer_times/data/prayer_times_impl.dart';
 import 'package:furqan/features/home/presentation/screens/prayer_times/domain/prayer_times_repo_abstract.dart';
 import 'package:furqan/features/home/presentation/screens/prayer_times/domain/prayer_times_repo_impl.dart';
 import 'package:furqan/features/home/presentation/screens/prayer_times/presentation/cubit/prayer_times_cubit.dart';
@@ -68,6 +70,14 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<RemoteDataSource>(
     () => RemoteDataSourceImpl(sl<AdhkarClient>()),
+  );
+
+  sl.registerLazySingleton<PrayerTimesClient>(
+    () => PrayerTimesClient(sl<DioFactory>().getDio()),
+  );
+
+  sl.registerLazySingleton<PrayerTimesDataAbstract>(
+    () => PrayerTimesImpl(sl<PrayerTimesClient>()),
   );
 
   ///supabase

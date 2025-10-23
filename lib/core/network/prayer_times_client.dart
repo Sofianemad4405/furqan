@@ -15,6 +15,7 @@ abstract class PrayerTimesClient {
   }) = _PrayerTimesClient;
 
   ///https://api.aladhan.com/v1/timings/21-10-2025?latitude=30.5727787&longitude=31.582086&method=2
+  @GET("/timings/{date}")
   Future<PrayerResponse> getPrayerTimings(
     @Path("date") String date,
     @Query("latitude") double latitude,

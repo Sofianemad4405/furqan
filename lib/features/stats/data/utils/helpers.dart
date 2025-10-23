@@ -11,3 +11,8 @@ String formatTime(int seconds) {
     return '${secs}s';
   }
 }
+
+String formattedDate() {
+  final now = DateTime.now();
+  return "${now.day}-${now.month}-${now.year}";
+}

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:furqan/core/entities/prayer_response_entity.dart';
 import 'package:furqan/core/services/location_service.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
@@ -12,6 +13,8 @@ import 'package:furqan/features/home/presentation/screens/prayer_times/presentat
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrayerTimesScreen extends StatefulWidget {
@@ -32,6 +35,12 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
   Position? userPosition;
   Placemark? userPlaceMark;
   List<PrayerListItem> prayers = [];
+  Timer? _timer;
+
+  String formattedDate() {
+    final now = DateTime.now();
+    return "${now.day}-${now.month}-${now.year}";
+  }
 
   @override
   void initState() {
@@ -48,9 +57,9 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
       _startNextPrayerTimer();
     });
     context.read<PrayerTimesCubit>().getPrayerTimings(
-      DateTime.now().toString(),
-      userPosition?.latitude ?? 0,
-      userPosition?.longitude ?? 0,
+      formattedDate(),
+      userPosition?.latitude ?? 30.5727787,
+      userPosition?.longitude ?? 31.582086,
       2,
     );
   }
@@ -63,6 +72,9 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
 
   List<String?>? _userAddress;
   Future<void> _loadAddress() async {
+    setState(() {
+      _isLoading = true;
+    });
     final address = await locationService.getUserAddress();
     setState(() {
       _userAddress = address ?? ['Location unavailable'];
@@ -73,6 +85,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -95,15 +108,15 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
   }
 
   void _loadPrayerTimes() async {
-    // setState(() {
-    //   _isLoading = true;
-    //   _error = null;
-    // });
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
     context.read<PrayerTimesCubit>().getPrayerTimings(
-      DateTime.now().toString(),
-      userPosition?.latitude ?? 0,
-      userPosition?.longitude ?? 0,
+      formattedDate(),
+      userPosition?.latitude ?? 30.5727787,
+      userPosition?.longitude ?? 31.582086,
       2,
     );
     _prayerTimes = await context
@@ -147,14 +160,17 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
         Icons.nightlight,
       ),
     ];
+
     _updateNextPrayer();
   }
 
   void _startNextPrayerTimer() {
-    Future.delayed(const Duration(minutes: 1), () {
+    _timer?.cancel(); // Cancel any existing timer
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       if (mounted) {
         _updateNextPrayer();
-        _startNextPrayerTimer();
+      } else {
+        timer.cancel();
       }
     });
   }
@@ -257,6 +273,7 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
                               const SizedBox(height: 24),
                               _buildQuoteCard(isDark),
                             ],
+                            const SizedBox(height: 100),
                           ],
                         ),
                       ),
@@ -354,20 +371,23 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _userAddress?[1] ?? 'Location unavailable',
+                    (_userAddress?.length ?? 0) > 1
+                        ? _userAddress![1]!
+                        : 'Location unavailable',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
                   ),
-                  Text(
-                    '${_userAddress?[2]} • ${_userAddress?[0]} $userPosition',
-                    style: TextStyle(
-                      color: Colors.white.withAlpha(204),
-                      fontSize: 12,
+                  if ((_userAddress?.length ?? 0) > 2)
+                    Text(
+                      '${_userAddress![2]} • $timezone}',
+                      style: TextStyle(
+                        color: Colors.white.withAlpha(204),
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -396,7 +416,11 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
         ),
         child: Column(
           children: [
-            const Text('🕌', style: TextStyle(fontSize: 40)),
+            SvgPicture.asset(
+              "assets/svgs/mosque-svgrepo-com.svg",
+              height: 50,
+              width: 50,
+            ),
             const SizedBox(height: 8),
             Text(
               'Next: ${_nextPrayer!.name}',
@@ -706,7 +730,11 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
         ),
         child: Column(
           children: [
-            const Text('🤲', style: TextStyle(fontSize: 32)),
+            SvgPicture.asset(
+              "assets/svgs/palms-up-together-svgrepo-com.svg",
+              height: 50,
+              width: 50,
+            ),
             const SizedBox(height: 12),
             Text(
               '"And establish prayer at the two ends of the day and at the approach of the night. '

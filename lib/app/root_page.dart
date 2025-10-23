@@ -16,6 +16,7 @@ import 'package:furqan/features/settings/presentation/screens/settings_screen.da
 import 'package:furqan/features/stats/presentation/screens/stats_page.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:furqan/features/user_data/services/user_progress_service.dart';
+import 'package:get/get.dart' as getx;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RootPage extends StatefulWidget {
@@ -33,10 +34,15 @@ class _RootPageState extends State<RootPage> {
   void _refresh() => setState(() {});
 
   Widget _buildOffstageNavigator(int index, Widget child) {
-    return Navigator(
-      key: _navKeys[index],
-      observers: [_RouteObserver(_refresh)],
-      onGenerateRoute: (settings) => MaterialPageRoute(builder: (_) => child),
+    return Offstage(
+      offstage: _currentIndex != index,
+      child: Navigator(
+        key: _navKeys[index],
+        observers: [_RouteObserver(() => _refresh())],
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(builder: (_) => child);
+        },
+      ),
     );
   }
 
@@ -74,25 +80,6 @@ class _RootPageState extends State<RootPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        // appBar: AppBar(
-        //   leading: canPop
-        //       ? IconButton(
-        //           icon: const Icon(Icons.arrow_back),
-        //           onPressed: () {
-        //             _navKeys[_currentIndex].currentState?.maybePop();
-        //           },
-        //         )
-        //       : const Icon(Icons.menu),
-        //   title: const Text("Furqan"),
-        //   actions: [
-        //     AnimatedThemeSwitcher(
-        //       isDark: isDark,
-        //       onChanged: (v) {
-        //         context.read<ThemeCubit>().toggleTheme();
-        //       },
-        //     ),
-        //   ],
-        // ),
         appBar: const ModernAppBar(title: "FurQan"),
         extendBody: true,
         body: userProgress == null

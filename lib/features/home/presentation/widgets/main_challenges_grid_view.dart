@@ -5,6 +5,7 @@ import 'package:furqan/core/utils/constants.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/azkar_screen.dart';
 import 'package:furqan/features/home/presentation/screens/prayer_times/presentation/screens/prayer_times_screen.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
+import 'package:get/get.dart';
 
 class MainChallengesGridView extends StatelessWidget {
   const MainChallengesGridView({super.key});
@@ -26,14 +27,11 @@ class MainChallengesGridView extends StatelessWidget {
           builder: (context, state) {
             return GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return index == 2
-                          ? const DhikrScreen()
-                          : const PrayerTimesScreen();
-                    },
+                Navigator.of(context).push(
+                  GetPageRoute(
+                    page: () => index == 2
+                        ? const DhikrScreen()
+                        : const PrayerTimesScreen(),
                   ),
                 );
               },

@@ -1,29 +1,43 @@
 import 'package:furqan/core/entities/date_entity.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'date_model.g.dart';
+// part 'date_model.g.dart';
 
 @JsonSerializable()
 class DateModel {
   final String readable;
   final String timestamp;
-  final Map<String, String> weekDay;
+  final String arWeekDay;
+  final String enWeekDay;
 
   DateModel({
     required this.readable,
     required this.timestamp,
-    required this.weekDay,
+    required this.arWeekDay,
+    required this.enWeekDay,
   });
 
-  factory DateModel.fromJson(Map<String, dynamic> json) =>
-      _$DateModelFromJson(json);
-  Map<String, dynamic> toJson() => _$DateModelToJson(this);
+  factory DateModel.fromJson(Map<String, dynamic> json) {
+    return DateModel(
+      readable: json['readable'] ?? '',
+      timestamp: json['timestamp'] ?? '',
+      arWeekDay: json['hijri']?['weekday']?['ar'] ?? '',
+      enWeekDay: json['hijri']?['weekday']?['en'] ?? '',
+    );
+  }
+  Map<String, dynamic> toJson() => {
+    'readable': readable,
+    'timestamp': timestamp,
+    'arWeekDay': arWeekDay,
+    'enWeekDay': enWeekDay,
+  };
 
   DateEntity toEntity() {
     return DateEntity(
       readable: readable,
       timestamp: timestamp,
-      weekDay: weekDay,
+      arWeekDay: arWeekDay,
+      enWeekDay: enWeekDay,
     );
   }
 }

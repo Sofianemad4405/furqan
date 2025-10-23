@@ -10,7 +10,25 @@ part of 'prayer_times_client.dart';
 
 class _PrayerTimesClient implements PrayerTimesClient {
   _PrayerTimesClient(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://api.aladhan.com/v1/timings';
+    baseUrl ??= 'https://api.aladhan.com/v1';
+
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          print("➡️ REQUEST[${options.method}] => ${options.uri}");
+          print("📦 Query Parameters: ${options.queryParameters}");
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          print("✅ RESPONSE[${response.statusCode}] => ${response.data}");
+          return handler.next(response);
+        },
+        onError: (DioError e, handler) {
+          print("❌ ERROR[${e.response?.statusCode}] => ${e.response?.data}");
+          return handler.next(e);
+        },
+      ),
+    );
   }
 
   final Dio _dio;
@@ -54,19 +72,26 @@ class _PrayerTimesClient implements PrayerTimesClient {
     int method,
   ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      "latitude": latitude,
+      "longitude": longitude,
+      "method": method,
+    };
+
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
+
     final _options = _setStreamType<PrayerResponse>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/timings/${date}',
+            '/timings/$date',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
+
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
     late PrayerResponse _value;
     try {
