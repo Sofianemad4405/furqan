@@ -48,14 +48,14 @@ class _ReadingSurahState extends State<ReadingSurah> {
     super.initState();
   }
 
-  String formatTime(int totalSeconds) {
-    final hours = totalSeconds ~/ 3600;
-    final minutes = (totalSeconds % 3600) ~/ 60;
-    final seconds = totalSeconds % 60;
-    return "${hours.toString().padLeft(2, '0')}:"
-        "${minutes.toString().padLeft(2, '0')}:"
-        "${seconds.toString().padLeft(2, '0')}";
-  }
+  // String formatTime(int totalSeconds) {
+  //   final hours = totalSeconds ~/ 3600;
+  //   final minutes = (totalSeconds % 3600) ~/ 60;
+  //   final seconds = totalSeconds % 60;
+  //   return "${hours.toString().padLeft(2, '0')}:"
+  //       "${minutes.toString().padLeft(2, '0')}:"
+  //       "${seconds.toString().padLeft(2, '0')}";
+  // }
 
   Future<void> _handleTimer() async {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
@@ -214,12 +214,6 @@ class _ReadingSurahState extends State<ReadingSurah> {
                     final likes = state.userProgress.likedAyahs;
                     final surahKey = widget.surah.surahNo.toString();
                     isLiked = likes[surahKey]?.contains(ayahNumber) ?? false;
-                    // logger.log("❤️ Ayah $ayahNumber liked? $isLiked");
-                  }
-                  if (state is UserProgressLoaded) {
-                    final likes = state.userProgress.likedAyahs;
-                    final surahKey = widget.surah.surahNo.toString();
-                    isLiked = likes[surahKey]?.contains(ayahNumber) ?? false;
                   }
                   return VerseCard(
                     openSheet: () {},
@@ -229,6 +223,7 @@ class _ReadingSurahState extends State<ReadingSurah> {
                     verseAudios: verseAudios,
                     isLiked: isLiked,
                     toggleAyahToLikes: () {
+                      logger.log("toggling like for $ayahNumber");
                       context.read<UserProgressCubit>().toggleAyahLike(
                         widget.surah.surahNo,
                         ayahNumber,

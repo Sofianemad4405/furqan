@@ -224,66 +224,59 @@ class _PrayerTimesScreenState extends State<PrayerTimesScreen>
     final isDark = context.watch<ThemeCubit>().isDarkMood();
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: isDark
-              ? QuranAppTheme.darkScaffoldGradient
-              : QuranAppTheme.lightScaffoldGradient,
-        ),
-        child: SafeArea(
-          child: BlocBuilder<PrayerTimesCubit, PrayerTimesState>(
-            builder: (context, state) {
-              if (state is PrayerTimesLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (state is PrayerTimesError) {
-                return Center(child: Text(state.error));
-              }
-              if (state is PrayerTimesLoaded) {
-                return Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    children: [
-                      _buildHeader(isDark),
-                      const SizedBox(height: 24),
-                      Expanded(
-                        child: ListView(
-                          children: [
-                            if (_prayerTimes != null) ...[
-                              _buildLocationCard(
-                                isDark,
-                                state.prayerResponseEntity.timezone,
-                              ),
-                              const SizedBox(height: 16),
-                            ],
-                            if (_nextPrayer != null) ...[
-                              _buildNextPrayerCard(isDark),
-                              const SizedBox(height: 16),
-                            ],
-                            if (_error != null) ...[
-                              _buildErrorCard(isDark),
-                              const SizedBox(height: 16),
-                            ],
-                            if (_isLoading && _prayerTimes == null) ...[
-                              _buildLoadingCard(isDark),
-                              const SizedBox(height: 16),
-                            ],
-                            if (_prayerTimes != null) ...[
-                              _buildPrayerTimesList(isDark),
-                              const SizedBox(height: 24),
-                              _buildQuoteCard(isDark),
-                            ],
-                            const SizedBox(height: 100),
+      body: SafeArea(
+        child: BlocBuilder<PrayerTimesCubit, PrayerTimesState>(
+          builder: (context, state) {
+            if (state is PrayerTimesLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is PrayerTimesError) {
+              return Center(child: Text(state.error));
+            }
+            if (state is PrayerTimesLoaded) {
+              return Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    _buildHeader(isDark),
+                    const SizedBox(height: 24),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          if (_prayerTimes != null) ...[
+                            _buildLocationCard(
+                              isDark,
+                              state.prayerResponseEntity.timezone,
+                            ),
+                            const SizedBox(height: 16),
                           ],
-                        ),
+                          if (_nextPrayer != null) ...[
+                            _buildNextPrayerCard(isDark),
+                            const SizedBox(height: 16),
+                          ],
+                          if (_error != null) ...[
+                            _buildErrorCard(isDark),
+                            const SizedBox(height: 16),
+                          ],
+                          if (_isLoading && _prayerTimes == null) ...[
+                            _buildLoadingCard(isDark),
+                            const SizedBox(height: 16),
+                          ],
+                          if (_prayerTimes != null) ...[
+                            _buildPrayerTimesList(isDark),
+                            const SizedBox(height: 24),
+                            _buildQuoteCard(isDark),
+                          ],
+                          const SizedBox(height: 100),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );

@@ -23,7 +23,8 @@ class ListeningToSurah extends StatefulWidget {
   State<ListeningToSurah> createState() => _ListeningToSurahState();
 }
 
-class _ListeningToSurahState extends State<ListeningToSurah> {
+class _ListeningToSurahState extends State<ListeningToSurah>
+    with AutomaticKeepAliveClientMixin {
   //audio player
   final player = AudioPlayer();
 
@@ -48,26 +49,66 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
   void initState() {
     super.initState();
     _loadRecitersAndSurahs();
-    getCurrentSurahDuration(widget.surah.surahNo);
-    // controlSurah();
+    _initializeAudio();
     player.playerStateStream.listen((state) {
       if (state.processingState == ProcessingState.completed) {
         nextSurah();
       }
     });
+
+    player.playbackEventStream.listen(
+      null,
+      onError: (Object e, StackTrace st) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
+        }
+      },
+    );
+  }
+
+  Future<void> _initializeAudio() async {
+    try {
+      final url = widget.surah.surahAudio["1"]?.url;
+      if (url != null && url.isNotEmpty) {
+        await player.setUrl(url);
+        await getCurrentSurahDuration(widget.surah.surahNo);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to load audio: $e')));
+      }
+    }
   }
 
   Future<void> _loadRecitersAndSurahs() async {
     currentPlayingSurah = widget.surah;
     reciters = await context.read<ReadingCubit>().getAvailableReciters();
     surahs = await context.read<ReadingCubit>().getAllSurahs();
-    currentReciter = reciters.values.toList()[0];
-    reciterId = reciters.keys.toList().indexOf(currentReciter);
+
+    // Make sure we have reciters before accessing
+    if (reciters.isNotEmpty) {
+      String firstReciterId = reciters.keys.first;
+      currentReciter = reciters[firstReciterId] ?? "";
+      reciterId = int.tryParse(firstReciterId) ?? 0;
+      hasChangedReciter = true; // Force audio reload with new reciter
+
+      if (mounted) {
+        setState(() {});
+      }
+    }
   }
 
-  Future<void> setCurrentReciter(String reciter) async {
+  Future<void> setCurrentReciter(String reciter, String reciterId) async {
     currentReciter = reciter;
-    setState(() {});
+    this.reciterId = int.tryParse(reciterId) ?? 0;
+    hasChangedReciter = true;
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> setCurrentSurah(SurahEntity surah) async {
@@ -76,16 +117,31 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
   }
 
   Future<void> controlSurah() async {
-    if (player.playing) {
-      await player.pause();
-    } else {
-      if (player.audioSource == null || hasChangedReciter) {
-        await player.setUrl(
-          currentPlayingSurah?.surahAudio[(reciterId + 1).toString()]!.url ??
-              "",
-        );
+    try {
+      if (player.playing) {
+        await player.pause();
+      } else {
+        if (player.audioSource == null || hasChangedReciter) {
+          // Use reciterId directly since it's now properly initialized
+          final url =
+              currentPlayingSurah?.surahAudio[reciterId.toString()]?.url;
+          print('Debug - Audio URL: $url'); // Add debug print
+          if (url != null && url.isNotEmpty) {
+            await player.setUrl(url);
+            hasChangedReciter = false;
+          } else {
+            throw Exception('Invalid audio URL');
+          }
+        }
+        await player.play();
       }
-      await player.play();
+    } catch (e) {
+      print('Debug - Audio error: $e'); // Add debug print
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Failed to play audio: $e')));
+      }
     }
   }
 
@@ -128,7 +184,25 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
   }
 
   @override
+  bool get wantKeepAlive => false; // Don't keep the state when navigating away
+
+  @override
+  void deactivate() {
+    // This gets called when the widget is removed from the widget tree
+    player.stop();
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    player.stop();
+    player.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // Required by AutomaticKeepAliveClientMixin
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,10 +231,10 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        surahIcons[(currentPlayingSurah?.surahNo ?? 1) - 1],
-                        style: const TextStyle(fontSize: 18),
-                      ),
+                      // Text(
+                      //   surahIcons[(currentPlayingSurah?.surahNo ?? 1) - 1],
+                      //   style: const TextStyle(fontSize: 18),
+                      // ),
                       const Gap(10),
                       GestureDetector(
                         onTap: () {
@@ -347,11 +421,8 @@ class _ListeningToSurahState extends State<ListeningToSurah> {
                                           onTap: () {
                                             setCurrentReciter(
                                               reciters.values.toList()[index],
+                                              reciters.keys.toList()[index],
                                             );
-                                            bool isDifferent =
-                                                reciterId != index;
-                                            reciterId = index;
-                                            hasChangedReciter = isDifferent;
                                             getCurrentSurahDuration(
                                               currentPlayingSurah!.surahNo,
                                             );
@@ -797,6 +868,6 @@ String reciterMapper(String reciterInEng) {
     case "Hani Ar Rifai":
       return "هاني الرفاعي";
     default:
-      return "";
+      return "سفيان";
   }
 }

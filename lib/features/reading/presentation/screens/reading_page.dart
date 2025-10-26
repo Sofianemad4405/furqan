@@ -80,29 +80,36 @@ class ListeningToSurahShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      child: Column(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ShimmerContainer(height: 40),
-              ShimmerContainer(height: 20),
-            ],
-          ),
-          Gap(10),
-          ShimmerContainer(height: 500),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ShimmerContainer(height: 100),
-              Gap(10),
-              ShimmerContainer(height: 100),
-              Gap(10),
-              ShimmerContainer(height: 100),
-            ],
-          ),
-        ],
+    final width = MediaQuery.of(context).size.width;
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ShimmerContainer(width: width * 0.7, height: 40),
+                const Gap(8),
+                ShimmerContainer(width: width * 0.5, height: 20),
+              ],
+            ),
+            const Gap(16),
+            ShimmerContainer(
+              width: width,
+              height: MediaQuery.of(context).size.height * 0.6,
+            ),
+            const Gap(16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ShimmerContainer(width: width * 0.25, height: 60),
+                ShimmerContainer(width: width * 0.25, height: 60),
+                ShimmerContainer(width: width * 0.25, height: 60),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

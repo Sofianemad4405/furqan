@@ -47,128 +47,120 @@ class _DhikrScreenState extends State<DhikrScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: context.watch<ThemeCubit>().isDarkMood()
-              ? QuranAppTheme.darkScaffoldGradient.colors
-              : QuranAppTheme.lightScaffoldGradient.colors,
-          begin: AlignmentGeometry.topLeft,
-          end: AlignmentGeometry.bottomRight,
-        ),
-      ),
-      child: Scaffold(
-        body: SafeArea(
-          child: BlocBuilder<AdhkarCubit, AdhkarState>(
-            builder: (context, state) {
-              if (state is AdhkarCategoriesLoaded) {
-                return Column(
-                  children: [
-                    CustomContainer(
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Icon(Icons.arrow_back),
-                            ),
-                            const Gap(20),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "الأذكار والأدعية",
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.headlineSmall,
-                                ),
-                                const Gap(5),
-                                Text(
-                                  "Dhikr & Supplications",
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+    return Scaffold(
+      body: SafeArea(
+        child: BlocBuilder<AdhkarCubit, AdhkarState>(
+          builder: (context, state) {
+            if (state is AdhkarLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is AdhkarCategoriesLoaded) {
+              return Column(
+                children: [
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.arrow_back),
+                          ),
+                          const Gap(20),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "الأذكار والأدعية",
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall,
+                              ),
+                              const Gap(5),
+                              Text(
+                                "Dhikr & Supplications",
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                    const Gap(20),
+                  ),
+                  const Gap(20),
 
-                    ///Azkar Elsaba7
-                    DhikrListTile(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          GetPageRoute(
-                            page: () => AzkarListView(
-                              titleTranslation: "Morning Azkar",
-                              azkarSectionEntity: morningAzkar,
-                              icon: 'assets/svgs/sunrise-up-svgrepo-com.svg',
-                            ),
+                  ///Azkar Elsaba7
+                  DhikrListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        GetPageRoute(
+                          page: () => AzkarListView(
+                            titleTranslation: "Morning Azkar",
+                            azkarSectionEntity: morningAzkar,
+                            icon: 'assets/svgs/sunrise-up-svgrepo-com.svg',
                           ),
-                        );
-                      },
-                      title: azkarCategories[0],
-                      englishTitle: azkarCategoriesEnglish[0],
-                      count: morningAzkar?.content.length ?? 0,
-                      icon: 'assets/svgs/sunrise-up-svgrepo-com.svg',
-                    ),
+                        ),
+                      );
+                    },
+                    title: azkarCategories[0],
+                    englishTitle: azkarCategoriesEnglish[0],
+                    count: morningAzkar?.content.length ?? 0,
+                    icon: 'assets/svgs/sunrise-up-svgrepo-com.svg',
+                  ),
 
-                    const Gap(20),
+                  const Gap(20),
 
-                    ///Azkar Elmasaa
-                    DhikrListTile(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          GetPageRoute(
-                            page: () => AzkarListView(
-                              titleTranslation: "Evening Azkar",
-                              azkarSectionEntity: eveningAzkar,
-                              icon: 'assets/svgs/moon-svgrepo-com.svg',
-                            ),
+                  ///Azkar Elmasaa
+                  DhikrListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        GetPageRoute(
+                          page: () => AzkarListView(
+                            titleTranslation: "Evening Azkar",
+                            azkarSectionEntity: eveningAzkar,
+                            icon: 'assets/svgs/moon-svgrepo-com.svg',
                           ),
-                        );
-                      },
-                      englishTitle: azkarCategoriesEnglish[1],
-                      title: azkarCategories[1],
-                      count: eveningAzkar?.content.length ?? 0,
-                      icon: 'assets/svgs/moon-svgrepo-com.svg',
-                    ),
-                    const Gap(20),
+                        ),
+                      );
+                    },
+                    englishTitle: azkarCategoriesEnglish[1],
+                    title: azkarCategories[1],
+                    count: eveningAzkar?.content.length ?? 0,
+                    icon: 'assets/svgs/moon-svgrepo-com.svg',
+                  ),
+                  const Gap(20),
 
-                    ///Azkar Elmasaa
-                    DhikrListTile(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          GetPageRoute(
-                            page: () => AzkarListView(
-                              titleTranslation: "Post Prayer Azkar",
-                              azkarSectionEntity: postPratAzkar,
-                              icon: 'assets/svgs/prayer-times-svgrepo-com.svg',
-                            ),
+                  ///Azkar Elmasaa
+                  DhikrListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        GetPageRoute(
+                          page: () => AzkarListView(
+                            titleTranslation: "Post Prayer Azkar",
+                            azkarSectionEntity: postPratAzkar,
+                            icon: 'assets/svgs/prayer-beads-svgrepo-com.svg',
                           ),
-                        );
-                      },
-                      englishTitle: azkarCategoriesEnglish[2],
-                      title: azkarCategories[2],
-                      count: postPratAzkar?.content.length ?? 0,
-                      icon: 'assets/svgs/prayer-times-svgrepo-com.svg',
-                    ),
-                  ],
-                );
-              }
-              if (state is AdhkarLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (state is AdhkarError) {
-                return Center(child: Text(state.message));
-              }
-              return const SizedBox();
-            },
-          ),
+                        ),
+                      );
+                    },
+                    englishTitle: azkarCategoriesEnglish[2],
+                    title: azkarCategories[2],
+                    count: postPratAzkar?.content.length ?? 0,
+                    icon: 'assets/svgs/prayer-beads-svgrepo-com.svg',
+                  ),
+                ],
+              );
+            }
+            if (state is AdhkarLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (state is AdhkarError) {
+              return Center(child: Text(state.message));
+            }
+            return const SizedBox();
+          },
         ),
       ),
     );

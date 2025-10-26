@@ -47,32 +47,21 @@ class UserProgressCubit extends Cubit<UserProgresState> {
   }
 
   void toggleAyahLike(int surahNo, int ayahNumber) {
-    if (state is! UserProgressLoaded) return;
+    if (state is UserProgressLoaded) {
+      final current = (state as UserProgressLoaded).userProgress;
+      final surahKey = surahNo.toString();
+      final likedAyahs = Map<String, List<int>>.from(current.likedAyahs);
 
-    final currentState = state as UserProgressLoaded;
-    final current = currentState.userProgress;
+      likedAyahs.putIfAbsent(surahKey, () => []);
+      if (likedAyahs[surahKey]!.contains(ayahNumber)) {
+        likedAyahs[surahKey]!.remove(ayahNumber);
+      } else {
+        likedAyahs[surahKey]!.add(ayahNumber);
+      }
 
-    // انسخ الماب والقوائم نسخ عميق (deep copy)
-    final updatedLikes = <String, List<int>>{};
-    current.likedAyahs.forEach((key, value) {
-      updatedLikes[key] = List<int>.from(value);
-    });
-
-    final surahKey = surahNo.toString();
-    final ayahs = updatedLikes[surahKey] ?? [];
-
-    if (ayahs.contains(ayahNumber)) {
-      ayahs.remove(ayahNumber);
-    } else {
-      ayahs.add(ayahNumber);
+      final updatedProgress = current.copyWith(likedAyahs: likedAyahs);
+      emit(UserProgressLoaded(userProgress: updatedProgress));
+      updateUserData({'liked_ayahs': likedAyahs});
     }
-
-    updatedLikes[surahKey] = List<int>.from(ayahs);
-
-    final updatedProgress = current.copyWith(likedAyahs: updatedLikes);
-
-    emit(UserProgressLoaded(userProgress: updatedProgress));
-
-    updateUserData({'liked_ayahs': updatedLikes});
   }
 }

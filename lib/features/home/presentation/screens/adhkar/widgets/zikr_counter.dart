@@ -1,13 +1,18 @@
+import 'dart:async';
+import 'dart:developer' as logger;
 import 'dart:math';
 import 'dart:ui';
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/entities/dhikr_entity.dart';
 import 'package:furqan/core/themes/theme_system.dart';
+import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/reading/presentation/widgets/session_stats.dart';
+import 'package:furqan/features/stats/data/utils/helpers.dart';
 import 'package:gap/gap.dart';
 
 class ZikrCounter extends StatefulWidget {
@@ -39,10 +44,14 @@ class _ZikrCounterState extends State<ZikrCounter>
   late ConfettiController _confettiController;
   final GlobalKey<_AnimatedRewardBoxState> rewardBoxKey =
       GlobalKey<_AnimatedRewardBoxState>();
+  int _seconds = 0;
+  UserProgressCubit userProgressCubit = sl<UserProgressCubit>();
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
+    _handleTimer();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -64,9 +73,18 @@ class _ZikrCounterState extends State<ZikrCounter>
     increaseCount();
   }
 
+  Future<void> _handleTimer() async {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      setState(() {
+        _seconds++;
+      });
+    });
+  }
+
   @override
   void dispose() {
     _controller.dispose();
+    _timer.cancel();
     _confettiController.dispose();
     super.dispose();
   }
@@ -78,16 +96,16 @@ class _ZikrCounterState extends State<ZikrCounter>
       child: Column(
         children: [
           const Gap(12),
-          CustomContainer(
+          SizedBox(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
+                  IconButton(
+                    onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Icon(Icons.arrow_back),
+                    icon: const Icon(Icons.arrow_back),
                   ),
                   const Gap(20),
                   Column(
@@ -226,8 +244,13 @@ class _ZikrCounterState extends State<ZikrCounter>
                                     ),
                                   ),
                                   const Spacer(),
-                                  GestureDetector(
-                                    onTap: () {},
+                                  InkWell(
+                                    onTap: () {
+                                      //reset counter
+                                      setState(() {
+                                        count = 0;
+                                      });
+                                    },
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Stack(
@@ -245,7 +268,7 @@ class _ZikrCounterState extends State<ZikrCounter>
                                               height: 50,
                                               child: const Center(
                                                 child: Icon(
-                                                  Icons.restart_alt_outlined,
+                                                  Icons.restart_alt,
                                                   color: Colors.white,
                                                 ),
                                               ),
@@ -280,7 +303,7 @@ class _ZikrCounterState extends State<ZikrCounter>
                     ),
                   ],
                 ),
-                const Gap(30),
+                const Gap(20),
                 SizedBox(
                   height: 100,
                   child: Row(
@@ -296,7 +319,7 @@ class _ZikrCounterState extends State<ZikrCounter>
                           title: 'Sessions Time',
                           iconColor: const Color(0xff27A57A),
                           topColumn: Text(
-                            "2:49",
+                            formatTime(_seconds),
                             style: Theme.of(context).textTheme.labelMedium,
                           ),
                         ),
@@ -304,36 +327,63 @@ class _ZikrCounterState extends State<ZikrCounter>
                       const Gap(20),
                       Expanded(
                         child: SessionStats(
-                          icon: const Icon(
-                            Icons.alarm,
-                            color: Color(0xff27A57A),
-                            size: 15,
+                          icon: SvgPicture.asset(
+                            height: 15,
+                            width: 15,
+                            "assets/svgs/sparkles-svgrepo-com.svg",
                           ),
                           title: '+$count',
                           iconColor: const Color(0xff27A57A),
-                          topColumn: Expanded(
-                            child: Center(
-                              child: Text(
-                                "Hasanat Earned",
-                                style: Theme.of(context).textTheme.labelMedium,
-                              ),
-                            ),
+                          topColumn: Text(
+                            "Hasanat Earned",
+                            style: Theme.of(context).textTheme.labelMedium,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const Gap(50),
+                const Gap(20),
+                if (widget.dhikr!.bless.isNotEmpty)
+                  CustomContainer(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              SvgPicture.asset(
+                                height: 20,
+                                width: 20,
+                                "assets/svgs/sparkles-svgrepo-com.svg",
+                              ),
+                              Text(
+                                "البركة والفضل",
+                                style: Theme.of(context).textTheme.titleMedium,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                          const Gap(20),
+                          Text(
+                            widget.dhikr?.bless ?? "",
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(fontFamily: "Amiri"),
+                            textDirection: TextDirection.rtl,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                const Gap(20),
                 ConfettiWidget(
                   confettiController: _confettiController,
                   blastDirectionality: BlastDirectionality.explosive, // متوزعة
                   blastDirection: -pi / 2, // تطلع لفوق
                   emissionFrequency: .2, // معدل الانبعاث
                   numberOfParticles: 25, // عدد الورق
-                  gravity: 0.2, // الجاذبية تخليها تنزل لتحت تاني
+                  gravity: 0.2,
                   colors: const [
-                    // ألوان الورق
                     Colors.red,
                     Colors.blue,
                     Colors.green,
