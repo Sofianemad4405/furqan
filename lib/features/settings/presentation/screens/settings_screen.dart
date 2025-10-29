@@ -24,6 +24,7 @@ import 'package:furqan/features/settings/presentation/widgets/settings_header.da
 import 'package:furqan/features/settings/presentation/widgets/taps.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 
 class SettingsScreen extends StatefulWidget {
   final VoidCallback? onLogout;
@@ -182,7 +183,9 @@ class _SettingsScreenState extends State<SettingsScreen>
         const Gap(16),
         AppearanceSection(
           isDark: isDark,
-          theme: theme,
+          theme: context.read<ThemeCubit>().state == ThemeMode.dark
+              ? 'dark'
+              : 'light',
           fontSize: fontSize,
           arabicFont: arabicFont,
         ),
@@ -250,25 +253,25 @@ class _SettingsScreenState extends State<SettingsScreen>
   Widget _buildQuickActions(bool isDark) {
     final actions = [
       QuickAction(
-        icon: Icons.favorite,
+        icon: Iconsax.heart5,
         label: 'Liked Ayahs',
         color: Colors.pink,
         onTap: _handleLikedAyahs,
       ),
       QuickAction(
-        icon: Icons.message,
+        icon: Iconsax.message,
         label: 'Feedback',
         color: Colors.blue,
         onTap: _handleFeedback,
       ),
       QuickAction(
-        icon: Icons.star,
+        icon: Iconsax.star5,
         label: 'Rate App',
         color: Colors.amber,
         onTap: _handleRateApp,
       ),
       QuickAction(
-        icon: Icons.shield,
+        icon: Iconsax.shield_security,
         label: 'Privacy',
         color: Colors.green,
         onTap: _handlePrivacy,
@@ -280,7 +283,7 @@ class _SettingsScreenState extends State<SettingsScreen>
         onTap: _handleAbout,
       ),
       QuickAction(
-        icon: Icons.logout,
+        icon: Iconsax.logout4,
         label: 'Sign Out',
         color: Colors.grey,
         onTap: _handleSignOut,

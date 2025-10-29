@@ -87,7 +87,7 @@ class _RateAppDialogState extends State<RateAppDialog> {
                 child: Icon(
                   index < _rating ? Icons.star : Icons.star_border,
                   color: const Color(0xFFFBBF24),
-                  size: 40,
+                  size: 30,
                 ),
               ),
             );

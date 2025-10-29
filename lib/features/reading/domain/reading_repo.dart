@@ -61,12 +61,21 @@ class ReadingRepoImpl implements ReadingRepo {
   @override
   Future<List<TafsirProviderEntity>> getTafsirProviders() async {
     try {
+      log("🔄 ReadingRepo: Calling data source to get tafsir providers...");
       final tafsirProviders = await _dataSource.getTafsirProviders();
-      return tafsirProviders
+      log(
+        "✅ ReadingRepo: Data source returned ${tafsirProviders.length} tafsir providers",
+      );
+
+      final entities = tafsirProviders
           .map((tafsirProvider) => tafsirProvider.toEntity())
           .toList();
+
+      log("✅ ReadingRepo: Converted to ${entities.length} entities");
+      return entities;
     } catch (e) {
-      log("error in getTafsirProviders ${e.toString()}");
+      log("❌ ReadingRepo: Error in getTafsirProviders: ${e.toString()}");
+      log("❌ ReadingRepo: Error type: ${e.runtimeType}");
       return [];
     }
   }

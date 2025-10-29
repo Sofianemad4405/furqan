@@ -19,17 +19,19 @@ class SelectSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            color: isDark ? const Color(0xFFE5E7EB) : const Color(0xFF4B5563),
+        Expanded(
+          flex: 2,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              color: isDark ? const Color(0xFFE5E7EB) : const Color(0xFF4B5563),
+            ),
           ),
         ),
-        Container(
-          constraints: const BoxConstraints(maxWidth: 200),
+        Expanded(
+          flex: 3,
           child: DropdownButton<String>(
             icon: const Icon(Iconsax.arrow_down5),
             value: value,
@@ -45,7 +47,11 @@ class SelectSetting extends StatelessWidget {
             items: options.entries.map((entry) {
               return DropdownMenuItem<String>(
                 value: entry.key,
-                child: Text(entry.value, overflow: TextOverflow.ellipsis),
+                child: Text(
+                  entry.value,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               );
             }).toList(),
             onChanged: (newValue) {

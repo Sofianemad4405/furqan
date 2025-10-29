@@ -5,6 +5,7 @@ import 'package:furqan/features/settings/presentation/widgets/glass_card.dart';
 import 'package:furqan/features/settings/presentation/widgets/section_header.dart';
 import 'package:furqan/features/settings/presentation/widgets/select_setting.dart';
 import 'package:gap/gap.dart';
+import 'package:iconsax/iconsax.dart';
 
 class AppearanceSection extends StatelessWidget {
   const AppearanceSection({
@@ -28,7 +29,7 @@ class AppearanceSection extends StatelessWidget {
         children: [
           SectionHeader(
             isDark: isDark,
-            icon: isDark ? Icons.dark_mode : Icons.light_mode,
+            icon: isDark ? Iconsax.moon5 : Iconsax.sun_15,
             title: 'Appearance',
           ),
           const Gap(16),

@@ -81,9 +81,27 @@ class ReadingDataSourceImpl implements ReadingDataSource {
   @override
   Future<List<TafsirProvider>> getTafsirProviders() async {
     try {
+      log("🔄 ReadingDataSource: Making API call to get tafsir list...");
+      log(
+        "🔄 ReadingDataSource: API URL: http://api.quran-tafseer.com/tafseer/",
+      );
+
       final response = await _tafsirClient.getTafsirList();
+
+      log(
+        "✅ ReadingDataSource: API call successful, got ${response.length} tafsir providers",
+      );
+
+      if (response.isNotEmpty) {
+        log("📋 ReadingDataSource: First provider: ${response[0].toJson()}");
+      } else {
+        log("kiiaan no tafsir providers");
+      }
+
       return response;
     } catch (e) {
+      log("❌ ReadingDataSource: API call failed: ${e.toString()}");
+      log("❌ ReadingDataSource: Error type: ${e.runtimeType}");
       throw Exception(e.toString());
     }
   }

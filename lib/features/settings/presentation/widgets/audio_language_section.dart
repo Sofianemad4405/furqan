@@ -3,6 +3,7 @@ import 'package:furqan/features/settings/presentation/widgets/glass_card.dart';
 import 'package:furqan/features/settings/presentation/widgets/section_header.dart';
 import 'package:furqan/features/settings/presentation/widgets/select_setting.dart';
 import 'package:furqan/features/settings/presentation/widgets/toggle_settings.dart';
+import 'package:iconsax/iconsax.dart';
 
 class AudioLanguageSection extends StatelessWidget {
   const AudioLanguageSection({
@@ -40,7 +41,7 @@ class AudioLanguageSection extends StatelessWidget {
         children: [
           SectionHeader(
             isDark: isDark,
-            icon: Icons.volume_up,
+            icon: Iconsax.volume_high5,
             title: 'Audio & Language',
           ),
           const SizedBox(height: 16),

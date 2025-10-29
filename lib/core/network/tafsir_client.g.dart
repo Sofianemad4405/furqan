@@ -74,7 +74,9 @@ class _TafsirClient implements TafsirClient {
             (dynamic i) => TafsirProvider.fromJson(i as Map<String, dynamic>),
           )
           .toList();
+      log("valueeee $_value");
     } on Object catch (e, s) {
+      log("kkkkkkkkkkkkkkkkkkkkkkkkkkk");
       errorLogger?.logError(e, s, _options);
       rethrow;
     }

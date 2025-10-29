@@ -24,7 +24,7 @@ class SessionStats extends StatelessWidget {
         final isDark = state == ThemeMode.dark;
         return CustomContainer(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +49,7 @@ class SessionStats extends StatelessWidget {
                         ),
                         child: icon,
                       ),
-                      const Gap(10),
+                      const Gap(5),
                       Text(title, style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),

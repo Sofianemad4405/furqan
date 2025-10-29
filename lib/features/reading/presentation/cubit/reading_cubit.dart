@@ -94,11 +94,15 @@ class ReadingCubit extends Cubit<ReadingState> {
 
   Future<List<TafsirProviderEntity>> getTafsirProviders() async {
     try {
+      log("🔄 ReadingCubit: Calling repository to get tafsir providers...");
       final tafsirProviders = await _readingRepo.getTafsirProviders();
-      log(tafsirProviders.length.toString());
+      log(
+        "✅ ReadingCubit: Repository returned ${tafsirProviders.length} tafsir providers",
+      );
       return tafsirProviders;
     } catch (e) {
-      log(e.toString());
+      log("❌ ReadingCubit: Error getting tafsir providers: ${e.toString()}");
+      log("❌ ReadingCubit: Error type: ${e.runtimeType}");
       return [];
     }
   }

@@ -48,15 +48,6 @@ class _ReadingSurahState extends State<ReadingSurah> {
     super.initState();
   }
 
-  // String formatTime(int totalSeconds) {
-  //   final hours = totalSeconds ~/ 3600;
-  //   final minutes = (totalSeconds % 3600) ~/ 60;
-  //   final seconds = totalSeconds % 60;
-  //   return "${hours.toString().padLeft(2, '0')}:"
-  //       "${minutes.toString().padLeft(2, '0')}:"
-  //       "${seconds.toString().padLeft(2, '0')}";
-  // }
-
   Future<void> _handleTimer() async {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       setState(() {
@@ -202,9 +193,46 @@ class _ReadingSurahState extends State<ReadingSurah> {
         return SingleChildScrollView(
           child: Column(
             children: [
+              const Gap(10),
+              AppBar(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                titleSpacing: 0,
+                title: Row(
+                  children: [
+                    IconButton(
+                      iconSize: 18,
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        context
+                            .read<ReadingCubit>()
+                            .toggleToSurahSelectionMode();
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Reading Mode",
+                          style: Theme.of(context).textTheme.headlineLarge
+                              ?.copyWith(color: const Color(0xff00B590)),
+                        ),
+                        Text(
+                          "Read the complete Surah",
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              const Gap(20),
+
               ///El headar bta3 elPage
               AllSessionStats(seconds: _seconds, ayahsRead: ayahsRead),
-              const Gap(50),
+              const Gap(30),
 
               ///ELcard ely feh elAyah
               BlocBuilder<UserProgressCubit, UserProgresState>(

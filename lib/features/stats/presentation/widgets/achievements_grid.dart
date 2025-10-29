@@ -17,21 +17,6 @@ class AchievementsGrid extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return CustomContainer(
-      // decoration: BoxDecoration(
-      //   borderRadius: BorderRadius.circular(16),
-      //   border: Border.all(
-      //     color: isDark
-      //         ? Colors.white.withOpacity(0.1)
-      //         : Colors.black.withOpacity(0.1),
-      //   ),
-      //   // boxShadow: [
-      //   //   BoxShadow(
-      //   //     color: Colors.black.withOpacity(0.1),
-      //   //     blurRadius: 10,
-      //   //     offset: const Offset(0, 4),
-      //   //   ),
-      //   // ],
-      // ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -59,7 +44,7 @@ class AchievementsGrid extends StatelessWidget {
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: (height / width) * .45,
+                childAspectRatio: (height / width) * .35,
               ),
               itemCount: achievements.length,
               itemBuilder: (context, index) {

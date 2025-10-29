@@ -5,6 +5,8 @@ import 'package:iconsax/iconsax.dart';
 
 class Streak extends StatelessWidget {
   const Streak({super.key});
+  final int currentStreak = 0;
+  final int challengesCompleted = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class Streak extends StatelessWidget {
                       children: [
                         const SizedBox(height: 40, width: 40),
                         Text(
-                          "0 days",
+                          "$currentStreak days",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -110,7 +112,7 @@ class Streak extends StatelessWidget {
                       children: [
                         const SizedBox(height: 40, width: 40),
                         Text(
-                          "0 days",
+                          "$challengesCompleted challenges",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],

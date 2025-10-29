@@ -34,13 +34,15 @@ class _TodayChallengesState extends State<TodayChallenges> {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
+                    Gap(MediaQuery.of(context).padding.top + 20),
+
                     ///Header
                     Header(
                       totalChallenges: 3,
                       completedChallenges:
                           state.userProgress.dailyChallengesCompleted,
                     ),
-                    const Gap(20),
+                    const Gap(40),
 
                     //streak and completed
                     const Streak(),

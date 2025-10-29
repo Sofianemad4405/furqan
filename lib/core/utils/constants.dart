@@ -183,3 +183,11 @@ List<String> recitersImgs = [
   "assets/imgs/yasser.png",
   "assets/imgs/hany.png",
 ];
+
+final List<String> nationalities = [
+  "Kuwaiti",
+  "Saudi",
+  "Saudi",
+  "Saudi",
+  "Saudi",
+];

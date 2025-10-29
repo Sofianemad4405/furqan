@@ -64,12 +64,14 @@ class _VerseCardState extends State<VerseCard> {
     super.initState();
   }
 
+  ///load reciters
   Future<void> _loadReciters() async {
     reciters = await context.read<ReadingCubit>().getAvailableReciters();
     currentReciter = reciters.keys.first;
     reciterId = sl<Prefs>().readingModeDefaultReciter;
   }
 
+  ///get tafsir providers
   Future<void> getTafsirProviders() async {
     try {
       log("getting");
@@ -77,16 +79,20 @@ class _VerseCardState extends State<VerseCard> {
       setState(() {
         tafsirProviders = providers;
       });
-      log("provo");
-      if (providers.isNotEmpty) {
-        log("getting verse tafsir");
-        getVerseTafsir(providers[0].id);
-      }
+      // log("provo");
+      // if (providers.isNotEmpty) {
+      //   log("getting verse tafsir");
+      // } else {
+      //   log("no tafsir providers");
+      // }
+      log("ana ${providers[0].bookName}");
+      getVerseTafsir(providers[0].id);
     } on Exception catch (e) {
-      log("lol ${e.toString()}");
+      log("kiiaan ${e.toString()}");
     }
   }
 
+  ///get verse tafsir
   Future<VerseTafsirEntity> getVerseTafsir(int tafseerId) async {
     final verseTafsir = await context.read<ReadingCubit>().getVerseTafsir(
       tafseerId,
@@ -124,6 +130,8 @@ class _VerseCardState extends State<VerseCard> {
                             : Colors.black,
                       ),
                     ),
+
+                    ///like/unlike
                     IconButton(
                       onPressed: widget.toggleAyahToLikes,
                       icon: Icon(
@@ -133,6 +141,8 @@ class _VerseCardState extends State<VerseCard> {
                             : Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
+
+                    ///surah name and ayah number
                     GestureDetector(
                       onTap: widget.openSheet,
                       child: Column(
@@ -149,6 +159,8 @@ class _VerseCardState extends State<VerseCard> {
                         ],
                       ),
                     ),
+
+                    ///select reciter
                     GestureDetector(
                       onTap: () {
                         showModalBottomSheet(
@@ -267,6 +279,7 @@ class _VerseCardState extends State<VerseCard> {
                       ),
                     ),
 
+                    ///play/pause
                     GestureDetector(
                       onTap: () async {
                         log(widget.player.duration.toString());
@@ -305,6 +318,8 @@ class _VerseCardState extends State<VerseCard> {
                         },
                       ),
                     ),
+
+                    ///tafsir
                     GestureDetector(
                       onTap: () {
                         log("DIalog");
@@ -398,13 +413,15 @@ class _VerseCardState extends State<VerseCard> {
                                           itemBuilder: (context, index) {
                                             final tafsirProvider =
                                                 tafsirProviders[index];
-                                            log(tafsirProvider.author);
                                             return Padding(
                                               padding: const EdgeInsets.all(
                                                 4.0,
                                               ),
                                               child: BlocBuilder<ThemeCubit, ThemeMode>(
                                                 builder: (context, state) {
+                                                  log(
+                                                    "sofiiaaan: ${tafsirProvider.id}",
+                                                  );
                                                   return TafsirProviderTile(
                                                     tafsirProvider:
                                                         tafsirProvider,
@@ -435,9 +452,11 @@ class _VerseCardState extends State<VerseCard> {
                                                               "No Tafsir",
                                                             );
                                                           }
-
                                                           final verseTafsir =
                                                               snapshot.data!;
+                                                          log(
+                                                            "verse tafsir: ${verseTafsir.text}",
+                                                          );
                                                           return Container(
                                                             decoration: BoxDecoration(
                                                               color:

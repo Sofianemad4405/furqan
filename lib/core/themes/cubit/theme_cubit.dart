@@ -35,6 +35,10 @@ class ThemeCubit extends Cubit<ThemeMode> {
     prefs.saveThemeMode(themeMode);
   }
 
+  String getThemeText() {
+    return state == ThemeMode.dark ? "Dark Mode" : "Light Mode";
+  }
+
   IconData getThemeIcon() {
     return state == ThemeMode.dark ? Icons.dark_mode : Icons.light_mode;
   }

@@ -23,8 +23,7 @@ class ListeningToSurah extends StatefulWidget {
   State<ListeningToSurah> createState() => _ListeningToSurahState();
 }
 
-class _ListeningToSurahState extends State<ListeningToSurah>
-    with AutomaticKeepAliveClientMixin {
+class _ListeningToSurahState extends State<ListeningToSurah> {
   //audio player
   final player = AudioPlayer();
 
@@ -184,16 +183,6 @@ class _ListeningToSurahState extends State<ListeningToSurah>
   }
 
   @override
-  bool get wantKeepAlive => false; // Don't keep the state when navigating away
-
-  @override
-  void deactivate() {
-    // This gets called when the widget is removed from the widget tree
-    player.stop();
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
     player.stop();
     player.dispose();
@@ -202,7 +191,6 @@ class _ListeningToSurahState extends State<ListeningToSurah>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Required by AutomaticKeepAliveClientMixin
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

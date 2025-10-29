@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:furqan/core/models/tafsir_provider.dart';
 import 'package:furqan/core/models/verse_tafsir.dart';
@@ -25,6 +27,6 @@ abstract class TafsirClient {
   );
 
   ///http://api.quran-tafseer.com/tafseer/
-  @GET("/tafseer/")
+  @GET("/tafseer")
   Future<List<TafsirProvider>> getTafsirList();
 }

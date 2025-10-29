@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:furqan/features/settings/presentation/widgets/glass_card.dart';
 import 'package:furqan/features/settings/presentation/widgets/section_header.dart';
 import 'package:furqan/features/settings/presentation/widgets/toggle_settings.dart';
+import 'package:iconsax/iconsax.dart';
 
 class NotificationsSection extends StatefulWidget {
   const NotificationsSection({
@@ -36,7 +37,7 @@ class _NotificationsSectionState extends State<NotificationsSection> {
         children: [
           SectionHeader(
             isDark: widget.isDark,
-            icon: Icons.notifications,
+            icon: Iconsax.notification5,
             title: 'Notifications',
           ),
           const SizedBox(height: 16),
