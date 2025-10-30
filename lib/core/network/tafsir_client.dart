@@ -1,24 +1,17 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:furqan/core/models/tafsir_provider.dart';
 import 'package:furqan/core/models/verse_tafsir.dart';
 import 'package:furqan/core/utils/parse_error_logger.dart';
 import 'package:retrofit/http.dart';
-import 'package:furqan/core/utils/constants.dart';
 
 part 'tafsir_client.g.dart';
 
-@RestApi(baseUrl: tafsirBaseUrl)
+@RestApi(baseUrl: 'http://api.quran-tafseer.com')
 abstract class TafsirClient {
-  factory TafsirClient(
-    Dio dio, {
-    String? tafsirBaseUrl,
-    ParseErrorLogger? errorLogger,
-  }) = _TafsirClient;
+  factory TafsirClient(Dio dio, {ParseErrorLogger? errorLogger}) =
+      _TafsirClient;
 
-  ///api.quran-tafseer.com/tafseer/{tafseer_id}/{sura_number}/{ayah_number}
-  ///http://api.quran-tafseer.com/tafseer/1/1/1
+  ///https://quranapi.pages.dev/api/tafseer/{tafseer_id}/{sura_number}/{ayah_number}
   @GET("/tafseer/{tafseerId}/{surahNo}/{ayahNumber}")
   Future<VerseTafsir> getVerseTafsir(
     @Path("tafseerId") int tafseerId,
@@ -26,7 +19,7 @@ abstract class TafsirClient {
     @Path("ayahNumber") int ayahNumber,
   );
 
-  ///http://api.quran-tafseer.com/tafseer/
-  @GET("/tafseer")
+  ///https://quranapi.pages.dev/api/tafseer/
+  @GET("/tafseer") // Remove trailing slash
   Future<List<TafsirProvider>> getTafsirList();
 }

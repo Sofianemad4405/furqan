@@ -1,5 +1,3 @@
-import 'package:furqan/features/home/presentation/models/challenge_model.dart';
-
 const String baseUrl = "https://quranapi.pages.dev/api";
 const String tafsirBaseUrl = "http://api.quran-tafseer.com";
 const String dhikrBaseUrl = "https://ahegazy.github.io/muslimKit/json";
@@ -15,16 +13,28 @@ const String uzbek = "uzbek";
 const List<String> days = ["SU", "M", "T", "W", "TH", "F", "SA"];
 
 ///Main challenges
-List<ChallengeModel> mainChallenges = [
-  ChallengeModel(
-    challengeIcon: "📚",
-    challengeName: "Continue Reading",
-    challengeDesc: "Start your journey",
-  ),
-  ChallengeModel(challengeIcon: "🤲", challengeName: "Duas"),
-  ChallengeModel(challengeIcon: "✨", challengeName: "Dhikr Counter"),
-  ChallengeModel(challengeIcon: "🕌", challengeName: "Prayer Times"),
-];
+// List<MainChallenge> mainChallenges = [
+//   MainChallenge(
+//     challengeIcon: "📚",
+//     challengeName: "Continue Reading",
+//     challengeDesc: "Start your journey",
+//   ),
+//   MainChallenge(
+//     challengeIcon: "🤲",
+//     challengeName: "Duas",
+//     challengeDesc: "Recite your daily duas",
+//   ),
+//   MainChallenge(
+//     challengeIcon: "✨",
+//     challengeName: "Dhikr Counter",
+//     challengeDesc: "Keep track of your dhikr",
+//   ),
+//   MainChallenge(
+//     challengeIcon: "🕌",
+//     challengeName: "Prayer Times",
+//     challengeDesc: '',
+//   ),
+// ];
 
 // List<ChallengeModel> todayChallenges = [
 //   ChallengeModel(

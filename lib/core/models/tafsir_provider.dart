@@ -6,22 +6,26 @@ part 'tafsir_provider.g.dart';
 @JsonSerializable()
 class TafsirProvider {
   final int id;
-  final String name;
-  final String language;
-  final String author;
-  final String bookName;
+  final String? name;
+  final String? author;
+  final String? bookName;
+  final String? language;
 
   TafsirProvider({
     required this.id,
-    required this.name,
-    required this.language,
-    required this.author,
-    required this.bookName,
+    this.name,
+    this.author,
+    this.bookName,
+    this.language,
   });
 
-  factory TafsirProvider.fromJson(Map<String, dynamic> json) =>
-      _$TafsirProviderFromJson(json);
-  Map<String, dynamic> toJson() => _$TafsirProviderToJson(this);
+  factory TafsirProvider.fromJson(Map<String, dynamic> json) {
+    return _$TafsirProviderFromJson(json);
+  }
+
+  Map<String, dynamic> toJson() {
+    return _$TafsirProviderToJson(this);
+  }
 
   TafsirProviderEntity toEntity() {
     return TafsirProviderEntity(

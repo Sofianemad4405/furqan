@@ -62,7 +62,7 @@ class _TafsirProviderTileState extends State<TafsirProviderTile> {
                 ),
                 const SizedBox(width: 16),
                 Text(
-                  widget.tafsirProvider.name,
+                  widget.tafsirProvider.name ?? "Unknown",
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontFamily: "Amiri",
                     color: const Color(0xff00B578),

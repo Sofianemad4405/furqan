@@ -61,30 +61,33 @@ class ReadingDataSourceImpl implements ReadingDataSource {
     int surahNo,
     int ayahNumber,
   ) async {
-    log(
-      "URL => http://api.quran-tafseer.com/tafseer/$tafseerId/$surahNo/$ayahNumber",
-    );
+    final url =
+        "http://api.quran-tafseer.com/tafseer/$tafseerId/$surahNo/$ayahNumber";
+    log("📡 Request URL: $url");
+
     try {
       final response = await _tafsirClient.getVerseTafsir(
         tafseerId,
         surahNo,
         ayahNumber,
       );
-      log("koko ${response.toString()}");
+
+      log("✅ Response received: ${response.toJson()}");
       return response;
-    } catch (e) {
-      log("kokii ${e.toString()}");
-      throw Exception(e.toString());
+    } catch (e, stack) {
+      log("❌ API Error: ${e.toString()}");
+      log("📋 Stack trace: $stack");
+      throw Exception("Failed to fetch tafsir: ${e.toString()}");
     }
   }
 
   @override
   Future<List<TafsirProvider>> getTafsirProviders() async {
     try {
-      log("🔄 ReadingDataSource: Making API call to get tafsir list...");
-      log(
-        "🔄 ReadingDataSource: API URL: http://api.quran-tafseer.com/tafseer/",
-      );
+      // log("🔄 ReadingDataSource: Making API call to get tafsir list...");
+      // log(
+      //   "🔄 ReadingDataSource: API URL: http://api.quran-tafseer.com/tafseer/",
+      // );
 
       final response = await _tafsirClient.getTafsirList();
 

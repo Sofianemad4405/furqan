@@ -19,18 +19,19 @@ class UserProgressService {
         .maybeSingle();
 
     if (result == null) {
+      final currentMonth =
+          '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}';
+
       final defaultProgress = {
         'user_id': userId,
+        'month': currentMonth,
         'total_hassanat': 0,
-        'surahs_read': 0,
-        'minutes_of_reading_quraan': 0,
-        'current_streak': 0,
-        'longest_streak': 0,
-        'daily_challenges_completed': 0,
-        'duaas_recited': 0,
-        'zikr_count': 0,
-        'achievements_unlocked_ids': [],
-        'today_challenges': [],
+        'surahs_read': [],
+        'liked_ayahs': {},
+        'daily_streak': 0,
+        'best_streak': 0,
+        'achievements_unlocked': <int>[],
+        'weekly_hassanat': {},
       };
 
       final inserted = await supabase

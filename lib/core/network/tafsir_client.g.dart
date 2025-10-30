@@ -9,14 +9,12 @@ part of 'tafsir_client.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
 class _TafsirClient implements TafsirClient {
-  _TafsirClient(this._dio, {this.tafsirBaseUrl, this.errorLogger}) {
-    tafsirBaseUrl ??= 'http://api.quran-tafseer.com';
+  _TafsirClient(this._dio, {this.errorLogger}) {
+    baseUrl = 'http://api.quran-tafseer.com';
   }
 
   final Dio _dio;
-
-  String? tafsirBaseUrl;
-
+  late final String baseUrl;
   final ParseErrorLogger? errorLogger;
 
   @override
@@ -60,7 +58,7 @@ class _TafsirClient implements TafsirClient {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/tafseer/',
+            '/tafseer',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -74,9 +72,7 @@ class _TafsirClient implements TafsirClient {
             (dynamic i) => TafsirProvider.fromJson(i as Map<String, dynamic>),
           )
           .toList();
-      log("valueeee $_value");
     } on Object catch (e, s) {
-      log("kkkkkkkkkkkkkkkkkkkkkkkkkkk");
       errorLogger?.logError(e, s, _options);
       rethrow;
     }

@@ -114,8 +114,17 @@ class _HomeScreenState extends State<HomeScreen>
           );
         } else if (state is UserProgressLoading) {
           return const HomeShimmer();
+        } else if (state is UserProgressError) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              context.read<UserProgressCubit>().init();
+            },
+            child: SingleChildScrollView(
+              child: Center(child: Text(state.message)),
+            ),
+          );
         } else {
-          return const Center(child: Text("Error"));
+          return const SizedBox();
         }
       },
     );

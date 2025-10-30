@@ -42,10 +42,16 @@ class _TodayChallengesState extends State<TodayChallenges> {
                       completedChallenges:
                           state.userProgress.dailyChallengesCompleted,
                     ),
-                    const Gap(40),
+                    const Gap(20),
+                    const Divider(),
+                    const Gap(20),
 
                     //streak and completed
-                    const Streak(),
+                    Streak(
+                      currentStreak: state.userProgress.currentStreak,
+                      challengesCompleted:
+                          state.userProgress.dailyChallengesCompleted,
+                    ),
                     const Gap(20),
                     //today's challenges
                     Row(
@@ -64,7 +70,7 @@ class _TodayChallengesState extends State<TodayChallenges> {
                     ),
                     const Gap(20),
 
-                    ///Read 5 Ayahs
+                    ///Complete Surah
                     Challeange(
                       challengeTitle:
                           state.userProgress.todayChallenges[0].title,
@@ -83,7 +89,7 @@ class _TodayChallengesState extends State<TodayChallenges> {
                     ),
                     const Gap(20),
 
-                    ///Complete Surah
+                    ///Dhikr Session
                     Challeange(
                       challengeTitle:
                           state.userProgress.todayChallenges[1].title,

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
-
-import 'package:furqan/features/stats/data/models/ahievement.dart';
+import 'package:furqan/features/stats/data/models/achievement.dart';
 import 'package:furqan/features/stats/data/models/weekly_progress.dart';
 import 'package:furqan/features/stats/presentation/widgets/achievements_grid.dart';
 import 'package:furqan/features/stats/presentation/widgets/additional_stats.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
-import 'package:furqan/features/stats/data/models/ahievement.dart';
+import 'package:furqan/features/stats/data/models/achievement.dart';
 import 'package:furqan/features/stats/presentation/widgets/achievement_card.dart';
 
 class AchievementsGrid extends StatelessWidget {

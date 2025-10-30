@@ -1,9 +1,9 @@
 class TafsirProviderEntity {
   final int id;
-  final String name;
-  final String language;
-  final String author;
-  final String bookName;
+  final String? name;
+  final String? language;
+  final String? author;
+  final String? bookName;
 
   TafsirProviderEntity({
     required this.id,

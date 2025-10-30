@@ -1,0 +1,82 @@
+{
+  "code-runner.runInTerminal": true,
+  "debug.onTaskErrors": "debugAnyway",
+  "editor.fontFamily": "JetBrains Mono",
+  "editor.fontLigatures": true,
+  "terminal.integrated.enableMultiLinePasteWarning": false,
+  "editor.fontSize": 18,
+  "workbench.productIconTheme": "material-product-icons",
+  "editor.formatOnSave": true,
+  "explorer.confirmDragAndDrop": false,
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off",
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+  "chronicler.ffmpeg-binary": "d:\\/ffmpeg.exe",
+  "explorer.confirmDelete": false,
+  "cmake.configureOnOpen": true,
+  "cmake.showOptionsMovedNotification": false,
+  "workbench.editor.enablePreview": false,
+  "cph.general.defaultLanguageTemplateFileLocation": "D:/problem_solving/template.cpp",
+  "emmet.extensionsPath": [
+    "D:\\problem_sets\\lvl1\\template.cpp",
+    "D:/problem_sets/lvl1/template.cpp"
+  ],
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "workbench.editorAssociations": {
+    "*.exe": "default"
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false,
+    "dart": true,
+    "cpp": false
+  },
+  "cmake.pinnedCommands": [
+    "workbench.action.tasks.configureTaskRunner",
+    "workbench.action.tasks.runTask"
+  ],
+  "glassit.alpha": 240,
+  "glassit.step": 10,
+  "redhat.telemetry.enabled": true,
+  "cph.general.defaultLanguage": "cpp",
+  "editor.defaultFormatter": "Dart-Code.flutter",
+  "git.autofetch": true,
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "workbench.iconTheme": "material-icon-theme",
+  "dart.previewCommitCharacters": true,
+  "editor.autoClosingBrackets": "always",
+  "editor.autoClosingComments": "always",
+  "dart.enableCompletionCommitCharacters": true,
+  "editor.inlineSuggest.suppressSuggestions": true,
+  "editor.suggest.snippetsPreventQuickSuggestions": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "workbench.colorTheme": "Night Owl",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "dart.previewLsp": true,
+  "dart.openDevTools": "flutter",
+  "dart.debugExternalPackageLibraries": true,
+  "dart.debugSdkLibraries": false,
+  "dart.showInspectorNotificationsForWidgetErrors": true
+}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -32,7 +31,7 @@ class Challeange extends StatefulWidget {
 class _ChalleangeState extends State<Challeange> {
   @override
   Widget build(BuildContext context) {
-    return CustomContainer(
+    return Container(
       decoration: widget.isCompleted
           ? BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(12)),
@@ -44,7 +43,10 @@ class _ChalleangeState extends State<Challeange> {
               border: Border.all(color: const Color(0xFF00A83F)),
               color: const Color(0xFF00A83F).withValues(alpha: 0.1),
             )
-          : null,
+          : BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              color: Theme.of(context).cardColor,
+            ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -91,6 +93,31 @@ class _ChalleangeState extends State<Challeange> {
                             const Icon(
                               Iconsax.tick_circle,
                               color: Color(0xFF00A83F),
+                            ),
+                          if (widget.isCompleted) const Gap(5),
+                          if (widget.isCompleted)
+                            Container(
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFF00B578,
+                                ).withValues(alpha: 0.1),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
+                                  vertical: 2,
+                                ),
+                                child: Text(
+                                  "Completed",
+                                  style: Theme.of(context).textTheme.labelLarge
+                                      ?.copyWith(
+                                        color: const Color(0xFF00A83F),
+                                      ),
+                                ),
+                              ),
                             ),
                         ],
                       ),

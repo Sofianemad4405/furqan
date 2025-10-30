@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' as logger;
 import 'dart:math';
+
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,6 +115,10 @@ class _ReadingSurahState extends State<ReadingSurah> {
   void _onSurahCompleted() {
     setState(() {
       _confettiController.play();
+    });
+    //update user data
+    context.read<UserProgressCubit>().updateUserData({
+      'surahs_completed': surahsRead + 1,
     });
   }
 

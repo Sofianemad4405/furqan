@@ -23,11 +23,12 @@ class Header extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    InkWell(
-                      onTap: () {
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Icon(
+                      icon: Icon(
                         Icons.arrow_back,
                         color: Theme.of(context).iconTheme.color,
                       ),

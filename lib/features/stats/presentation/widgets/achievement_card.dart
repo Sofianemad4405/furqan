@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
-import 'package:furqan/features/stats/data/models/ahievement.dart';
+import 'package:furqan/features/stats/data/models/achievement.dart';
 import 'package:iconsax/iconsax.dart';
 
 class AchievementCard extends StatelessWidget {

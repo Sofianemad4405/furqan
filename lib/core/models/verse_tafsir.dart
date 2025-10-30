@@ -3,12 +3,21 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'verse_tafsir.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: true)
 class VerseTafsir {
+  @JsonKey(name: 'tafseer_id', fromJson: _convertToInt)
   final int tafseerId;
+
+  @JsonKey(name: 'tafseer_name', defaultValue: '')
   final String tafseerName;
+
+  @JsonKey(name: 'ayah_url', defaultValue: '')
   final String ayahUrl;
+
+  @JsonKey(name: 'ayah_number', fromJson: _convertToInt)
   final int ayahNumber;
+
+  @JsonKey(defaultValue: '')
   final String text;
 
   VerseTafsir({
@@ -18,6 +27,15 @@ class VerseTafsir {
     required this.ayahNumber,
     required this.text,
   });
+
+  // Helper method to safely convert dynamic to int
+  static int _convertToInt(dynamic value) {
+    if (value == null) return 0;
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value) ?? 0;
+    if (value is double) return value.toInt();
+    return 0;
+  }
 
   factory VerseTafsir.fromJson(Map<String, dynamic> json) =>
       _$VerseTafsirFromJson(json);

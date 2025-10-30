@@ -6,6 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/services/prefs.dart';
+import 'package:furqan/features/stats/data/models/achievement.dart';
+import 'package:furqan/features/user_data/models/daily_challenge_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -62,6 +64,113 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> addDefaultChallengesAndAchievements() async {
+    final supabase = sl<SupabaseClient>();
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) return;
+    final existing = await supabase
+        .from('daily_challenges')
+        .select('id')
+        .eq('user_id', userId);
+
+    if (existing.isNotEmpty) return;
+
+    final challenges = [
+      DailyChallengeModel(
+        userId: userId,
+        title: 'Complete 3 Surahs',
+        icon: "📖",
+        description: "Read any 3 Surahs today",
+        target: 3,
+        completed: 0,
+        createdAt: DateTime.now().toIso8601String(),
+      ),
+      DailyChallengeModel(
+        userId: userId,
+        title: 'Morning Duas',
+        icon: "🤲",
+        description: "Recite 5 morning duas",
+        target: 5,
+        completed: 0,
+        createdAt: DateTime.now().toIso8601String(),
+      ),
+      DailyChallengeModel(
+        userId: userId,
+        title: 'Evening Duas',
+        icon: "🌙",
+        description: "Recite 5 evening duas",
+        target: 5,
+        completed: 0,
+        createdAt: DateTime.now().toIso8601String(),
+      ),
+    ];
+    final achievements = [
+      Achievement(
+        title: 'First Steps',
+        description: 'Read your first Ayah',
+        icon: '🌟',
+        unlocked: false,
+        id: 1,
+      ),
+      Achievement(
+        title: 'Consistent Reader',
+        description: '7 day reading streak',
+        icon: '🔥',
+        unlocked: false,
+        id: 2,
+      ),
+      Achievement(
+        title: 'Surah Master',
+        description: 'Complete 10 Surahs',
+        icon: '📚',
+        unlocked: false,
+        id: 3,
+      ),
+      Achievement(
+        title: 'Night Reader',
+        description: 'Read after Isha prayer',
+        icon: '🌙',
+        unlocked: false,
+        id: 4,
+      ),
+      Achievement(
+        title: 'Challenge Champion',
+        description: 'Complete 50 challenges',
+        icon: '🏆',
+        unlocked: false,
+        id: 5,
+      ),
+      Achievement(
+        title: 'Duas Master',
+        description: 'Recite 100 Duas',
+        icon: '🤲',
+        unlocked: false,
+        id: 6,
+      ),
+      Achievement(
+        title: 'Dhikr Champion',
+        description: 'Complete 1000 Dhikr',
+        icon: '✨',
+        unlocked: false,
+        id: 7,
+      ),
+      Achievement(
+        title: 'Devoted Reader',
+        description: '30 day streak',
+        icon: '💎',
+        unlocked: false,
+        id: 8,
+      ),
+    ];
+    await supabase
+        .from('daily_challenges')
+        .insert(challenges.map((c) => c.toJson()).toList());
+    await supabase
+        .from('achievements')
+        .insert(achievements.map((a) => a.toJson()).toList());
+    log('Default challenges and achievements added for user $userId');
+  }
+
   Future<void> signInWithFacebook() async {
     await supabase.auth.signInWithOAuth(
       OAuthProvider.facebook,
@@ -75,13 +184,10 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> signInWithGithub() async {
     await supabase.auth.signInWithOAuth(
       OAuthProvider.github,
-      redirectTo: kIsWeb
-          ? null
-          : 'my.scheme://my-host', // Optionally set the redirect link to bring back the user via deeplink.
+      redirectTo: kIsWeb ? null : 'my.scheme://my-host',
       authScreenLaunchMode: kIsWeb
           ? LaunchMode.platformDefault
-          : LaunchMode
-                .externalApplication, // Launch the auth screen in a new webview on mobile.
+          : LaunchMode.externalApplication,
     );
   }
 
@@ -99,6 +205,10 @@ class AuthCubit extends Cubit<AuthState> {
         emailRedirectTo: "io.supabase.flutter://login-callback",
       );
       log(res.user.toString());
+      final user = res.user;
+      if (user != null) {
+        await addDefaultChallengesAndAchievements();
+      }
       emit(SignUpSuccess(authResponse: res));
     } on AuthApiException catch (e) {
       log(e.toString());

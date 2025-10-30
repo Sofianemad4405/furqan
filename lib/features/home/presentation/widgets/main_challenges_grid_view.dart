@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
-import 'package:furqan/core/utils/constants.dart';
+import 'package:furqan/features/home/presentation/models/main_challenges.dart';
 import 'package:furqan/features/home/presentation/screens/adhkar/azkar_screen.dart';
 import 'package:furqan/features/home/presentation/screens/prayer_times/presentation/screens/prayer_times_screen.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:get/get.dart';
 
 class MainChallengesGridView extends StatelessWidget {
-  const MainChallengesGridView({super.key});
+  const MainChallengesGridView({super.key, required this.mainChallenges});
+  final List<MainChallenge> mainChallenges;
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +51,7 @@ class MainChallengesGridView extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       Text(
-                        mainChallenges[index].challengeDesc ??
-                            "Start your journey",
+                        mainChallenges[index].challengeDesc ,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
