@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/stats/data/models/achievement.dart';
+import 'package:furqan/features/stats/data/models/user_achievement.dart';
 import 'package:furqan/features/stats/presentation/widgets/achievement_card.dart';
 
 class AchievementsGrid extends StatelessWidget {
@@ -8,9 +9,11 @@ class AchievementsGrid extends StatelessWidget {
     super.key,
     required this.isDark,
     required this.achievements,
+    required this.userAchievements,
   });
   final bool isDark;
   final List<Achievement> achievements;
+  final List<UserAchievement> userAchievements;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +55,7 @@ class AchievementsGrid extends StatelessWidget {
                 return AchievementCard(
                   achievement: achievement,
                   isDark: isDark,
+                  userAchievement: userAchievements[index],
                 );
               },
             ),

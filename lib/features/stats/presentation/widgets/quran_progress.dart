@@ -66,8 +66,10 @@ class QuranProgress extends StatelessWidget {
             const SizedBox(height: 16),
             ProgressRow(
               label: 'Daily Challenges',
-              value: userProgress.dailyChallengesCompleted.toString(),
-              progress: userProgress.dailyChallengesCompleted / 100,
+              value: userProgress.todayChallenges.entries.length.toString(),
+              progress:
+                  userProgress.todayChallenges.values.fold(0, (a, b) => a + b) /
+                  100,
               isDark: isDark,
             ),
           ],

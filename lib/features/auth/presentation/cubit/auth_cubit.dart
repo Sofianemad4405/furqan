@@ -6,8 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/services/prefs.dart';
-import 'package:furqan/features/stats/data/models/achievement.dart';
-import 'package:furqan/features/user_data/models/daily_challenge_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -23,44 +21,76 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       emit(GoogleAuthLoading());
 
-      const webClientId =
-          '885310355539-7vksih53bkloogp9mb3ra6vst8jjnsah.apps.googleusercontent.com';
+      final googleSignIn = kIsWeb
+          ? GoogleSignIn(
+              clientId: const String.fromEnvironment('GOOGLE_WEB_CLIENT_ID'),
+            )
+          : GoogleSignIn(
+              // Android client ID from Google Cloud Console
+              serverClientId: const String.fromEnvironment(
+                'GOOGLE_ANDROID_CLIENT_ID',
+              ),
+            );
 
-      final googleSignIn = GoogleSignIn(serverClientId: webClientId);
-      final googleUser = await googleSignIn.signIn();
+      log('Starting Google Sign In...');
+      final googleUser = await googleSignIn.signIn().catchError((error) {
+        log('Google Sign In Error: $error');
+        throw Exception('Failed to start Google Sign In: $error');
+      });
+
       if (googleUser == null) {
-        emit(const GoogleAuthError("Sign in cancelled"));
+        log('Google Sign In cancelled by user');
+        emit(const GoogleAuthError("Sign in cancelled by user"));
         return;
       }
 
-      final googleAuth = await googleUser.authentication;
+      log('Getting Google Auth tokens...');
+      final googleAuth = await googleUser.authentication.catchError((error) {
+        log('Google Auth Error: $error');
+        throw Exception('Failed to get Google authentication: $error');
+      });
+
       final accessToken = googleAuth.accessToken;
       final idToken = googleAuth.idToken;
 
-      if (accessToken == null || idToken == null) {
-        emit(const GoogleAuthError("Missing token"));
+      if (accessToken == null) {
+        log('Missing access token');
+        emit(const GoogleAuthError("Missing access token"));
         return;
       }
 
-      final authResponse = await supabase.auth.signInWithIdToken(
-        provider: OAuthProvider.google,
-        idToken: idToken,
-        accessToken: accessToken,
-      );
+      log('Signing in to Supabase with Google token...');
+      final authResponse = await supabase.auth
+          .signInWithIdToken(
+            provider: OAuthProvider.google,
+            idToken: idToken!,
+            accessToken: accessToken,
+          )
+          .catchError((error) {
+            log('Supabase Auth Error: $error');
+            throw Exception('Failed to sign in to Supabase: $error');
+          });
+
       final user = authResponse.user;
       if (user != null) {
+        log('Successfully signed in user: ${user.email}');
         await prefs.saveUser(
           name: user.userMetadata?['name'] ?? '',
           email: user.email ?? '',
           photo: user.userMetadata?['picture'] ?? '',
           userId: user.id,
         );
-        log("message");
+        await addDefaultChallengesAndAchievements();
       }
+
       emit(GoogleAuthSuccess(authResponse: authResponse));
-    } catch (e) {
-      log(e.toString());
-      emit(GoogleAuthError(e.toString()));
+    } catch (e, stackTrace) {
+      log('Google Sign In Failed', error: e, stackTrace: stackTrace);
+      emit(
+        GoogleAuthError(
+          'Sign in failed: ${e.toString().replaceAll('Exception:', '')}',
+        ),
+      );
     }
   }
 
@@ -68,107 +98,114 @@ class AuthCubit extends Cubit<AuthState> {
     final supabase = sl<SupabaseClient>();
     final userId = supabase.auth.currentUser?.id;
     if (userId == null) return;
-    final existing = await supabase
+
+    final challenges = [
+      {
+        'title': 'Complete 3 Surahs',
+        'icon': '📖',
+        'description': 'Read any 3 Surahs today',
+        'target': 3,
+      },
+      {
+        'title': 'Morning Duas',
+        'icon': '🤲',
+        'description': 'Recite 5 morning duas',
+        'target': 5,
+      },
+      {
+        'title': 'Evening Duas',
+        'icon': '🌙',
+        'description': 'Recite 5 evening duas',
+        'target': 5,
+      },
+    ];
+
+    final existingChallenges = await supabase
         .from('daily_challenges')
+        .select('id');
+    if (existingChallenges.isEmpty) {
+      await supabase.from('daily_challenges').insert(challenges);
+    }
+
+    final achievements = [
+      {
+        'title': 'First Steps',
+        'description': 'Read your first Ayah',
+        'icon': '🌟',
+      },
+      {
+        'title': 'Consistent Reader',
+        'description': '7 day reading streak',
+        'icon': '🔥',
+      },
+      {
+        'title': 'Surah Master',
+        'description': 'Complete 10 Surahs',
+        'icon': '📚',
+      },
+      {
+        'title': 'Night Reader',
+        'description': 'Read after Isha prayer',
+        'icon': '🌙',
+      },
+      {
+        'title': 'Challenge Champion',
+        'description': 'Complete 50 challenges',
+        'icon': '🏆',
+      },
+      {'title': 'Duas Master', 'description': 'Recite 100 Duas', 'icon': '🤲'},
+      {
+        'title': 'Dhikr Champion',
+        'description': 'Complete 1000 Dhikr',
+        'icon': '✨',
+      },
+      {'title': 'Devoted Reader', 'description': '30 day streak', 'icon': '💎'},
+    ];
+
+    final existingAchievements = await supabase
+        .from('achievements')
+        .select('id');
+    if (existingAchievements.isEmpty) {
+      await supabase.from('achievements').insert(achievements);
+    }
+
+    final userChallenges = await supabase
+        .from('user_daily_challenges')
         .select('id')
         .eq('user_id', userId);
 
-    if (existing.isNotEmpty) return;
+    if (userChallenges.isEmpty) {
+      final allChallenges = await supabase
+          .from('daily_challenges')
+          .select('id');
+      final userChallengeLinks = allChallenges
+          .map(
+            (c) => {'user_id': userId, 'challenge_id': c['id'], 'completed': 0},
+          )
+          .toList();
+      await supabase.from('user_daily_progress').insert(userChallengeLinks);
+    }
 
-    final challenges = [
-      DailyChallengeModel(
-        userId: userId,
-        title: 'Complete 3 Surahs',
-        icon: "📖",
-        description: "Read any 3 Surahs today",
-        target: 3,
-        completed: 0,
-        createdAt: DateTime.now().toIso8601String(),
-      ),
-      DailyChallengeModel(
-        userId: userId,
-        title: 'Morning Duas',
-        icon: "🤲",
-        description: "Recite 5 morning duas",
-        target: 5,
-        completed: 0,
-        createdAt: DateTime.now().toIso8601String(),
-      ),
-      DailyChallengeModel(
-        userId: userId,
-        title: 'Evening Duas',
-        icon: "🌙",
-        description: "Recite 5 evening duas",
-        target: 5,
-        completed: 0,
-        createdAt: DateTime.now().toIso8601String(),
-      ),
-    ];
-    final achievements = [
-      Achievement(
-        title: 'First Steps',
-        description: 'Read your first Ayah',
-        icon: '🌟',
-        unlocked: false,
-        id: 1,
-      ),
-      Achievement(
-        title: 'Consistent Reader',
-        description: '7 day reading streak',
-        icon: '🔥',
-        unlocked: false,
-        id: 2,
-      ),
-      Achievement(
-        title: 'Surah Master',
-        description: 'Complete 10 Surahs',
-        icon: '📚',
-        unlocked: false,
-        id: 3,
-      ),
-      Achievement(
-        title: 'Night Reader',
-        description: 'Read after Isha prayer',
-        icon: '🌙',
-        unlocked: false,
-        id: 4,
-      ),
-      Achievement(
-        title: 'Challenge Champion',
-        description: 'Complete 50 challenges',
-        icon: '🏆',
-        unlocked: false,
-        id: 5,
-      ),
-      Achievement(
-        title: 'Duas Master',
-        description: 'Recite 100 Duas',
-        icon: '🤲',
-        unlocked: false,
-        id: 6,
-      ),
-      Achievement(
-        title: 'Dhikr Champion',
-        description: 'Complete 1000 Dhikr',
-        icon: '✨',
-        unlocked: false,
-        id: 7,
-      ),
-      Achievement(
-        title: 'Devoted Reader',
-        description: '30 day streak',
-        icon: '💎',
-        unlocked: false,
-        id: 8,
-      ),
-    ];
-    await supabase
-        .from('daily_challenges')
-        .insert(challenges.map((c) => c.toJson()).toList());
-    await supabase
-        .from('achievements')
-        .insert(achievements.map((a) => a.toJson()).toList());
-    log('Default challenges and achievements added for user $userId');
+    final userAchievements = await supabase
+        .from('user_achievements')
+        .select('id')
+        .eq('user_id', userId);
+
+    if (userAchievements.isEmpty) {
+      final allAchievements = await supabase.from('achievements').select('id');
+      final userAchievementLinks = allAchievements
+          .map(
+            (a) => {
+              'user_id': userId,
+              'achievement_id': a['id'],
+              'unlocked': false,
+            },
+          )
+          .toList();
+      await supabase.from('user_achievements').insert(userAchievementLinks);
+    }
+
+    log('Default challenges and achievements linked to user $userId');
   }
 
   Future<void> signInWithFacebook() async {

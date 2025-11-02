@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/core/themes/theme_system.dart';
 import 'package:furqan/core/widgets/custom_nav_bar.dart';
 import 'package:furqan/features/chat/presentation/screens/chat_screen.dart';
+import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/home_screen.dart';
 import 'package:furqan/features/home/presentation/widgets/app_bar.dart';
 import 'package:furqan/features/reading/presentation/screens/reading_page.dart';
@@ -15,9 +15,6 @@ import 'package:furqan/features/search/presentation/screens/search_page.dart';
 import 'package:furqan/features/settings/presentation/screens/settings_screen.dart';
 import 'package:furqan/features/stats/presentation/screens/stats_page.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
-import 'package:furqan/features/user_data/services/user_progress_service.dart';
-import 'package:get/get.dart' as getx;
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -55,16 +52,13 @@ class _RootPageState extends State<RootPage> {
   }
 
   Future<void> _loadUserProgress() async {
-    final user = Supabase.instance.client.auth.currentUser;
-    final progressService = sl<UserProgressService>();
+    final userCubit = sl<UserProgressCubit>();
 
-    final progress = await progressService.getUserProgress(user!.id);
+    final progress = await userCubit.getUserProgress();
 
     setState(() {
       userProgress = progress;
     });
-
-    log(user.id.toString());
   }
 
   @override

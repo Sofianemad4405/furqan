@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:furqan/app/furqan.dart';
 import 'package:furqan/core/di/get_it_service.dart';
 import 'package:furqan/core/services/prefs.dart';
@@ -15,10 +16,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   init();
   await setupLocator();
+  await dotenv.load();
   await Supabase.initialize(
-    url: 'https://cnuahoupcouqorghsemr.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNudWFob3VwY291cW9yZ2hzZW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk3ODUwNzQsImV4cCI6MjA3NTM2MTA3NH0.q02YLI-m4DmhCwpV8mO1OWUPDgKGepbpW5Z87E_wokc',
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
   final prefs = sl<Prefs>();
   final supabase = sl<SupabaseClient>();

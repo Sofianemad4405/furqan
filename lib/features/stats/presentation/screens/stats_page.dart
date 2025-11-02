@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
 import 'package:furqan/features/stats/data/models/achievement.dart';
+import 'package:furqan/features/stats/data/models/user_achievement.dart';
 import 'package:furqan/features/stats/data/models/weekly_progress.dart';
 import 'package:furqan/features/stats/presentation/widgets/achievements_grid.dart';
 import 'package:furqan/features/stats/presentation/widgets/additional_stats.dart';
@@ -38,6 +39,7 @@ class _StatsScreenState extends State<StatsScreen>
   ];
 
   late List<Achievement> achievements;
+  late List<UserAchievement> userAchievements;
 
   @override
   void initState() {
@@ -66,59 +68,10 @@ class _StatsScreenState extends State<StatsScreen>
     _controller.forward();
   }
 
-  void _loadUserProgress() async {
-    userProgress = await context.read<UserProgressCubit>().getUserProgress();
-    achievements = [
-      Achievement(
-        title: "First Steps",
-        description: "Read your first Ayah",
-        icon: "🌟",
-        unlocked: true,
-      ),
-      Achievement(
-        title: "Consistent Reader",
-        description: "7 day reading streak",
-        icon: "🔥",
-        unlocked: userProgress.currentStreak >= 7,
-      ),
-      Achievement(
-        title: "Surah Master",
-        description: "Complete 10 Surahs",
-        icon: "📚",
-        unlocked: userProgress.surahsRead >= 10,
-      ),
-      Achievement(
-        title: "Night Reader",
-        description: "Read after Isha prayer",
-        icon: "🌙",
-        unlocked: userProgress.minutesOfReadingQuraan > 100,
-      ),
-      Achievement(
-        title: "Challenge Champion",
-        description: "Complete 50 challenges",
-        icon: "🏆",
-        unlocked: userProgress.dailyChallengesCompleted >= 50,
-      ),
-      Achievement(
-        title: "Duas Master",
-        description: "Recite 100 Duas",
-        icon: "🤲",
-        unlocked: userProgress.duaasRecited >= 100,
-      ),
-      Achievement(
-        title: "Dhikr Champion",
-        description: "Complete 1000 Dhikr",
-        icon: "✨",
-        unlocked: userProgress.zikrCount >= 1000,
-      ),
-      Achievement(
-        title: "Devoted Reader",
-        description: "30 day streak",
-        icon: "💎",
-        unlocked: userProgress.longestStreak >= 30,
-      ),
-    ];
-    setState(() {});
+  void _loadUserProgress() {
+    if (context.read<UserProgressCubit>().state is! UserProgressLoaded) {
+      context.read<UserProgressCubit>().loadUserProgress();
+    }
   }
 
   @override
@@ -167,7 +120,11 @@ class _StatsScreenState extends State<StatsScreen>
             // Achievements
             _buildAnimatedWidget(
               _cardAnimations[4],
-              AchievementsGrid(isDark: isDark, achievements: achievements),
+              AchievementsGrid(
+                isDark: isDark,
+                achievements: achievements,
+                userAchievements: userAchievements,
+              ),
             ),
             const Gap(32),
 

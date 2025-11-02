@@ -1,0 +1,9 @@
+android {
+    defaultConfig {
+        applicationId "com.example.furqan"
+        // ...existing config...
+        manifestPlaceholders += [
+            'GOOGLE_ANDROID_CLIENT_ID': '885310355539-your-android-client-id.apps.googleusercontent.com'
+        ]
+    }
+}

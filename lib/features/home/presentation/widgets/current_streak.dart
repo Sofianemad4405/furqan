@@ -39,7 +39,7 @@ class CurrentStreak extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  "Best: ${userProgress.longestStreak} days",
+                  "Best: ${userProgress.bestStreak} days",
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(color: Colors.white),

@@ -78,5 +78,6 @@
   "dart.openDevTools": "flutter",
   "dart.debugExternalPackageLibraries": true,
   "dart.debugSdkLibraries": false,
-  "dart.showInspectorNotificationsForWidgetErrors": true
+  "dart.showInspectorNotificationsForWidgetErrors": true,
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

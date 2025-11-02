@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:furqan/core/widgets/shimmers/shimmer_container.dart';
-import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
-import 'package:furqan/features/home/presentation/widgets/current_streak.dart';
 import 'package:furqan/core/widgets/shimmers/current_streak_shimmer.dart';
-import 'package:furqan/features/home/presentation/widgets/home_header.dart';
-import 'package:furqan/features/home/presentation/widgets/home_stats.dart';
 import 'package:furqan/core/widgets/shimmers/home_stats_shimmer.dart';
 import 'package:furqan/core/widgets/shimmers/main_challenges_grid_shimmer.dart';
+import 'package:furqan/core/widgets/shimmers/shimmer_container.dart';
+import 'package:furqan/core/widgets/shimmers/today_challenges_shimmer.dart';
+import 'package:furqan/features/home/presentation/cubit/user_progress_cubit.dart';
+import 'package:furqan/features/home/presentation/models/main_challenges.dart';
+import 'package:furqan/features/home/presentation/widgets/current_streak.dart';
+import 'package:furqan/features/home/presentation/widgets/home_header.dart';
+import 'package:furqan/features/home/presentation/widgets/home_stats.dart';
 import 'package:furqan/features/home/presentation/widgets/main_challenges_grid_view.dart';
 import 'package:furqan/features/home/presentation/widgets/today.dart';
 import 'package:furqan/features/home/presentation/widgets/today_challenges_list_view.dart';
-import 'package:furqan/core/widgets/shimmers/today_challenges_shimmer.dart';
 import 'package:gap/gap.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -94,7 +95,11 @@ class _HomeScreenState extends State<HomeScreen>
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const Gap(10),
-                          TodayChallengesList(userProgress: state.userProgress),
+                          TodayChallengesList(
+                            userProgress: state.userProgress,
+                            dailyChallenges: state.todayChallenges,
+                            userDailyChallenge: state.userDailyChallenges,
+                          ),
                           const Gap(20),
 
                           ///Current Streak
@@ -102,7 +107,38 @@ class _HomeScreenState extends State<HomeScreen>
                           const Gap(20),
 
                           ///Main Challenges Grid View
-                          const MainChallengesGridView(),
+                          MainChallengesGridView(
+                            mainChallenges: [
+                              MainChallenge(
+                                challengeName: "Continue Reading",
+                                challengeDesc: "Start your journey",
+                                challengeIcon: "📚",
+                              ),
+
+                              MainChallenge(
+                                challengeIcon: '🤲',
+                                challengeName: 'Duas',
+                                challengeDesc:
+                                    '${state.userProgress.duasRecited} recited today',
+                              ),
+                              //                               ✨
+                              // Adhkar
+                              // Daily remembrance
+                              MainChallenge(
+                                challengeIcon: '✨',
+                                challengeName: 'Adhkar',
+                                challengeDesc: 'Daily remembrance',
+                              ),
+                              //                               🕌
+                              // Prayer Times
+                              // Next: Asr in 1h 38m
+                              MainChallenge(
+                                challengeIcon: '🕌',
+                                challengeName: 'Prayer Times',
+                                challengeDesc: 'Next: Asr in 1h 38m',
+                              ),
+                            ],
+                          ),
                           const Gap(120),
                         ],
                       ),

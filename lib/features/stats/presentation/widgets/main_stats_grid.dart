@@ -42,7 +42,7 @@ class MainStatsGrid extends StatelessWidget {
         ),
         StatsCard(
           icon: '⏰',
-          value: formatTime(userProgress.minutesOfReadingQuraan),
+          value: formatTime(userProgress.readingMinutes),
           label: 'Total Time',
           gradientColors: isDark
               ? [const Color(0xFF1E3A8A), const Color(0xFF3730A3)]

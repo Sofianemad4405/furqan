@@ -8,8 +8,7 @@ class UserProgress {
   int ayahsRead;
   int currentStreak;
   int bestStreak;
-  List<int> todayChallenges;
-  List<int> achievementsUnlocked;
+  Map<String, int> todayChallenges;
   List<int> surahsReadIds;
   Map<String, dynamic> likedAyahs;
   Map<String, int> weeklyHassanat;
@@ -22,10 +21,9 @@ class UserProgress {
     this.surahsRead = 0,
     this.readingMinutes = 0,
     this.likedAyahs = const {},
-    this.todayChallenges = const [],
+    this.todayChallenges = const {},
     this.currentStreak = 0,
     this.bestStreak = 0,
-    this.achievementsUnlocked = const [],
     this.weeklyHassanat = const {},
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -43,10 +41,9 @@ class UserProgress {
       surahsRead: json['surahs_read'] as int,
       readingMinutes: json['reading_minutes'] as int,
       likedAyahs: Map<String, dynamic>.from(json['liked_ayahs'] ?? {}),
-      todayChallenges: List<int>.from(json['today_challenges'] ?? []),
+      todayChallenges: Map<String, int>.from(json['today_challenges'] ?? {}),
       currentStreak: json['current_streak'] as int,
       bestStreak: json['best_streak'] as int,
-      achievementsUnlocked: List<int>.from(json['achievements_unlocked'] ?? []),
       weeklyHassanat: Map<String, int>.from(json['weekly_hassanat'] ?? {}),
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
@@ -67,7 +64,6 @@ class UserProgress {
       'today_challenges': todayChallenges,
       'current_streak': currentStreak,
       'best_streak': bestStreak,
-      'achievements_unlocked': achievementsUnlocked,
       'weekly_hassanat': weeklyHassanat,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
@@ -76,5 +72,42 @@ class UserProgress {
       'surahs_read_ids': surahsReadIds,
       'ayahs_read': ayahsRead,
     };
+  }
+
+  UserProgress copyWith({
+    String? userId,
+    int? totalHassanat,
+    int? surahsRead,
+    int? readingMinutes,
+    int? duasRecited,
+    int? zikrCount,
+    int? ayahsRead,
+    int? currentStreak,
+    int? bestStreak,
+    Map<String, int>? todayChallenges,
+    List<int>? achievementsUnlocked,
+    List<int>? surahsReadIds,
+    Map<String, dynamic>? likedAyahs,
+    Map<String, int>? weeklyHassanat,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return UserProgress(
+      userId: userId ?? this.userId,
+      totalHassanat: totalHassanat ?? this.totalHassanat,
+      surahsRead: surahsRead ?? this.surahsRead,
+      readingMinutes: readingMinutes ?? this.readingMinutes,
+      duasRecited: duasRecited ?? this.duasRecited,
+      zikrCount: zikrCount ?? this.zikrCount,
+      ayahsRead: ayahsRead ?? this.ayahsRead,
+      currentStreak: currentStreak ?? this.currentStreak,
+      bestStreak: bestStreak ?? this.bestStreak,
+      todayChallenges: todayChallenges ?? this.todayChallenges,
+      surahsReadIds: surahsReadIds ?? this.surahsReadIds,
+      likedAyahs: likedAyahs ?? this.likedAyahs,
+      weeklyHassanat: weeklyHassanat ?? this.weeklyHassanat,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
   }
 }

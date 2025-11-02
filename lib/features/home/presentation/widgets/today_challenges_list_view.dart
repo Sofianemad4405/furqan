@@ -3,13 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:furqan/core/themes/cubit/theme_cubit.dart';
 import 'package:furqan/features/home/presentation/screens/today_challenges/today_challenges.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
+import 'package:furqan/features/user_data/models/daily_challenge_model.dart';
+import 'package:furqan/features/user_data/models/user_daily_challenge.dart';
 import 'package:furqan/features/user_data/models/user_progress.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 class TodayChallengesList extends StatelessWidget {
-  const TodayChallengesList({super.key, required this.userProgress});
+  const TodayChallengesList({
+    super.key,
+    required this.userProgress,
+    required this.dailyChallenges,
+    required this.userDailyChallenge,
+  });
   final UserProgress userProgress;
+  final List<DailyChallengeModel> dailyChallenges;
+  final List<UserDailyChallenge> userDailyChallenge;
 
   @override
   Widget build(BuildContext context) {
@@ -47,24 +56,27 @@ class TodayChallengesList extends StatelessWidget {
                               userProgress: userProgress,
                               context: context,
                               index: index,
+                              dailyChallenges: dailyChallenges,
                             ),
                             const Spacer(),
                             Text(
-                              "${userProgress.todayChallenges[index].finished}/${userProgress.todayChallenges[index].target}",
+                              "${userDailyChallenge[index].completed}/${dailyChallenges[index].target}",
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                           ],
                         ),
                         const Gap(20),
                         Text(
-                          userProgress.todayChallenges[index].description,
+                          dailyChallenges[index].description,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const Gap(20),
                         LinearProgressIndicator(
                           minHeight: 5,
                           borderRadius: BorderRadius.circular(12),
-                          value: userProgress.todayChallenges[index].progress,
+                          value:
+                              userDailyChallenge[index].completed /
+                              dailyChallenges[index].target,
                           backgroundColor: Colors.grey,
                           color: Colors.green,
                         ),
@@ -84,6 +96,7 @@ class TodayChallengesList extends StatelessWidget {
 Widget _buildChallengeIconAndTitle({
   required Color color,
   required UserProgress userProgress,
+  required List<DailyChallengeModel> dailyChallenges,
   required BuildContext context,
   required int index,
 }) {
@@ -98,14 +111,14 @@ Widget _buildChallengeIconAndTitle({
         ),
         child: Center(
           child: Text(
-            userProgress.todayChallenges[index].icon,
+            dailyChallenges[index].icon,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ),
       const Gap(10),
       Text(
-        userProgress.todayChallenges[index].title,
+        dailyChallenges[index].title,
         style: Theme.of(context).textTheme.titleMedium,
       ),
     ],

@@ -39,8 +39,17 @@ class _TodayChallengesState extends State<TodayChallenges> {
                     ///Header
                     Header(
                       totalChallenges: 3,
-                      completedChallenges:
-                          state.userProgress.dailyChallengesCompleted,
+                      completedChallenges: state.userDailyChallenges
+                          .where(
+                            (challenge) =>
+                                challenge.completed >=
+                                state.todayChallenges
+                                    .firstWhere(
+                                      (tc) => tc.id == challenge.challengeId,
+                                    )
+                                    .target,
+                          )
+                          .length,
                     ),
                     const Gap(20),
                     const Divider(),
@@ -49,8 +58,17 @@ class _TodayChallengesState extends State<TodayChallenges> {
                     //streak and completed
                     Streak(
                       currentStreak: state.userProgress.currentStreak,
-                      challengesCompleted:
-                          state.userProgress.dailyChallengesCompleted,
+                      challengesCompleted: state.userDailyChallenges
+                          .where(
+                            (challenge) =>
+                                challenge.completed >=
+                                state.todayChallenges
+                                    .firstWhere(
+                                      (tc) => tc.id == challenge.challengeId,
+                                    )
+                                    .target,
+                          )
+                          .length,
                     ),
                     const Gap(20),
                     //today's challenges
@@ -72,35 +90,29 @@ class _TodayChallengesState extends State<TodayChallenges> {
 
                     ///Complete Surah
                     Challeange(
-                      challengeTitle:
-                          state.userProgress.todayChallenges[0].title,
-                      challengeDesc:
-                          state.userProgress.todayChallenges[0].description,
-                      numberOfSteps:
-                          state.userProgress.todayChallenges[0].target,
-                      completed: state.userProgress.todayChallenges[0].finished,
+                      challengeTitle: state.todayChallenges[0].title,
+                      challengeDesc: state.todayChallenges[0].description,
+                      numberOfSteps: state.todayChallenges[0].target,
+                      completed: state.userDailyChallenges[0].completed,
                       percentage:
-                          state.userProgress.todayChallenges[0].finished /
-                          state.userProgress.todayChallenges[0].target,
+                          state.userDailyChallenges[0].completed /
+                          state.todayChallenges[0].target,
                       hasanatReward: 20,
                       isCompleted:
-                          state.userProgress.todayChallenges[0].finished ==
-                          state.userProgress.todayChallenges[0].target,
+                          state.userDailyChallenges[0].completed ==
+                          state.todayChallenges[0].target,
                     ),
                     const Gap(20),
 
                     ///Dhikr Session
                     Challeange(
-                      challengeTitle:
-                          state.userProgress.todayChallenges[1].title,
-                      challengeDesc:
-                          state.userProgress.todayChallenges[1].description,
-                      numberOfSteps:
-                          state.userProgress.todayChallenges[1].target,
-                      completed: state.userProgress.todayChallenges[1].finished,
+                      challengeTitle: state.todayChallenges[1].title,
+                      challengeDesc: state.todayChallenges[1].description,
+                      numberOfSteps: state.todayChallenges[1].target,
+                      completed: state.userDailyChallenges[1].completed,
                       percentage:
-                          state.userProgress.todayChallenges[1].finished /
-                          state.userProgress.todayChallenges[1].target,
+                          state.userDailyChallenges[1].completed /
+                          state.todayChallenges[1].target,
                       hasanatReward: 50,
                       isCompleted: state.userProgress.surahsRead >= 1,
                     ),
@@ -108,19 +120,16 @@ class _TodayChallengesState extends State<TodayChallenges> {
 
                     ///Morning Duas
                     Challeange(
-                      challengeTitle:
-                          state.userProgress.todayChallenges[2].title,
-                      challengeDesc:
-                          state.userProgress.todayChallenges[2].description,
-                      numberOfSteps:
-                          state.userProgress.todayChallenges[2].target,
-                      completed: state.userProgress.todayChallenges[2].finished,
+                      challengeTitle: state.todayChallenges[2].title,
+                      challengeDesc: state.todayChallenges[2].description,
+                      numberOfSteps: state.todayChallenges[2].target,
+                      completed: state.userDailyChallenges[2].completed,
                       percentage:
-                          state.userProgress.todayChallenges[2].finished /
-                          state.userProgress.todayChallenges[2].target,
+                          state.userDailyChallenges[2].completed /
+                          state.todayChallenges[2].target,
                       hasanatReward: 30,
                       isDuaa: true,
-                      isCompleted: state.userProgress.duaasRecited >= 3,
+                      isCompleted: state.userProgress.duasRecited >= 3,
                     ),
                     const Gap(30),
                     CustomContainer(

@@ -19,7 +19,7 @@ class AdditionalStats extends StatelessWidget {
         Expanded(
           child: AdditionalStatsCard(
             icon: '🤲',
-            value: userProgress.duaasRecited.toString(),
+            value: userProgress.duasRecited.toString(),
             label: 'Duas Recited',
             isDark: isDark,
           ),

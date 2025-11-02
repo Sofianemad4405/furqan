@@ -68,7 +68,7 @@ class HomeStats extends StatelessWidget {
                 statModel: StatModel(
                   label: "Minutes",
                   icon: "⏱️",
-                  number: userProgress.minutesOfReadingQuraan,
+                  number: userProgress.readingMinutes,
                 ),
                 gradientColors: [
                   colors.minutes['background']!,

@@ -13,8 +13,14 @@ final class UserProgressLoading extends UserProgresState {}
 
 final class UserProgressLoaded extends UserProgresState {
   final UserProgress userProgress;
+  final List<DailyChallengeModel> todayChallenges;
+  final List<UserDailyChallenge> userDailyChallenges;
 
-  const UserProgressLoaded({required this.userProgress});
+  const UserProgressLoaded({
+    required this.userProgress,
+    required this.todayChallenges,
+    required this.userDailyChallenges,
+  });
 }
 
 final class UserProgressUpdated extends UserProgresState {

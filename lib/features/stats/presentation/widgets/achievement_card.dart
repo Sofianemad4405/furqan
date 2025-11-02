@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:furqan/features/home/presentation/widgets/custom_container.dart';
 import 'package:furqan/features/stats/data/models/achievement.dart';
+import 'package:furqan/features/stats/data/models/user_achievement.dart';
 import 'package:iconsax/iconsax.dart';
 
 class AchievementCard extends StatelessWidget {
@@ -8,19 +9,21 @@ class AchievementCard extends StatelessWidget {
     super.key,
     required this.achievement,
     required this.isDark,
+    required this.userAchievement,
   });
   final Achievement achievement;
+  final UserAchievement userAchievement;
   final bool isDark;
 
   @override
   Widget build(BuildContext context) {
     return CustomContainer(
-      borderColor: !achievement.unlocked
+      borderColor: !userAchievement.unlocked
           ? (isDark ? Colors.grey[700]! : Colors.grey[200]!)
           : (isDark ? const Color(0xFF047857) : const Color(0xFFA7F3D0)),
-      decoration: achievement.unlocked
+      decoration: userAchievement.unlocked
           ? BoxDecoration(
-              color: achievement.unlocked
+              color: userAchievement.unlocked
                   ? (isDark
                         ? const Color(0xFF064E3B).withValues(alpha: 0.3)
                         : const Color(0xFFD1FAE5))
@@ -28,7 +31,7 @@ class AchievementCard extends StatelessWidget {
               // : null,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: achievement.unlocked
+                color: userAchievement.unlocked
                     ? (isDark
                           ? const Color(0xFF047857)
                           : const Color(0xFFA7F3D0))
@@ -47,11 +50,11 @@ class AchievementCard extends StatelessWidget {
                   achievement.icon,
                   style: TextStyle(
                     fontSize: 18,
-                    color: achievement.unlocked ? null : Colors.grey,
+                    color: userAchievement.unlocked ? null : Colors.grey,
                   ),
                 ),
                 const Spacer(),
-                if (achievement.unlocked)
+                if (userAchievement.unlocked)
                   const Icon(Iconsax.tick_circle, color: Color(0xFF047857)),
               ],
             ),
