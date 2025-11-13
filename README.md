@@ -71,65 +71,24 @@ It provides a complete Islamic experience with features that help users read, li
 Furqan aims to provide a **complete Islamic companion app**, combining Quran reading, listening, tafsir, azkar, and prayer tools in one place — with a smooth and modern user experience.
 
 ---
+## 📸 App Screenshots
 
-## 📸Some Screenshots
-
-### achievements
-assets/imgs/app_screens/achievements.jpeg
-
-### ayahs
-assets/imgs/app_screens/ayahs.jpeg
-
-### azkar
-assets/imgs/app_screens/azkar.jpeg
-
-### chosse_surah
-assets/imgs/app_screens/chosse_surah.jpeg
-
-### complaint_successful
-assets/imgs/app_screens/complaint_successful.jpeg
-
-### home
-assets/imgs/app_screens/home.jpeg
-
-### info_app
-assets/imgs/app_screens/info_app.jpeg
-
-### listen_mode
-assets/imgs/app_screens/listen_mode.jpeg
-
-### listen
-assets/imgs/app_screens/listen.jpeg
-
-### login
-assets/imgs/app_screens/login.jpeg
-
-### privacy
-assets/imgs/app_screens/privacy.jpeg
-
-### rate
-assets/imgs/app_screens/rate.jpeg
-
-### read
-assets/imgs/app_screens/read.jpeg
-
-### settings
-assets/imgs/app_screens/settings.jpeg
-
-### stats
-assets/imgs/app_screens/stats.jpeg
-
-### stats2
-assets/imgs/app_screens/stats2.jpeg
-
-### tafsir
-assets/imgs/app_screens/tafsir.jpeg
-
-### zikr_counter
-assets/imgs/app_screens/zikr_counter.jpeg
-
-### zikr_data
-assets/imgs/app_screens/zikr_data.jpeg
+| | | |
+|---|---|---|
+| <img src="assets/imgs/app_screens/achievements.jpeg" width="250"/> | <img src="assets/imgs/app_screens/ayahs.jpeg" width="250"/> | <img src="assets/imgs/app_screens/azkar.jpeg" width="250"/> |
+| **achievements** | **ayahs** | **azkar** |
+| <img src="assets/imgs/app_screens/chosse_surah.jpeg" width="250"/> | <img src="assets/imgs/app_screens/complaint_successful.jpeg" width="250"/> | <img src="assets/imgs/app_screens/home.jpeg" width="250"/> |
+| **chosse_surah** | **complaint_successful** | **home** |
+| <img src="assets/imgs/app_screens/info_app.jpeg" width="250"/> | <img src="assets/imgs/app_screens/listen_mode.jpeg" width="250"/> | <img src="assets/imgs/app_screens/listen.jpeg" width="250"/> |
+| **info_app** | **listen_mode** | **listen** |
+| <img src="assets/imgs/app_screens/login.jpeg" width="250"/> | <img src="assets/imgs/app_screens/privacy.jpeg" width="250"/> | <img src="assets/imgs/app_screens/rate.jpeg" width="250"/> |
+| **login** | **privacy** | **rate** |
+| <img src="assets/imgs/app_screens/read.jpeg" width="250"/> | <img src="assets/imgs/app_screens/settings.jpeg" width="250"/> | <img src="assets/imgs/app_screens/stats.jpeg" width="250"/> |
+| **read** | **settings** | **stats** |
+| <img src="assets/imgs/app_screens/stats2.jpeg" width="250"/> | <img src="assets/imgs/app_screens/tafsir.jpeg" width="250"/> | <img src="assets/imgs/app_screens/zikr_counter.jpeg" width="250"/> |
+| **stats2** | **tafsir** | **zikr_counter** |
+| <img src="assets/imgs/app_screens/zikr_data.jpeg" width="250"/> | | |
+| **zikr_data** | | |
 
 
 ---
