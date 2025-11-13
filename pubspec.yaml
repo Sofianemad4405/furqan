@@ -70,6 +70,7 @@ flutter:
   assets:
     - assets/svgs/
     - assets/imgs/
+    - assets/imgs/app_screens/
     - .env
   # example:
   fonts:

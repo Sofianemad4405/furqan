@@ -28,7 +28,55 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final sl = GetIt.instance;
+
 Future<void> init() async {
+  // Core Services
+  sl.registerLazySingleton<DioFactory>(() => DioFactory());
+  sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
+
+  // API Clients
+  sl.registerLazySingleton<ApiService>(
+    () => ApiService(sl<DioFactory>().getDio()),
+  );
+  sl.registerLazySingleton<TafsirClient>(
+    () => TafsirClient(sl<DioFactory>().getDio()),
+  );
+  sl.registerLazySingleton<AdhkarClient>(
+    () => AdhkarClient(sl<DioFactory>().getDio()),
+  );
+  sl.registerLazySingleton<PrayerTimesClient>(
+    () => PrayerTimesClient(sl<DioFactory>().getDio()),
+  );
+
+  // Data Sources
+  sl.registerLazySingleton<ReadingDataSource>(
+    () => ReadingDataSourceImpl(sl<ApiService>(), sl<TafsirClient>()),
+  );
+  sl.registerLazySingleton<RemoteDataSource>(
+    () => RemoteDataSourceImpl(sl<AdhkarClient>()),
+  );
+  sl.registerLazySingleton<PrayerTimesDataAbstract>(
+    () => PrayerTimesImpl(sl<PrayerTimesClient>()),
+  );
+  sl.registerLazySingleton<UserProgressService>(() => UserProgressService());
+
+  // Repositories
+  sl.registerLazySingleton<ReadingRepo>(
+    () => ReadingRepoImpl(sl<ReadingDataSource>()),
+  );
+  sl.registerLazySingleton<HomeRepoAbstract>(
+    () => HomeRepoImpl(sl<RemoteDataSource>()),
+  );
+  sl.registerLazySingleton<PrayerTimesRepoAbstract>(
+    () => PrayerTimesRepoImpl(sl<PrayerTimesDataAbstract>()),
+  );
+
+  // Controllers
+  sl.registerLazySingleton<UserDataController>(
+    () => UserDataController(sl<UserProgressService>()),
+  );
+
+  // Cubits
   sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit(sl<Prefs>()));
   sl.registerLazySingleton<ReadingCubit>(() => ReadingCubit(sl<ReadingRepo>()));
   sl.registerLazySingleton<AdhkarCubit>(
@@ -39,55 +87,6 @@ Future<void> init() async {
     () => UserProgressCubit(sl<UserDataController>(), sl<Prefs>()),
   );
   sl.registerLazySingleton<PrayerTimesCubit>(() => PrayerTimesCubit());
-  sl.registerLazySingleton<ApiService>(
-    () => ApiService(sl<DioFactory>().getDio()),
-  );
-
-  sl.registerLazySingleton<TafsirClient>(
-    () => TafsirClient(sl<DioFactory>().getDio()),
-  );
-
-  sl.registerLazySingleton<DioFactory>(() => DioFactory());
-
-  sl.registerLazySingleton<ReadingDataSource>(
-    () => ReadingDataSourceImpl(sl<ApiService>(), sl<TafsirClient>()),
-  );
-
-  sl.registerLazySingleton<AdhkarClient>(
-    () => AdhkarClient(sl<DioFactory>().getDio()),
-  );
-
-  sl.registerLazySingleton<ReadingRepo>(
-    () => ReadingRepoImpl(sl<ReadingDataSource>()),
-  );
-
-  sl.registerLazySingleton<PrayerTimesRepoAbstract>(
-    () => PrayerTimesRepoImpl(sl<PrayerTimesDataAbstract>()),
-  );
-
-  sl.registerLazySingleton<HomeRepoAbstract>(
-    () => HomeRepoImpl(sl<RemoteDataSource>()),
-  );
-  sl.registerLazySingleton<RemoteDataSource>(
-    () => RemoteDataSourceImpl(sl<AdhkarClient>()),
-  );
-
-  sl.registerLazySingleton<PrayerTimesClient>(
-    () => PrayerTimesClient(sl<DioFactory>().getDio()),
-  );
-
-  sl.registerLazySingleton<PrayerTimesDataAbstract>(
-    () => PrayerTimesImpl(sl<PrayerTimesClient>()),
-  );
-
-  ///supabase
-  sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
-  sl.registerLazySingleton<UserProgressService>(() => UserProgressService());
-
-  ///user data
-  sl.registerLazySingleton<UserDataController>(
-    () => UserDataController(sl<UserProgressService>()),
-  );
 }
 
 Future<void> setupLocator() async {

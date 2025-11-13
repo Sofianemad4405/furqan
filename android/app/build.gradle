@@ -1,10 +1,32 @@
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
 android {
+    namespace "com.example.furqan"
+    compileSdk 34
+
     defaultConfig {
         applicationId "com.example.furqan"
-        // ...existing config...
-        manifestPlaceholders += [
-            'GOOGLE_ANDROID_CLIENT_ID': '885310355539-your-android-client-id.apps.googleusercontent.com'
-        ]
+        minSdkVersion flutter.minSdkVersion
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.debug
+        }
     }
 }
-// d14c4ce9a427bfbb393f9a46ea950947141b4662
+
+flutter {
+    source "../.."
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.0"
+}
