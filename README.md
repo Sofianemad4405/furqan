@@ -71,7 +71,7 @@ It provides a complete Islamic experience with features that help users read, li
 Furqan aims to provide a **complete Islamic companion app**, combining Quran reading, listening, tafsir, azkar, and prayer tools in one place — with a smooth and modern user experience.
 
 ---
-## 📸 App Screenshots
+## 📸 Some Screenshots
 
 | | | |
 |---|---|---|
