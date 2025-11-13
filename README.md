@@ -72,9 +72,64 @@ Furqan aims to provide a **complete Islamic companion app**, combining Quran rea
 
 ---
 
-## 📸 Screenshots
-will be added soon
+## 📸Some Screenshots
 
+### achievements
+assets/imgs/app_screens/achievements.jpeg
+
+### ayahs
+assets/imgs/app_screens/ayahs.jpeg
+
+### azkar
+assets/imgs/app_screens/azkar.jpeg
+
+### chosse_surah
+assets/imgs/app_screens/chosse_surah.jpeg
+
+### complaint_successful
+assets/imgs/app_screens/complaint_successful.jpeg
+
+### home
+assets/imgs/app_screens/home.jpeg
+
+### info_app
+assets/imgs/app_screens/info_app.jpeg
+
+### listen_mode
+assets/imgs/app_screens/listen_mode.jpeg
+
+### listen
+assets/imgs/app_screens/listen.jpeg
+
+### login
+assets/imgs/app_screens/login.jpeg
+
+### privacy
+assets/imgs/app_screens/privacy.jpeg
+
+### rate
+assets/imgs/app_screens/rate.jpeg
+
+### read
+assets/imgs/app_screens/read.jpeg
+
+### settings
+assets/imgs/app_screens/settings.jpeg
+
+### stats
+assets/imgs/app_screens/stats.jpeg
+
+### stats2
+assets/imgs/app_screens/stats2.jpeg
+
+### tafsir
+assets/imgs/app_screens/tafsir.jpeg
+
+### zikr_counter
+assets/imgs/app_screens/zikr_counter.jpeg
+
+### zikr_data
+assets/imgs/app_screens/zikr_data.jpeg
 
 ---
 
