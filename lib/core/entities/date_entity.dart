@@ -21,4 +21,13 @@ class DateEntity {
       enWeekDay: enWeekDay,
     );
   }
+
+
+
+
+
+
+
+
+
 }
